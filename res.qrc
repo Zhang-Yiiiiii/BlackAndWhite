@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/black.png</file>
+        <file>icon/delete.png</file>
+        <file>icon/edit.png</file>
+        <file>icon/flush.png</file>
+        <file>icon/link.png</file>
+        <file>icon/manage.png</file>
+        <file>icon/quit.png</file>
+        <file>icon/set.png</file>
+        <file>icon/unlock.png</file>
+        <file>icon/upload.png</file>
+        <file>icon/white.png</file>
+        <file>image/mainScene.jpg</file>
+        <file>numberIcon/number-eight.png</file>
+        <file>numberIcon/number-five.png</file>
+        <file>numberIcon/number-four.png</file>
+        <file>numberIcon/number-nine.png</file>
+        <file>numberIcon/number-one.png</file>
+        <file>numberIcon/number-one_1.png</file>
+        <file>numberIcon/number-seven.png</file>
+        <file>numberIcon/number-six.png</file>
+        <file>numberIcon/number-three.png</file>
+        <file>numberIcon/number-two.png</file>
+        <file>icon/hexagon.png</file>
+        <file>icon/debug1.png</file>
+        <file>icon/debug3.png</file>
+        <file>icon/debug0.png</file>
+        <file>icon/debug2.png</file>
+    </qresource>
+</RCC>
