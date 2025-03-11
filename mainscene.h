@@ -37,8 +37,6 @@ public:
     //自建地图的对话框
     myDialog * mydialog;
 
-    //获取游戏信息的对象
-    Data * data = nullptr;
 
     ~MainScene();
 

@@ -79,21 +79,20 @@ void myDialog::confirmButtonClicked()
     }
 
     //获取列数
-    str = ui->lineEdit3->text();
+    str = ui->lineEdit4->text();
     number = str.toInt(&ok);
     if (ok && number > 0 && number <= 20)
     {
-        num4 = number;
+        num4 = number - 1;
     }
     else
     {
         QMessageBox::warning(this, "警告", "无效的输入");
         return;
-
     }
 
     //获取方向
-    str = ui->lineEdit4->text();
+    str = ui->lineEdit5->text();
     number = str.toInt(&ok);
     if (ok && number >= 0 && number <= 3)
     {
@@ -101,7 +100,7 @@ void myDialog::confirmButtonClicked()
     }
     else
     {
-        QMessageBox::warning(this, "警告", "无效的输入");
+       QMessageBox::warning(this, "警告", "无效的输入");
         return;
     }
 

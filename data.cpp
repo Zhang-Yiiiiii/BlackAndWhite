@@ -36,9 +36,7 @@ void Data::getData()
             {
                 ifs >> temp;
                 v1[i][j] = temp;
-                std::cout<<temp;
             }
-            std::cout<<std::endl;
         }
 
         // 读取 ansArray

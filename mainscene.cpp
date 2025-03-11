@@ -8,9 +8,6 @@ MainScene::MainScene(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //初始化
-    data = new Data;
-
     //设置窗口大小 标题 图标
     this->setFixedSize(BACKGROUDWIDTH,BACKGROUDHEIGHT);
     this->setWindowTitle(MYTITLE);
@@ -30,14 +27,38 @@ MainScene::MainScene(QWidget *parent)
             bugY = mydialog->num4;
             bugDirection = mydialog->num5;
 
-            std::cout.flush();
-            std::cout<<gameLevel<<gameStep<<std::endl;
-
-
+            //进入游戏场景 由玩家自行改变地图
             gameScene = new GameScene(gameLevel,this);
             this->hide();
             gameScene->setGeometry(this->geometry());
             gameScene->show();
+
+            //返回来的信号
+            connect(gameScene,&GameScene::changeBack,[=](){
+                gameScene->hide();
+                this->setGeometry(gameScene->geometry());
+                this->show();
+
+                delete gameScene;
+                gameScene = nullptr;
+            });
+
+            //保存自建地图
+            //保存按钮
+            QPushButton * saveBtn = new QPushButton(gameScene);
+            saveBtn->setText("保 存");
+            saveBtn->setFont(QFont("华文新魏",15));
+            saveBtn->setFixedSize(120,50);
+            saveBtn->move(BACKGROUDWIDTH-saveBtn->width(),BACKGROUDHEIGHT- 4 * saveBtn->height());
+            saveBtn->show();
+            connect(saveBtn,&QPushButton::clicked,[=](){
+                int ret = QMessageBox::question(this,"问题","确定保存游戏？");
+                if(ret == QMessageBox::Yes)
+                {
+                    this->gameScene->saveGame(gameLevel,gameStep,bugX,bugY,bugDirection);
+                }
+            });
+
         });
 
     });

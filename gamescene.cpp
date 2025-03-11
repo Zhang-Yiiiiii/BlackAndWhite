@@ -106,6 +106,16 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     });
 
 
+    //步数说明
+    QLabel * stepLabel = new QLabel(this);
+    stepLabel->setText(QString::number(this->gameStep));
+    stepLabel->move(40,40);
+    QFont stepLabelFont;
+    stepLabelFont.setBold(true);
+    stepLabelFont.setPointSize(12);
+    stepLabel->setFont(stepLabelFont);
+
+
     // //设置打印按钮  测试
     // QPushButton * printBtn = new QPushButton(this);
     // printBtn->setText("打 印");
@@ -130,7 +140,7 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
 
     //显示虫子
     QPushButton * bugBtn = new QPushButton(this);
-    bugBtn->move(BOARDPOSX+bugPos.x()*(GRIDSIZE + 1),BOARDPOSY+bugPos.y()*(GRIDSIZE + 1));
+    bugBtn->move(BOARDPOSX+bugPos.y()*(GRIDSIZE + 1),BOARDPOSY+bugPos.x()*(GRIDSIZE + 1));
     QString pixStr = QString(BUGPATH).arg(bugDir);
     bugPix.load(pixStr);
     bugBtn->setFixedSize(bugPix.size());
@@ -142,7 +152,7 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
 
 
     //判断是否可解 并打印答案
-    endIsSolvable(gameArray,bugPos,bugDir,gameStep);
+    //endIsSolvable(gameArray,bugPos,bugDir,gameStep);
 }
 
 //显示棋盘的函数
@@ -206,10 +216,11 @@ bool GameScene::isWin()
     return true;
 }
 
-//判断是否有解  已知起点
+//判断是否有解  已知起点信息
 bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, int step)
 {
     bool gameArr[20][20];
+    int totalStep = step;
 
     //拷贝数组
     for(int i = 0;i < 20; i++)
@@ -220,6 +231,7 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
         }
     }
 
+    //起点
     int x = pos.x();
     int y = pos.y();
 
@@ -229,7 +241,7 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
     // 3 改变前一个格子颜色
 
 
-    while(step--)
+    while(totalStep--)
     {
         //改变前一格颜色
         gameArr[x][y] = !gameArr[x][y];
@@ -260,8 +272,8 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
         }
         else
         {
-            bugDir--;  //左转方向减一
-            if(bugDir<0) bugDir+=4;
+            bugDir+=3;  //左转方向加三
+            bugDir%=4;
         }
 
         //跃出格子
@@ -272,17 +284,19 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
     }
 
 
-    //将答案打印
+    //将结果传给data
     for(int i=0;i<20;i++)
     {
         for(int j=0;j<20;j++)
         {
-            std::cout.flush();
-            std::cout<<gameArr[i][j]<<",";
+            this->data->gameArray[gameLevel][i][j] = gameArr[i][j];
+            this->data->ansArray[gameLevel][i][j] = gameArray[i][j];
         }
-        std::cout<<"\n";
-        std::cout.flush();
     }
+
+    this->data->bugDir[gameLevel] = bugDir;
+    this->data->bugPos[gameLevel] = QPoint(x,y);
+    this->data->stepArray[gameLevel] = step;
 
     return true;
 }
@@ -386,26 +400,11 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
 //保存自建地图
 void GameScene::saveGame(int level,int step,int x,int y,int direction)
 {
-
-    int ret = QMessageBox::question(this,"询问","是否决定保存新建地图");
-
-    if(ret == QMessageBox::No) return;
-
-    //保存步数
-    data->stepArray[level] = step;
-
-    //保存bug位置 方向
-    data->bugPos[level] = QPoint(x,y);
-    data->bugDir[level] = direction;
-
-    //将地图保存到data中
-    for(int i=0;i<20;i++)
+    //判断是否可解
+    if(!startIsSolvable(this->gameArray,QPoint(x,y),direction,step))  //不可解
     {
-        for(int j=0;j<20;j++)
-        {
-            data->gameArray[level][i][j] = this->gameArray[i][j];
-            data->ansArray[level][i][j] = this->ansArray[i][j];
-        }
+        QMessageBox::about(this,"提醒","该设计游戏无解！请重新设计");
+        return;
     }
 
     //进行返回操作
@@ -417,6 +416,6 @@ GameScene::~GameScene()
 {
 
     //删除数据对象
-    // delete data;
-    // data = nullptr;
+    delete data;
+    data = nullptr;
 }
