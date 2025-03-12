@@ -5,6 +5,8 @@ release/hexagon.o
 release/main.o
 release/mainscene.o
 release/mydialog.o
+release/user.o
+release/usermanager.o
 release/qrc_res.o
 release/moc_gamescene.o
 release/moc_gridbutton.o

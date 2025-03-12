@@ -15,6 +15,8 @@
 
 #define SELECTBTNNUMBER 37  //选关按钮数量
 
+#define RULEPATH "D:/rule.txt" //说明文件的路径
+
 
 
 /************六边形按钮配置数据******************/
@@ -38,5 +40,8 @@
 
 /************游戏数据配置数据******************/
 #define DATAPATH "D:/data.txt"
+
+/************用户管理配置数据******************/
+#define USERDATAPATH "D:/userData.txt"
 
 #endif // CONFIG_H

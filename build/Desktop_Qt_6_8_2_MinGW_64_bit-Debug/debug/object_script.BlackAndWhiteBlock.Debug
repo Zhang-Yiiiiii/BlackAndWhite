@@ -5,6 +5,8 @@ debug/hexagon.o
 debug/main.o
 debug/mainscene.o
 debug/mydialog.o
+debug/user.o
+debug/usermanager.o
 debug/qrc_res.o
 debug/moc_gamescene.o
 debug/moc_gridbutton.o

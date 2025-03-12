@@ -42,6 +42,10 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     QAction * buildAction = gameMenu->addAction("自建游戏地图");
     QAction * instructionAction = gameMenu->addAction("说明");
 
+    //显示游戏说明
+    connect(instructionAction,&QAction::triggered,[=](){
+        this->showRule();
+    });
 
     //退出游戏
     connect(quitAction,&QAction::triggered,[=](){
@@ -49,7 +53,7 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     });
 
     //设置返回按钮
-    QPushButton * backBtn = new QPushButton(this);
+    backBtn = new QPushButton(this);
     backBtn->setText("返 回");
     backBtn->setFont(QFont("华文新魏",15));
     backBtn->setFixedSize(120,50);
@@ -59,30 +63,32 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     });
 
     //设置提交按钮
-    QPushButton * submitBtn = new QPushButton(this);
+    submitBtn = new QPushButton(this);
     submitBtn->setText("提 交");
     submitBtn->setFont(QFont("华文新魏",15));
     submitBtn->setFixedSize(120,50);
     submitBtn->move(BACKGROUDWIDTH-submitBtn->width(),BACKGROUDHEIGHT - 2 * submitBtn->height());
     connect(submitBtn,&QPushButton::clicked,[=](){
         //判断是否胜利
-        std::cout.flush();
-        std::cout<<"ans\n";
-        std::cout.flush();
         if(isWin())
         {
             qDebug()<<"胜利";
+            QMessageBox::about(this,"通过","恭喜你成功通过此关");
+            emit changeBack();  //进行返回
+
         }
         else
         {
             qDebug()<<"失败";
+            QMessageBox::about(this,"失败","答案错误，罚时30秒");
+            this->resetGame(); //重置棋盘
         }
         std::cout.flush();
     });
 
 
     //重置按钮
-    QPushButton * resetBtn = new QPushButton(this);
+    resetBtn = new QPushButton(this);
     resetBtn->setText("重 置");
     resetBtn->setFont(QFont("华文新魏",15));
     resetBtn->setFixedSize(120,50);
@@ -93,14 +99,7 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
         {
             for(int i = 0;i<20;i++)
             {
-                for(int j = 0;j<20;j++)
-                {
-                    if(gameArray[i][j] != data->gameArray[gameLevel][i][j])  //有些格子被点击了
-                    {
-                        board[i][j]->changeFlag();
-                        gameArray[i][j] = data->gameArray[gameLevel][i][j];
-                    }
-                }
+                this->resetGame(); //进行重置
             }
         }
     });
@@ -153,6 +152,33 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
 
     //判断是否可解 并打印答案
     //endIsSolvable(gameArray,bugPos,bugDir,gameStep);
+}
+
+//显示游戏说明
+void GameScene::showRule()
+{
+    std::ifstream ifs(RULEPATH);
+
+
+    // 打开文件
+    if (!ifs.is_open()) {
+        qDebug() << "无法打开文件：" << RULEPATH;
+        return;
+    }
+
+    // 使用 std::stringstream 读取整个文件内容
+    std::stringstream buffer;
+    buffer << ifs.rdbuf(); // 将文件内容读取到 stringstream 中
+
+    //关闭文件
+    ifs.close();
+
+    // 将 stringstream 的内容转换为 QString
+    QString fileContent = QString::fromStdString(buffer.str());
+
+
+    QMessageBox::about(this,"说明",fileContent);
+
 }
 
 //显示棋盘的函数
@@ -214,6 +240,22 @@ bool GameScene::isWin()
         }
     }
     return true;
+}
+
+//重置棋盘
+void GameScene::resetGame()
+{
+    for(int i=0;i<20;i++)
+    {
+        for(int j = 0;j<20;j++)
+        {
+            if(gameArray[i][j] != data->gameArray[gameLevel][i][j])  //有些格子被点击了
+            {
+                board[i][j]->changeFlag();
+                gameArray[i][j] = data->gameArray[gameLevel][i][j];
+            }
+        }
+    }
 }
 
 //判断是否有解  已知起点信息
@@ -306,6 +348,8 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
 bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step)  //棋盘 虫子位置 方向 步数
 {
     bool gameArr[20][20];
+    int totalStep = step;
+    int dir = bugDir;
 
     //拷贝数组
     for(int i = 0;i < 20; i++)
@@ -315,16 +359,6 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
             gameArr[i][j] = gameArray[i][j];
         }
     }
-
-    //测试代码
-    // for(int i = 0;i < 20; i++)
-    // {
-    //     for(int j = 0;j < 20;j++)
-    //     {
-    //         qDebug()<<(gameArr[i][j]?"1":"0");
-    //     }
-    //     qDebug()<<"\n";
-    // }
 
     int x = pos.x();
     int y = pos.y();
@@ -337,7 +371,7 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
     gameArr[x][y] = !gameArr[x][y]; //改变最后一格颜色
 
 
-    while(step--)
+    while(totalStep--)
     {
         if(gameArr[x][y])  //白色
         {
@@ -381,30 +415,43 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
     //将第一格的颜色改变
     gameArr[x][y] = !gameArr[x][y];
 
-    //将答案打印
-    // for(int i=0;i<20;i++)
-    // {
-    //     for(int j=0;j<20;j++)
-    //     {
-    //         std::cout.flush();
-    //         std::cout<<gameArr[i][j]<<",";
-    //     }
-    //     std::cout<<"\n";
-    //     std::cout.flush();
-    // }
+    //将答案保存
+    for(int i=0;i<20;i++)
+    {
+        for(int j=0;j<20;j++)
+        {
+            this->data->gameArray[gameLevel][i][j] = gameArray[i][j];
+            this->data->ansArray[gameLevel][i][j] = gameArr[i][j];
+        }
+    }
+
+    this->data->bugDir[gameLevel] = dir;
+    this->data->bugPos[gameLevel] = pos;
+    this->data->stepArray[gameLevel] = step;
 
     return true;
 }
 
 
-//保存自建地图
-void GameScene::saveGame(int level,int step,int x,int y,int direction)
+//保存自建地图 flag==0：起点建图  flag==1：终点建图
+void GameScene::saveGame(bool flag,int level,int step,int x,int y,int direction)
 {
-    //判断是否可解
-    if(!startIsSolvable(this->gameArray,QPoint(x,y),direction,step))  //不可解
+    //判断是否可解 并且保存地图
+    if(flag == 0) //起点建图
     {
-        QMessageBox::about(this,"提醒","该设计游戏无解！请重新设计");
-        return;
+        if(!startIsSolvable(this->gameArray,QPoint(x,y),direction,step))  //不可解
+        {
+            QMessageBox::about(this,"提醒","该设计游戏无解！请重新设计");
+            return;
+        }
+    }
+    else  //终点建图
+    {
+        if(!endIsSolvable(this->gameArray,QPoint(x,y),direction,step))  //不可解
+        {
+            QMessageBox::about(this,"提醒","该设计游戏无解！请重新设计");
+            return;
+        }
     }
 
     //进行返回操作

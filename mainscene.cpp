@@ -14,6 +14,13 @@ MainScene::MainScene(QWidget *parent)
     this->setWindowIcon(QIcon(MYICON));
 
     //设置菜单栏
+
+    //显示游戏说明
+    connect(this->ui->actioninstruction,&QAction::triggered,[=](){
+        this->gameScene->showRule();
+    });
+
+
     //起点建图
     connect(this->ui->actionstartingPoint,&QAction::triggered,[=](){
         mydialog = new myDialog(this);
@@ -55,7 +62,7 @@ MainScene::MainScene(QWidget *parent)
                 int ret = QMessageBox::question(this,"问题","确定保存游戏？");
                 if(ret == QMessageBox::Yes)
                 {
-                    this->gameScene->saveGame(gameLevel,gameStep,bugX,bugY,bugDirection);
+                    this->gameScene->saveGame(0,gameLevel,gameStep,bugX,bugY,bugDirection);
                 }
             });
 
@@ -65,7 +72,50 @@ MainScene::MainScene(QWidget *parent)
 
     //终点建图
     connect(this->ui->actiondestination,&QAction::triggered,[=](){
+        mydialog = new myDialog(this);
+        mydialog->show();
 
+        connect(mydialog,&myDialog::getedInfo,[=](){
+            int gameLevel,gameStep,bugX,bugY,bugDirection;
+            gameLevel = mydialog->num1;
+            gameStep = mydialog->num2;
+            bugX = mydialog->num3;
+            bugY = mydialog->num4;
+            bugDirection = mydialog->num5;
+
+            //进入游戏场景 由玩家自行改变地图
+            gameScene = new GameScene(gameLevel,this);
+            this->hide();
+            gameScene->setGeometry(this->geometry());
+            gameScene->show();
+
+            //返回来的信号
+            connect(gameScene,&GameScene::changeBack,[=](){
+                gameScene->hide();
+                this->setGeometry(gameScene->geometry());
+                this->show();
+
+                delete gameScene;
+                gameScene = nullptr;
+            });
+
+            //保存自建地图
+            //保存按钮
+            QPushButton * saveBtn = new QPushButton(gameScene);
+            saveBtn->setText("保 存");
+            saveBtn->setFont(QFont("华文新魏",15));
+            saveBtn->setFixedSize(120,50);
+            saveBtn->move(BACKGROUDWIDTH-saveBtn->width(),BACKGROUDHEIGHT- 4 * saveBtn->height());
+            saveBtn->show();
+            connect(saveBtn,&QPushButton::clicked,[=](){
+                int ret = QMessageBox::question(this,"问题","确定保存游戏？");
+                if(ret == QMessageBox::Yes)
+                {
+                    this->gameScene->saveGame(1,gameLevel,gameStep,bugX,bugY,bugDirection);
+                }
+            });
+
+        });
     });
 
     //退出游戏

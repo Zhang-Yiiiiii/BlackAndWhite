@@ -15,7 +15,9 @@ SOURCES += \
     hexagon.cpp \
     main.cpp \
     mainscene.cpp \
-    mydialog.cpp
+    mydialog.cpp \
+    user.cpp \
+    usermanager.cpp
 
 HEADERS += \
     config.h \
@@ -24,7 +26,9 @@ HEADERS += \
     gridbutton.h \
     hexagon.h \
     mainscene.h \
-    mydialog.h
+    mydialog.h \
+    user.h \
+    usermanager.h
 
 FORMS += \
     mainscene.ui \

@@ -14,6 +14,7 @@
 #include "hexagon.h"
 #include "gridbutton.h"
 #include <iostream>
+#include <sstream>
 
 
 class GameScene : public QMainWindow
@@ -22,6 +23,17 @@ class GameScene : public QMainWindow
 public:
     explicit GameScene(int gameLevel ,QWidget *parent = nullptr);
 
+    //设置返回按钮
+    QPushButton * backBtn = nullptr;
+
+    //重置按钮
+    QPushButton * resetBtn = nullptr;
+
+    //设置提交按钮
+    QPushButton * submitBtn = nullptr;
+
+    //显示游戏说明
+    void showRule();
 
     //黑白格子
     GridButton * board[20][20];
@@ -52,12 +64,15 @@ public:
     //检验是否胜利
     bool isWin();
 
+    //重置棋盘
+    void resetGame();
+
     //判断是否有解
     bool startIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step);  //已知起点
     bool endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step);  //已知终点
 
     //保存地图的函数，用于自建地图
-    void saveGame(int level,int step,int x,int y,int direction);
+    void saveGame(bool flag,int level,int step,int x,int y,int direction);
 
     //信息对象
     Data * data ;
