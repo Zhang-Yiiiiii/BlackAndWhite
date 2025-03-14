@@ -9,6 +9,9 @@
 #include <QPainter>
 #include "hexagon.h"
 #include "mydialog.h"
+#include "usermanager.h"
+#include "loginwindow.h"
+#include <QToolTip>
 
 
 QT_BEGIN_NAMESPACE
@@ -27,15 +30,30 @@ public:
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
 
-    //显示选关六边形
+    //关卡按钮数组
     Hexagon *selectBtns[SELECTBTNNUMBER];
+
+    //显示选关六边形
     void showSelectBtn();
 
     //游戏关卡界面
     GameScene * gameScene = nullptr;
 
+    //自建地图函数  buildWay==0:起点建图 buildWay==1:终点建图
+    void selfBuildGame(bool buildWay);
+
     //自建地图的对话框
     myDialog * mydialog;
+
+    //游戏管理员
+    UserManager * usermanager = nullptr;
+
+    //当前用户名和密码
+    QString m_userName;
+    QString m_password;
+
+    //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
+    int verifyUserInfo(QString name,QString password);
 
 
     ~MainScene();

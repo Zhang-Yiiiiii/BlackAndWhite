@@ -13,9 +13,11 @@ SOURCES += \
     gamescene.cpp \
     gridbutton.cpp \
     hexagon.cpp \
+    loginwindow.cpp \
     main.cpp \
     mainscene.cpp \
     mydialog.cpp \
+    ranklist.cpp \
     user.cpp \
     usermanager.cpp
 
@@ -25,14 +27,18 @@ HEADERS += \
     gamescene.h \
     gridbutton.h \
     hexagon.h \
+    loginwindow.h \
     mainscene.h \
     mydialog.h \
+    ranklist.h \
     user.h \
     usermanager.h
 
 FORMS += \
+    loginwindow.ui \
     mainscene.ui \
-    mydialog.ui
+    mydialog.ui \
+    ranklist.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

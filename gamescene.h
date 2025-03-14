@@ -15,13 +15,15 @@
 #include "gridbutton.h"
 #include <iostream>
 #include <sstream>
+#include "usermanager.h"
+#include "ranklist.h"
 
 
 class GameScene : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit GameScene(int gameLevel ,QWidget *parent = nullptr);
+    explicit GameScene(int gameLevel ,UserManager * usermanager,QWidget *parent = nullptr);
 
     //设置返回按钮
     QPushButton * backBtn = nullptr;
@@ -35,11 +37,17 @@ public:
     //显示游戏说明
     void showRule();
 
+    //显示排行榜
+    void showRankList();
+
     //黑白格子
     GridButton * board[20][20];
 
     //显示棋盘
     void showBoard();
+
+    //显示虫子
+    void showBug();
 
     //重写绘图事件
     void paintEvent(QPaintEvent * e) override;
@@ -71,11 +79,15 @@ public:
     bool startIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step);  //已知起点
     bool endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step);  //已知终点
 
-    //保存地图的函数，用于自建地图
-    void saveGame(bool flag,int level,int step,int x,int y,int direction);
+    //保存地图的函数，用于自建地图  buildWay==0:起点建图  buildWay==1：终点建图
+    void saveGame(bool buildWay,int step,int x,int y,int direction);
 
     //信息对象
     Data * data ;
+
+    //用户管理员
+    UserManager * usermanager;
+
 
     //析构函数
     ~GameScene();

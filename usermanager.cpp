@@ -7,7 +7,7 @@ UserManager::UserManager()
     //文件不存在
     if(!ifs.is_open())
     {
-        qDebug()<<"文件不存在";
+        qDebug()<<QString("文件不存在").arg(USERDATAPATH);
 
         this->userNum = 0;
         this->userArray = nullptr;
@@ -22,7 +22,7 @@ UserManager::UserManager()
     ifs>>ch;
     if(ifs.eof())
     {
-        qDebug()<<"文件为空";
+        qDebug()<<QString("文件为空").arg(USERDATAPATH);
 
         this->userNum = 0;
         this->userArray = nullptr;

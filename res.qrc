@@ -27,5 +27,10 @@
         <file>icon/debug3.png</file>
         <file>icon/debug0.png</file>
         <file>icon/debug2.png</file>
+        <file>icon/passwordIcon.png</file>
+        <file>icon/userAccountIcon.png</file>
+        <file>image/loginRobot.jpg</file>
+        <file>image/loginBackground.jpg</file>
+        <file>image/loginWhitePic.png</file>
     </qresource>
 </RCC>

@@ -44,4 +44,13 @@
 /************用户管理配置数据******************/
 #define USERDATAPATH "D:/userData.txt"
 
+
+/************登录界面配置数据******************/
+#define USERACCOUNTICON ":/icon/userAccountIcon.png"
+#define PASSWORDICON ":/icon/passwordIcon.png"
+#define LOGINROBOT ":/image/loginRobot.jpg"
+#define LOGINBACKGROUND ":/image/loginBackground.jpg"
+#define LOGINWIHTEBACKGROUND ":image/loginWhitePic.png"
+
+
 #endif // CONFIG_H

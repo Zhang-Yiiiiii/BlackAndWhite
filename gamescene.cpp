@@ -1,10 +1,15 @@
 #include "gamescene.h"
 
-GameScene::GameScene(int gameLevel ,QWidget *parent)
-    : QMainWindow{parent},gameLevel(gameLevel)
+GameScene::GameScene(int gameLevel ,UserManager * usermanager, QWidget *parent)
+    : QMainWindow{parent},gameLevel(gameLevel),usermanager(usermanager)
 {
+    //设置关闭即释放
+    this->setAttribute(Qt::WA_DeleteOnClose);
+
+    //初始化游戏信息对象
     data = new Data;
 
+    //初始化信息
     for(int i = 0;i<20;i++)
     {
         for(int j = 0;j<20;j++)
@@ -39,8 +44,16 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     QAction * quitAction = startMenu->addAction("退出");
     QAction * saveAction = startMenu->addAction("保存");
 
-    QAction * buildAction = gameMenu->addAction("自建游戏地图");
+    //QAction * buildAction = gameMenu->addAction("自建游戏地图");
     QAction * instructionAction = gameMenu->addAction("说明");
+    QAction * rankAction = gameMenu->addAction("排行榜");
+
+    //连接排行榜按钮
+    connect(rankAction,&QAction::triggered,[=](){
+        this->showRankList();
+    });
+
+
 
     //显示游戏说明
     connect(instructionAction,&QAction::triggered,[=](){
@@ -72,18 +85,14 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
         //判断是否胜利
         if(isWin())
         {
-            qDebug()<<"胜利";
             QMessageBox::about(this,"通过","恭喜你成功通过此关");
             emit changeBack();  //进行返回
-
         }
         else
         {
-            qDebug()<<"失败";
             QMessageBox::about(this,"失败","答案错误，罚时30秒");
             this->resetGame(); //重置棋盘
         }
-        std::cout.flush();
     });
 
 
@@ -115,43 +124,12 @@ GameScene::GameScene(int gameLevel ,QWidget *parent)
     stepLabel->setFont(stepLabelFont);
 
 
-    // //设置打印按钮  测试
-    // QPushButton * printBtn = new QPushButton(this);
-    // printBtn->setText("打 印");
-    // printBtn->setFont(QFont("华文新魏",15));
-    // printBtn->setFixedSize(120,50);
-    // printBtn->move(BACKGROUDWIDTH-printBtn->width(),BACKGROUDHEIGHT-printBtn->height());
-    // connect(printBtn,&QPushButton::clicked,[=](){
-    //     for(int i=0;i<20;i++)
-    //     {
-    //         for(int j=0;j<20;j++)
-    //         {
-    //             qDebug()<<gameArray[i][j];
-    //         }
-    //         qDebug()<<"\n";
-    //     }
-    // });
-
-
     //显示棋盘
     showBoard();
 
-
     //显示虫子
-    QPushButton * bugBtn = new QPushButton(this);
-    bugBtn->move(BOARDPOSX+bugPos.y()*(GRIDSIZE + 1),BOARDPOSY+bugPos.x()*(GRIDSIZE + 1));
-    QString pixStr = QString(BUGPATH).arg(bugDir);
-    bugPix.load(pixStr);
-    bugBtn->setFixedSize(bugPix.size());
-    bugBtn->setIconSize(bugPix.size());
-    bugBtn->setIcon(QIcon(bugPix));
-    bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
-    bugBtn->setEnabled(false);  //设置不能点击
-    bugBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
+    showBug();
 
-
-    //判断是否可解 并打印答案
-    //endIsSolvable(gameArray,bugPos,bugDir,gameStep);
 }
 
 //显示游戏说明
@@ -159,10 +137,9 @@ void GameScene::showRule()
 {
     std::ifstream ifs(RULEPATH);
 
-
     // 打开文件
     if (!ifs.is_open()) {
-        qDebug() << "无法打开文件：" << RULEPATH;
+        QMessageBox::about(this,"通知",QString("无法打开文件").arg(RULEPATH));
         return;
     }
 
@@ -176,8 +153,15 @@ void GameScene::showRule()
     // 将 stringstream 的内容转换为 QString
     QString fileContent = QString::fromStdString(buffer.str());
 
-
     QMessageBox::about(this,"说明",fileContent);
+}
+
+//显示排行榜
+void GameScene::showRankList()
+ {
+    RankList * rankWindow = new RankList(this->usermanager->rankList,this);
+    rankWindow->move(20,70);
+    rankWindow->show();
 
 }
 
@@ -213,8 +197,25 @@ void GameScene::showBoard()
     }
 }
 
+//显示虫子
+void GameScene::showBug()
+{
+    QPushButton * bugBtn = new QPushButton(this);
+
+    //虫子所在坐标轴与窗口长宽不对应
+    bugBtn->move(BOARDPOSX+bugPos.y()*(GRIDSIZE + 1),BOARDPOSY+bugPos.x()*(GRIDSIZE + 1));
+    QString pixStr = QString(BUGPATH).arg(bugDir);
+    bugPix.load(pixStr);
+    bugBtn->setFixedSize(bugPix.size());
+    bugBtn->setIconSize(bugPix.size());
+    bugBtn->setIcon(QIcon(bugPix));
+    bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
+    bugBtn->setEnabled(false);  //设置不能点击
+    bugBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
+}
+
 //重写绘图事件
-void GameScene::paintEvent(QPaintEvent *e)
+void GameScene::paintEvent(QPaintEvent *)
 {
     //实例化画家
     QPainter painter(this);
@@ -224,7 +225,6 @@ void GameScene::paintEvent(QPaintEvent *e)
     QPixmap pix;
     pix.load(BACKGROUDPATH);
     painter.drawPixmap(0,0,pix);
-
 }
 
 //判断是否胜利
@@ -262,7 +262,11 @@ void GameScene::resetGame()
 bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, int step)
 {
     bool gameArr[20][20];
-    int totalStep = step;
+    int tempStep = step;
+
+    //起点
+    int x = pos.x();
+    int y = pos.y();
 
     //拷贝数组
     for(int i = 0;i < 20; i++)
@@ -273,17 +277,12 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
         }
     }
 
-    //起点
-    int x = pos.x();
-    int y = pos.y();
 
     //模拟前进过程
     // 1 向前走一步 step--
     // 2 根据所在位置的格子颜色改变方向 黑色左转 白色右转
     // 3 改变前一个格子颜色
-
-
-    while(totalStep--)
+    while(tempStep--)
     {
         //改变前一格颜色
         gameArr[x][y] = !gameArr[x][y];
@@ -325,7 +324,6 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
         }
     }
 
-
     //将结果传给data
     for(int i=0;i<20;i++)
     {
@@ -348,8 +346,11 @@ bool GameScene::startIsSolvable(bool gameArray[][20], QPoint pos, int bugDir, in
 bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int step)  //棋盘 虫子位置 方向 步数
 {
     bool gameArr[20][20];
-    int totalStep = step;
+    int tempStep = step;
     int dir = bugDir;
+
+    int x = pos.x();
+    int y = pos.y();
 
     //拷贝数组
     for(int i = 0;i < 20; i++)
@@ -360,18 +361,14 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
         }
     }
 
-    int x = pos.x();
-    int y = pos.y();
 
     //模拟后退过程
     // 1 将最后一个格子改变颜色 方便统一操作
     // 2 根据所在位置的格子颜色改变方向 黑色左转 白色右转 （黑色意味着之前是白色，当时右转，现在左转回来）
     // 3 后退一步，前一步格子颜色改变 step--
-
     gameArr[x][y] = !gameArr[x][y]; //改变最后一格颜色
 
-
-    while(totalStep--)
+    while(tempStep--)
     {
         if(gameArr[x][y])  //白色
         {
@@ -433,11 +430,11 @@ bool GameScene::endIsSolvable(bool gameArray[][20],QPoint pos,int bugDir,int ste
 }
 
 
-//保存自建地图 flag==0：起点建图  flag==1：终点建图
-void GameScene::saveGame(bool flag,int level,int step,int x,int y,int direction)
+//保存自建地图 buildWay==0：起点建图  buildWay==1：终点建图
+void GameScene::saveGame(bool buildWay,int step,int x,int y,int direction)
 {
     //判断是否可解 并且保存地图
-    if(flag == 0) //起点建图
+    if(buildWay == 0) //起点建图
     {
         if(!startIsSolvable(this->gameArray,QPoint(x,y),direction,step))  //不可解
         {
@@ -453,7 +450,6 @@ void GameScene::saveGame(bool flag,int level,int step,int x,int y,int direction)
             return;
         }
     }
-
     //进行返回操作
     emit changeBack();
 }
@@ -461,8 +457,8 @@ void GameScene::saveGame(bool flag,int level,int step,int x,int y,int direction)
 
 GameScene::~GameScene()
 {
-
     //删除数据对象
     delete data;
     data = nullptr;
+
 }

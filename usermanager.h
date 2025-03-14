@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QMap>
 #include <algorithm>
+#include <QMessageBox>
 
 class UserManager
 {
