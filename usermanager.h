@@ -47,6 +47,9 @@ public:
     //查找用户
     void findUser();
 
+    //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
+    int verifyUserInfo(QString name,QString password);
+
 };
 
 #endif // USERMANAGER_H

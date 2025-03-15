@@ -35,40 +35,17 @@ MainScene::MainScene(QWidget *parent)
         exit(0);
     });
 
+    //登录用户
+    connect(this->ui->actionLogin,&QAction::triggered,[=](){
+        this->userLogin();
+    });
+
 
     //初始化用户管理员
     this->usermanager = new UserManager;
 
     //显示选关六边形
     showSelectBtn();
-
-    //登录对话框
-    LoginWindow * loginWindow = new LoginWindow;
-    loginWindow->setWindowIcon(QIcon(MYICON));
-    loginWindow->show();
-
-    //获取登录信息
-    connect(loginWindow,&LoginWindow::userConfirmed,[=](){
-        int ret = this->verifyUserInfo(loginWindow->userName,loginWindow->password);
-        if(ret == 3) //登录成功
-        {
-            QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
-            QToolTip::showText(pos,"登录成功",this,this->rect(),5000);
-        }
-        else if(ret == 2) //密码错误
-        {
-            QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
-            QToolTip::showText(pos,"密码错误",this,this->rect(),5000);
-        }
-        else //用户不存在
-        {
-            QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
-            QToolTip::showText(pos,"用户不存在",this,this->rect(),5000);
-        }
-    });
-
-
-
 }
 
 
@@ -208,26 +185,55 @@ void MainScene::selfBuildGame(bool buildWay)
     });
 }
 
-//验证用户信息
-int MainScene::verifyUserInfo(QString name, QString password)
+//用户登录
+void MainScene::userLogin()
 {
-    //返回值 1：不存在用户 2：密码错误 3：登录成功
-    for(int i=0;i<this->usermanager->userNum;i++)
-    {
-        QString tempName = this->usermanager->userArray[i]->userName;
-        QString tempPwd = this->usermanager->userArray[i]->password;
-        if(tempName == name && tempPwd ==password)
-        {
-            return 3;  //成功找到
-        }
-        else if(tempName == name && tempPwd != password)
-        {
-            return 2;  //密码错误
-        }
-    }
+    //登录对话框
+    LoginWindow * loginWindow = new LoginWindow();
+    loginWindow->setWindowIcon(QIcon(MYICON));
+    loginWindow->move((this->width()-loginWindow->width())/2,(this->height()-loginWindow->height())/2);
+    loginWindow->show();
+    this->hide();
 
-    return 1;
+
+    //获取登录信息
+    connect(loginWindow,&LoginWindow::userConfirmed,[=]()mutable{
+        int ret = this->usermanager->verifyUserInfo(loginWindow->userName,loginWindow->password);
+
+        //提示信息所在位置
+        QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
+
+        if(ret == 3) //登录成功
+        {
+            //显示提示信息
+            QToolTip::showText(pos,"登录成功",this,this->rect(),5000);
+
+            //记录用户信息
+            this->m_userName = loginWindow->userName;
+            this->m_password = loginWindow->password;
+
+            this->show();
+            delete loginWindow;
+            loginWindow = nullptr;
+        }
+        else if(ret == 2) //密码错误
+        {
+            //显示提示信息
+            QToolTip::showText(pos,"密码错误",this,this->rect(),5000);
+        }
+        else //用户不存在
+        {
+            //显示提示信息
+            QToolTip::showText(pos,"用户不存在",this,this->rect(),5000);
+        }
+    });
 }
+
+void MainScene::userRegister()
+{
+
+}
+
 
 MainScene::~MainScene()
 {

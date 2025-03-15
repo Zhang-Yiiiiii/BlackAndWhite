@@ -95,7 +95,7 @@ public:
 
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName("horizontalLayout_5");
-        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_5->addItem(horizontalSpacer_5);
 
@@ -103,7 +103,7 @@ public:
         labelLogin->setObjectName("labelLogin");
         sizePolicy.setHeightForWidth(labelLogin->sizePolicy().hasHeightForWidth());
         labelLogin->setSizePolicy(sizePolicy);
-        labelLogin->setMinimumSize(QSize(120, 30));
+        labelLogin->setMinimumSize(QSize(180, 30));
         QFont font;
         font.setFamilies({QString::fromUtf8("Arial")});
         font.setPointSize(25);
@@ -113,7 +113,7 @@ public:
 
         horizontalLayout_5->addWidget(labelLogin);
 
-        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_5->addItem(horizontalSpacer_6);
 
@@ -159,7 +159,7 @@ public:
 
         horizontalLayout_4->addLayout(horizontalLayout);
 
-        horizontalSpacer_23 = new QSpacerItem(10, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_23 = new QSpacerItem(20, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer_23);
 
@@ -205,7 +205,7 @@ public:
 
         horizontalLayout_3->addLayout(horizontalLayout_2);
 
-        horizontalSpacer_4 = new QSpacerItem(10, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_4 = new QSpacerItem(20, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_4);
 
@@ -229,6 +229,8 @@ public:
         registerButton->setMinimumSize(QSize(85, 25));
         registerButton->setMaximumSize(QSize(85, 25));
         QFont font2;
+        font2.setFamilies({QString::fromUtf8("Arial")});
+        font2.setPointSize(14);
         font2.setWeight(QFont::Medium);
         registerButton->setFont(font2);
         registerButton->setAutoFillBackground(true);
@@ -258,7 +260,9 @@ public:
         loginButton->setSizePolicy(sizePolicy);
         loginButton->setMinimumSize(QSize(100, 30));
         QFont font3;
-        font3.setPointSize(18);
+        font3.setFamilies({QString::fromUtf8("Arial")});
+        font3.setPointSize(23);
+        font3.setBold(true);
         loginButton->setFont(font3);
         loginButton->setIconSize(QSize(16, 16));
 

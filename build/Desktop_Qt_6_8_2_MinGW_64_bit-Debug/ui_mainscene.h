@@ -27,6 +27,7 @@ public:
     QAction *actioninstruction;
     QAction *actionstartingPoint;
     QAction *actiondestination;
+    QAction *actionLogin;
     QWidget *centralwidget;
     QMenuBar *menubar;
     QMenu *menu;
@@ -49,12 +50,14 @@ public:
         actionstartingPoint->setObjectName("actionstartingPoint");
         actiondestination = new QAction(MainScene);
         actiondestination->setObjectName("actiondestination");
+        actionLogin = new QAction(MainScene);
+        actionLogin->setObjectName("actionLogin");
         centralwidget = new QWidget(MainScene);
         centralwidget->setObjectName("centralwidget");
         MainScene->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainScene);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 30));
+        menubar->setGeometry(QRect(0, 0, 800, 21));
         menubar->setStyleSheet(QString::fromUtf8("font: 700 12pt \"Microsoft YaHei UI\";\n"
 "background-color: rgba(217, 217, 217, 150);\n"
 "color: rgb(66, 66, 66);"));
@@ -73,6 +76,7 @@ public:
         menubar->addAction(menu_3->menuAction());
         menu->addAction(actionquit);
         menu->addAction(actionsave);
+        menu->addAction(actionLogin);
         menu_2->addAction(menu_4->menuAction());
         menu_2->addAction(actioninstruction);
         menu_4->addAction(actionstartingPoint);
@@ -92,6 +96,7 @@ public:
         actionstartingPoint->setText(QCoreApplication::translate("MainScene", "\350\265\267\347\202\271\345\273\272\345\233\276", nullptr));
         actionstartingPoint->setIconText(QCoreApplication::translate("MainScene", "\350\265\267\347\202\271\345\273\272\345\233\276", nullptr));
         actiondestination->setText(QCoreApplication::translate("MainScene", "\347\273\210\347\202\271\345\273\272\345\233\276", nullptr));
+        actionLogin->setText(QCoreApplication::translate("MainScene", "\347\231\273\345\275\225", nullptr));
         menu->setTitle(QCoreApplication::translate("MainScene", "\345\274\200\345\247\213", nullptr));
         menu_2->setTitle(QCoreApplication::translate("MainScene", "\346\270\270\346\210\217", nullptr));
         menu_4->setTitle(QCoreApplication::translate("MainScene", "\350\207\252\345\273\272\346\270\270\346\210\217\345\234\260\345\233\276", nullptr));

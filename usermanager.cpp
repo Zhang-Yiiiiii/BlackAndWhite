@@ -183,3 +183,24 @@ void UserManager::findUser()
 {
 
 }
+
+int UserManager::verifyUserInfo(QString name, QString password)
+{
+    //验证用户信息
+
+    //返回值 1：不存在用户 2：密码错误 3：登录成功
+    for(int i=0;i<this->userNum;i++)
+    {
+        QString tempName = this->userArray[i]->userName;
+        QString tempPwd = this->userArray[i]->password;
+        if(tempName == name && tempPwd ==password)
+        {
+            return 3;  //成功找到
+        }
+        else if(tempName == name && tempPwd != password)
+        {
+            return 2;  //密码错误
+        }
+    }
+    return 1;
+}

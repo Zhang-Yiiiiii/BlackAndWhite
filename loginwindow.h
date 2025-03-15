@@ -7,6 +7,7 @@
 #include <QPainter>
 
 
+
 namespace Ui {
 class LoginWindow;
 }
@@ -34,6 +35,15 @@ signals:
     void userConfirmed();  //用户点击登录按钮
 
     void userRegistered(); //用户点击注册按钮
+
+private slots:
+    void loginAccount();  //用户点击登录按钮
+
+    void registerAccount();  //用户点击确定注册按钮
+
+    void back();  //用户点击返回按钮
+
+    void requestRegister();  //用户点击请求注册按钮
 
 private:
     Ui::LoginWindow *ui;

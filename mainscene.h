@@ -52,8 +52,11 @@ public:
     QString m_userName;
     QString m_password;
 
-    //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
-    int verifyUserInfo(QString name,QString password);
+    //用户登录
+    void userLogin();
+
+    //用户注册
+    void userRegister();
 
 
     ~MainScene();
