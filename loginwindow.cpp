@@ -48,10 +48,10 @@ LoginWindow::LoginWindow(QWidget *parent)
     // 置于顶层
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
-    // 登录/确定注册 按钮的点击
+    // 登录 按钮的点击
     connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::loginAccount);
 
-    //请求注册按钮的点击
+    //请求注册 按钮的点击
     connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::requestRegister);
 
 }
@@ -110,6 +110,8 @@ void LoginWindow::back()
     connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::loginAccount);
     //监听请求注册按钮的连接
     connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::requestRegister);
+    //将密码显示方式改成密码模式
+    this->ui->passwdEdit->setEchoMode(QLineEdit::Password);
 
 }
 
@@ -128,4 +130,6 @@ void LoginWindow::requestRegister()
     connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::registerAccount);
     //监听返回按钮的点击
     connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::back);
+    //将密码显示方式改成普通
+    this->ui->passwdEdit->setEchoMode(QLineEdit::Normal);
 }

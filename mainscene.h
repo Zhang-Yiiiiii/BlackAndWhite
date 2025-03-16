@@ -12,7 +12,7 @@
 #include "usermanager.h"
 #include "loginwindow.h"
 #include <QToolTip>
-
+#include <QLayout>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -49,8 +49,8 @@ public:
     UserManager * usermanager = nullptr;
 
     //当前用户名和密码
-    QString m_userName;
-    QString m_password;
+    QString m_userName = "";
+    QString m_password = "";
 
     //用户登录
     void userLogin();

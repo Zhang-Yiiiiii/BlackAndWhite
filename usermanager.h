@@ -45,10 +45,15 @@ public:
     QVector<std::pair<QString,int>> rankList;
 
     //查找用户
-    void findUser();
+    User* findUser(QString userName);
+
+    //更新用户时间
+    void updatePassTime(QString username ,int totalTime, int level);
 
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
     int verifyUserInfo(QString name,QString password);
+
+    ~UserManager();
 
 };
 

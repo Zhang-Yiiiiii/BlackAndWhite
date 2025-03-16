@@ -177,6 +177,7 @@ debug/qrc_res.cpp: ../../res.qrc \
 		../../icon/link.png \
 		../../icon/debug0.png \
 		../../icon/debug2.png \
+		../../icon/timeIcon.png \
 		../../icon/debug3.png \
 		../../icon/passwordIcon.png \
 		../../icon/black.png \
@@ -453,6 +454,11 @@ debug/moc_gamescene.cpp: ../../gamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgridlayout.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListWidget \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QElapsedTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\gamescene.h -o debug\moc_gamescene.cpp
@@ -1324,6 +1330,11 @@ debug/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgridlayout.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListWidget \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QElapsedTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../mydialog.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
 		../../loginwindow.h \
@@ -2171,7 +2182,12 @@ debug/gamescene.o: ../../gamescene.cpp ../../gamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlayoutitem.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgridlayout.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListWidget \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QElapsedTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\gamescene.o ..\..\gamescene.cpp
 
 debug/gridbutton.o: ../../gridbutton.cpp ../../gridbutton.h \
@@ -2799,7 +2815,8 @@ debug/loginwindow.o: ../../loginwindow.cpp ../../loginwindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qpushbutton.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QSpacerItem \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\loginwindow.o ..\..\loginwindow.cpp
 
 debug/main.o: ../../main.cpp ../../mainscene.h \
@@ -3060,6 +3077,11 @@ debug/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgridlayout.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListWidget \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QElapsedTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../mydialog.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
 		../../loginwindow.h \
@@ -3325,6 +3347,11 @@ debug/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgridlayout.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListWidget \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistwidget.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QLayout \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QElapsedTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../mydialog.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
 		../../loginwindow.h \
@@ -3873,7 +3900,12 @@ debug/user.o: ../../user.cpp ../../user.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qalgorithms.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qstringmatcher.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qshareddata.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qshareddata_impl.h
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qshareddata_impl.h \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QSize \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qsize.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qmargins.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/q23utility.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\user.o ..\..\user.cpp
 
 debug/usermanager.o: ../../usermanager.cpp ../../usermanager.h \

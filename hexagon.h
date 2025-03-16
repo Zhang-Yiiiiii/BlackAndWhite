@@ -14,6 +14,7 @@
 #include <QRect>
 
 
+
 class Hexagon : public QPushButton
 {
     Q_OBJECT

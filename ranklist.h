@@ -9,6 +9,9 @@
 #include <QListWidget>
 #include <QVector>
 #include <QPushButton>
+#include <QTableWidget>
+#include <QHeaderView>
+
 
 namespace Ui {
 class RankList;

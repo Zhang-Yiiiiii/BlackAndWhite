@@ -161,11 +161,15 @@ void UserManager::userSort(int level)
     QString name;
     int record;
 
+    rankList.clear();
+
     //将指定关卡的数据放入容器
     for(int i=0;i<userNum;i++)
     {
         name = this->userArray[i]->userName;
         record = this->userArray[i]->gameRecord[level];
+
+        if(record == -1) continue; //用户没有通关
 
         this->rankList.push_back(std::pair<QString,int>(name,record));
     }
@@ -179,9 +183,44 @@ void UserManager::userSort(int level)
     });
 }
 
-void UserManager::findUser()
+User * UserManager::findUser(QString userName)
 {
+    User * user = nullptr;
 
+    for(int i=0;i<userNum;i++)
+    {
+        if(userArray[i]->userName == userName)
+        {
+            user = userArray[i];
+        }
+    }
+
+    return user;
+}
+
+void UserManager::updatePassTime(QString username, int totalTime, int level)
+{
+    User * user = findUser(username);
+
+    //没有登录 或者没有找到用户
+    if(user == nullptr)
+    {
+        return;
+    }
+
+    int minTotalTime = 0;
+
+    if(user->gameRecord[level] == -1)  //用户是第一次通关
+    {
+        minTotalTime = totalTime;
+    }
+    else
+    {
+        minTotalTime = std::min(user->gameRecord[level],totalTime);
+    }
+
+    user->gameRecord[level] = minTotalTime;
+    this->save();
 }
 
 int UserManager::verifyUserInfo(QString name, QString password)
@@ -202,5 +241,10 @@ int UserManager::verifyUserInfo(QString name, QString password)
             return 2;  //密码错误
         }
     }
-    return 1;
+    return 1;  //未找到用户
+}
+
+UserManager::~UserManager()
+{
+    this->save();
 }

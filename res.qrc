@@ -32,5 +32,6 @@
         <file>image/loginRobot.jpg</file>
         <file>image/loginBackground.jpg</file>
         <file>image/loginWhitePic.png</file>
+        <file>icon/timeIcon.png</file>
     </qresource>
 </RCC>

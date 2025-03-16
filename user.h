@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QMap>
+#include "config.h"
 
 class User
 {

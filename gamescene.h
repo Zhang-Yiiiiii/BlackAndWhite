@@ -17,13 +17,17 @@
 #include <sstream>
 #include "usermanager.h"
 #include "ranklist.h"
+#include <QLayout>
+#include <QElapsedTimer>
+#include <QTimer>
+
 
 
 class GameScene : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit GameScene(int gameLevel ,UserManager * usermanager,QWidget *parent = nullptr);
+    explicit GameScene(int gameLevel ,QString userName, UserManager * usermanager,QWidget *parent = nullptr);
 
     //设置返回按钮
     QPushButton * backBtn = nullptr;
@@ -34,11 +38,17 @@ public:
     //设置提交按钮
     QPushButton * submitBtn = nullptr;
 
+    //用户名
+    QString userName;
+
     //显示游戏说明
     void showRule();
 
     //显示排行榜
     void showRankList();
+
+    //更新排行榜
+    void updateRankList();
 
     //黑白格子
     GridButton * board[20][20];
@@ -88,6 +98,26 @@ public:
     //用户管理员
     UserManager * usermanager;
 
+    //时间label
+    QLabel * timeLabel;
+
+    //罚时label
+    QLabel * timePenaltyLabel;
+
+    //罚时的秒数
+    int penaltyTime = 0;
+
+    //定时器
+    QElapsedTimer * timer;
+
+    //控制显示时间
+    QTimer * showTimer;
+
+    //保存用户通关之后的时间
+    void saveTotalTime();
+
+
+
 
     //析构函数
     ~GameScene();
@@ -96,6 +126,12 @@ signals:
 
     //返回信号
     void changeBack();
+
+public slots:
+
+    //更新时间
+    void updateTime();
+
 };
 
 

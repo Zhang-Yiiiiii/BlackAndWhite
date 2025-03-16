@@ -40,7 +40,8 @@ struct qt_meta_tag_ZN9GameSceneE_t {};
 static constexpr auto qt_meta_stringdata_ZN9GameSceneE = QtMocHelpers::stringData(
     "GameScene",
     "changeBack",
-    ""
+    "",
+    "updateTime"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -52,7 +53,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9GameSceneE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -60,9 +61,15 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9GameSceneE[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   20,    2, 0x06,    1 /* Public */,
+       1,    0,   26,    2, 0x06,    1 /* Public */,
+
+ // slots: name, argc, parameters, tag, flags, initial metatype offsets
+       3,    0,   27,    2, 0x0a,    2 /* Public */,
 
  // signals: parameters
+    QMetaType::Void,
+
+ // slots: parameters
     QMetaType::Void,
 
        0        // eod
@@ -78,6 +85,8 @@ Q_CONSTINIT const QMetaObject GameScene::staticMetaObject = { {
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<GameScene, std::true_type>,
         // method 'changeBack'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'updateTime'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -89,6 +98,7 @@ void GameScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->changeBack(); break;
+        case 1: _t->updateTime(); break;
         default: ;
         }
     }
@@ -123,14 +133,14 @@ int GameScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

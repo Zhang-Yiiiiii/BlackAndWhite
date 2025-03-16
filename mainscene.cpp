@@ -50,7 +50,7 @@ MainScene::MainScene(QWidget *parent)
 
 
 //重写绘图事件
-void MainScene::paintEvent(QPaintEvent *e)
+void MainScene::paintEvent(QPaintEvent *)
 {
     //实例化画家
     QPainter painter(this);
@@ -58,6 +58,7 @@ void MainScene::paintEvent(QPaintEvent *e)
 
     //加载背景
     QPixmap pix;
+    pix = pix.scaled(this->size(),Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     pix.load(BACKGROUDPATH);
     painter.drawPixmap(0,0,pix);
 
@@ -66,15 +67,18 @@ void MainScene::paintEvent(QPaintEvent *e)
 //显示选关六边形
 void MainScene::showSelectBtn()
 {
+    QVBoxLayout * layout = new QVBoxLayout(this);
     //初始化六边形按钮
     for(int i=0;i<SELECTBTNNUMBER;i++)
     {
         selectBtns[i] = new Hexagon(i);
         selectBtns[i]->setParent(this);
 
+        layout->addWidget(selectBtns[i]);
+
         //监听六边形被点击的信号  进入游戏场景
         connect(selectBtns[i],&Hexagon::beClicked,[=](int gameLevel){
-            gameScene = new GameScene(gameLevel,usermanager,this);
+            gameScene = new GameScene(gameLevel,m_userName,usermanager,this);
             this->hide();
             gameScene->setGeometry(this->geometry());
             gameScene->show();
@@ -135,6 +139,8 @@ void MainScene::showSelectBtn()
         }
         k++;
     }
+
+    setLayout(layout);
 }
 
 //自建地图
@@ -152,7 +158,7 @@ void MainScene::selfBuildGame(bool buildWay)
         bugDirection = mydialog->num5;
 
         //进入游戏场景 由玩家自行改变地图
-        gameScene = new GameScene(gameLevel,this->usermanager,this);
+        gameScene = new GameScene(gameLevel,m_userName, this->usermanager,this);
         this->hide();
         gameScene->setGeometry(this->geometry());
         gameScene->show();
@@ -192,8 +198,14 @@ void MainScene::userLogin()
     LoginWindow * loginWindow = new LoginWindow();
     loginWindow->setWindowIcon(QIcon(MYICON));
     loginWindow->move((this->width()-loginWindow->width())/2,(this->height()-loginWindow->height())/2);
-    loginWindow->show();
     this->hide();
+    loginWindow->show();
+
+    //关闭对话框时重新显示主页面
+    connect(loginWindow,&QWidget::destroyed,this,[=](){
+        this->show();
+        qDebug()<<"login Window shut down";
+    });
 
 
     //获取登录信息
@@ -227,6 +239,35 @@ void MainScene::userLogin()
             QToolTip::showText(pos,"用户不存在",this,this->rect(),5000);
         }
     });
+
+    //用户注册
+    connect(loginWindow,&LoginWindow::userRegistered,this,[=]() mutable {
+        int ret = this->usermanager->verifyUserInfo(loginWindow->userName,loginWindow->password);
+
+        //提示信息所在位置
+        QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
+
+        if(ret == 3 || ret == 2) //用户存在
+        {
+            //显示提示信息
+            QToolTip::showText(pos,"用户已存在",this,this->rect(),5000);
+        }
+        else //注册成功
+        {
+            this->m_userName = loginWindow->userName;
+            this->m_password = loginWindow->password;
+
+            //显示提示信息
+            QToolTip::showText(pos,"注册成功，自动登录",this,this->rect(),5000);
+
+            this->show();
+            delete loginWindow;
+            loginWindow = nullptr;
+
+            //添加用户信息
+            this->usermanager->addUser(this->m_userName,this->m_password);
+        }
+    });
 }
 
 void MainScene::userRegister()
@@ -238,4 +279,7 @@ void MainScene::userRegister()
 MainScene::~MainScene()
 {
     delete ui;
+
+    delete usermanager;
+    usermanager = nullptr;
 }

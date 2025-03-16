@@ -9,7 +9,7 @@ Hexagon::Hexagon(int id ,QPushButton * parent):
     //设置按钮大小
     this->setFixedSize(pix.size());
     //设置边框为不规则
-    this->setStyleSheet("QPushButton{border:0px}");
+    this->setStyleSheet("QPushButton{border:0px; aspect-ratio: 1}");
     //设置图标
     this->setIcon(pix);
     //设置图标大小

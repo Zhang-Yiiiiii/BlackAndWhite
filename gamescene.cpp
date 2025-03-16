@@ -1,10 +1,55 @@
 #include "gamescene.h"
 
-GameScene::GameScene(int gameLevel ,UserManager * usermanager, QWidget *parent)
-    : QMainWindow{parent},gameLevel(gameLevel),usermanager(usermanager)
+GameScene::GameScene(int gameLevel , QString userName, UserManager * usermanager, QWidget *parent)
+    : QMainWindow{parent},gameLevel(gameLevel),usermanager(usermanager),userName(userName)
 {
+    //对本关的用户进行排序
+    usermanager->userSort(gameLevel);
+
     //设置关闭即释放
     this->setAttribute(Qt::WA_DeleteOnClose);
+
+    //初始化定时器
+    showTimer = new QTimer(this);
+    showTimer->start(500);
+
+    timer = new QElapsedTimer;
+    timer->start();
+
+    //监听showTimer对用户通关时间进行更新
+    connect(showTimer,&QTimer::timeout,this,&GameScene::updateTime);
+
+
+
+    //显示用时的label
+    timeLabel = new QLabel(this);
+    timeLabel->setFixedWidth(200);
+    timeLabel->setText("所用时间：00:00:00");
+    timeLabel->move(150,400);
+    timeLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                             "font-weight: bold; "
+                             "font-size: 20px; color: #333333; "
+                             "background-color: #ffffff; "
+                             "border: 2px solid #ffffff; "
+                             "border-radius: 10px; }");
+
+    timeLabel->setAlignment(Qt::AlignCenter);
+
+    //罚时label
+    timePenaltyLabel = new QLabel(this);
+    timePenaltyLabel->setFixedWidth(200);
+    timePenaltyLabel->setText("所罚时间：00:00:00");
+    timePenaltyLabel->move(150,400 + timeLabel->height() + 10);
+    timePenaltyLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                             "font-weight: bold; "
+                             "font-size: 20px; color: #333333; "
+                             "background-color: #ffffff; "
+                             "border: 2px solid #ffffff; "
+                             "border-radius: 10px; }");
+
+    timePenaltyLabel->setAlignment(Qt::AlignCenter);
+
+
 
     //初始化游戏信息对象
     data = new Data;
@@ -14,7 +59,6 @@ GameScene::GameScene(int gameLevel ,UserManager * usermanager, QWidget *parent)
     {
         for(int j = 0;j<20;j++)
         {
-
             gameArray[i][j] = data->gameArray[gameLevel][i][j];
             ansArray[i][j] = data->ansArray[gameLevel][i][j];
         }
@@ -86,12 +130,15 @@ GameScene::GameScene(int gameLevel ,UserManager * usermanager, QWidget *parent)
         if(isWin())
         {
             QMessageBox::about(this,"通过","恭喜你成功通过此关");
+            saveTotalTime();
             emit changeBack();  //进行返回
         }
         else
         {
             QMessageBox::about(this,"失败","答案错误，罚时30秒");
             this->resetGame(); //重置棋盘
+
+            this->penaltyTime+=30; //罚时增加
         }
     });
 
@@ -103,7 +150,7 @@ GameScene::GameScene(int gameLevel ,UserManager * usermanager, QWidget *parent)
     resetBtn->setFixedSize(120,50);
     resetBtn->move(BACKGROUDWIDTH-resetBtn->width(),BACKGROUDHEIGHT- 3 * resetBtn->height());
     connect(resetBtn,&QPushButton::clicked,[=](){
-        int ret = QMessageBox::question(this,"问题","是否确定重置？重置将会被惩罚30秒");
+        int ret = QMessageBox::question(this,"问题","是否确定重置？");
         if(ret == QMessageBox::Yes)
         {
             for(int i = 0;i<20;i++)
@@ -454,6 +501,33 @@ void GameScene::saveGame(bool buildWay,int step,int x,int y,int direction)
     emit changeBack();
 }
 
+//保存总用时
+void GameScene::saveTotalTime()
+{
+    //计算总时间
+    int totalTime = timer->elapsed()/1000;
+    totalTime += penaltyTime;
+
+    //更新时间
+    usermanager->updatePassTime(this->userName,totalTime,this->gameLevel);
+}
+
+//更新时间
+void GameScene::updateTime()
+{
+    int secs = timer->elapsed() / 1000;
+    int mins = secs / 60;
+    int hours = mins / 60;
+    secs %= 60;
+    mins %= 60;
+    timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+
+    secs = this->penaltyTime % 60;
+    mins = penaltyTime/60;
+    mins = mins %=60;
+    hours = mins / 60;
+    timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
+}
 
 GameScene::~GameScene()
 {
@@ -461,4 +535,5 @@ GameScene::~GameScene()
     delete data;
     data = nullptr;
 
+    delete timer;
 }
