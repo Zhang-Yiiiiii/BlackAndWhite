@@ -49,10 +49,10 @@ LoginWindow::LoginWindow(QWidget *parent)
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     // 登录 按钮的点击
-    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::loginAccount);
+    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::onLoginAccount);
 
     //请求注册 按钮的点击
-    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::requestRegister);
+    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::onRequestRegister);
 
 }
 
@@ -80,21 +80,31 @@ LoginWindow::~LoginWindow()
     delete ui;
 }
 
-void LoginWindow::loginAccount()
+QString LoginWindow::getUserName()
 {
-    this->userName = this->ui->userNameEdit->text();
-    this->password = this->ui->passwdEdit->text();
+    return this->m_userName;
+}
+
+QString LoginWindow::getUserPassword()
+{
+    return this->m_password;
+}
+
+void LoginWindow::onLoginAccount()
+{
+    this->m_userName = this->ui->userNameEdit->text();
+    this->m_password = this->ui->passwdEdit->text();
     emit this->userConfirmed();
 }
 
-void LoginWindow::registerAccount()
+void LoginWindow::onRegisterAccount()
 {
-    this->userName = this->ui->userNameEdit->text();
-    this->password = this->ui->passwdEdit->text();
+    this->m_userName = this->ui->userNameEdit->text();
+    this->m_password = this->ui->passwdEdit->text();
     emit this->userRegistered();
 }
 
-void LoginWindow::back()
+void LoginWindow::onBack()
 {
     this->ui->registerButton->setText("注册");
     this->ui->labelLogin->setText("LOGIN");
@@ -103,19 +113,19 @@ void LoginWindow::back()
 
 
     // 取消确定注册的按钮点击
-    disconnect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::registerAccount);
+    disconnect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::onRegisterAccount);
     //取消返回按钮的点击
-    disconnect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::back);
+    disconnect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::onBack);
     //监听登录按钮连接
-    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::loginAccount);
+    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::onLoginAccount);
     //监听请求注册按钮的连接
-    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::requestRegister);
+    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::onRequestRegister);
     //将密码显示方式改成密码模式
     this->ui->passwdEdit->setEchoMode(QLineEdit::Password);
 
 }
 
-void LoginWindow::requestRegister()
+void LoginWindow::onRequestRegister()
 {
     this->ui->registerButton->setText("返回");
     this->ui->labelLogin->setText("REGISTER");
@@ -123,13 +133,13 @@ void LoginWindow::requestRegister()
     this->setWindowTitle("注册");
 
     //取消登录按钮连接
-    disconnect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::loginAccount);
+    disconnect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::onLoginAccount);
     //取消请求注册按钮的连接
-    disconnect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::requestRegister);
+    disconnect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::onRequestRegister);
     // 监听确定注册的按钮点击
-    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::registerAccount);
+    connect(this->ui->loginButton,&QPushButton::clicked,this,&LoginWindow::onRegisterAccount);
     //监听返回按钮的点击
-    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::back);
+    connect(this->ui->registerButton,&QPushButton::clicked,this,&LoginWindow::onBack);
     //将密码显示方式改成普通
     this->ui->passwdEdit->setEchoMode(QLineEdit::Normal);
 }

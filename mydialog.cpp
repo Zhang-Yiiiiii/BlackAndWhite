@@ -3,7 +3,7 @@
 
 myDialog::myDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::myDialog)
+    , ui(new Ui::MyDialog)
 {
     ui->setupUi(this);
 
@@ -30,6 +30,31 @@ myDialog::~myDialog()
     delete ui;
 }
 
+int myDialog::getNum1()
+{
+    return this->m_num1;
+}
+
+int myDialog::getNum2()
+{
+    return this->m_num2;
+}
+
+int myDialog::getNum3()
+{
+    return this->m_num3;
+}
+
+int myDialog::getNum4()
+{
+    return this->m_num4;
+}
+
+int myDialog::getNum5()
+{
+    return this->m_num5;
+}
+
 //槽函数
 void myDialog::confirmButtonClicked()
 {
@@ -42,7 +67,7 @@ void myDialog::confirmButtonClicked()
     //获取关卡数
     if (ok && number>0 && number<=37)
     {
-        num1 = number;
+        m_num1 = number;
     }
     else
     {
@@ -55,7 +80,7 @@ void myDialog::confirmButtonClicked()
     number = str.toInt(&ok);
     if (ok && number >= 0 && number <= 1000)
     {
-        num2 = number;
+        m_num2 = number;
     }
     else
     {
@@ -69,7 +94,7 @@ void myDialog::confirmButtonClicked()
     number = str.toInt(&ok);
     if (ok && number > 0 && number <= 20)
     {
-        num3 = number - 1;
+        m_num3 = number - 1;
     }
     else
     {
@@ -83,7 +108,7 @@ void myDialog::confirmButtonClicked()
     number = str.toInt(&ok);
     if (ok && number > 0 && number <= 20)
     {
-        num4 = number - 1;
+        m_num4 = number - 1;
     }
     else
     {
@@ -96,7 +121,7 @@ void myDialog::confirmButtonClicked()
     number = str.toInt(&ok);
     if (ok && number >= 0 && number <= 3)
     {
-        num5 = number;
+        m_num5 = number;
     }
     else
     {

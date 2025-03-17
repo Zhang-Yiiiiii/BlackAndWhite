@@ -1,9 +1,7 @@
 #include "mainscene.h"
 
 #include <QApplication>
-#include <iostream>
-#include <fstream>
-
+#include <QFont>
 
 int main(int argc, char *argv[])
 {

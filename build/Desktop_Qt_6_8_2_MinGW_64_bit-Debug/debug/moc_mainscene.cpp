@@ -38,7 +38,14 @@ struct qt_meta_tag_ZN9MainSceneE_t {};
 
 #ifdef QT_MOC_HAS_STRINGDATA
 static constexpr auto qt_meta_stringdata_ZN9MainSceneE = QtMocHelpers::stringData(
-    "MainScene"
+    "MainScene",
+    "onUserLogin",
+    "",
+    "onHexagonClicked",
+    "gameLevel",
+    "onDialogInfoReceived",
+    "buildWay",
+    "onGameSceneChangeBack"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -50,12 +57,24 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
+
+ // slots: name, argc, parameters, tag, flags, initial metatype offsets
+       1,    0,   38,    2, 0x08,    1 /* Private */,
+       3,    1,   39,    2, 0x08,    2 /* Private */,
+       5,    1,   42,    2, 0x08,    4 /* Private */,
+       7,    0,   45,    2, 0x08,    6 /* Private */,
+
+ // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    4,
+    QMetaType::Void, QMetaType::Bool,    6,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -68,7 +87,17 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
     nullptr,
     qt_incomplete_metaTypeArray<qt_meta_tag_ZN9MainSceneE_t,
         // Q_OBJECT / Q_GADGET
-        QtPrivate::TypeAndForceComplete<MainScene, std::true_type>
+        QtPrivate::TypeAndForceComplete<MainScene, std::true_type>,
+        // method 'onUserLogin'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onHexagonClicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'onDialogInfoReceived'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<bool, std::false_type>,
+        // method 'onGameSceneChangeBack'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
@@ -76,10 +105,15 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
 void MainScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     auto *_t = static_cast<MainScene *>(_o);
-    (void)_t;
-    (void)_c;
-    (void)_id;
-    (void)_a;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: _t->onUserLogin(); break;
+        case 1: _t->onHexagonClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 2: _t->onDialogInfoReceived((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 3: _t->onGameSceneChangeBack(); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObject *MainScene::metaObject() const
@@ -98,6 +132,18 @@ void *MainScene::qt_metacast(const char *_clname)
 int MainScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QMainWindow::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 4)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 4;
+    }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 4)
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+        _id -= 4;
+    }
     return _id;
 }
 QT_WARNING_POP

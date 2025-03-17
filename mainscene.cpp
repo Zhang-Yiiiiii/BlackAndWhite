@@ -1,6 +1,8 @@
 #include "mainscene.h"
 #include "ui_mainscene.h"
 
+#include "loginwindow.h"
+
 MainScene::MainScene(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainScene)
@@ -12,16 +14,17 @@ MainScene::MainScene(QWidget *parent)
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
-    //设置菜单栏
+    //初始化用户管理员
+    this->m_usermanager = new UserManager;
 
+    //设置菜单栏
     //显示游戏说明
-    connect(this->ui->actioninstruction,&QAction::triggered,[=](){
-        this->gameScene->showRule();
+    connect(this->ui->actioninstruction,&QAction::triggered,[this](){
+        this->m_gameScene->showRule();
     });
 
-
     //起点建图
-    connect(this->ui->actionstartingPoint,&QAction::triggered,[=](){
+    connect(this->ui->actionstartingPoint,&QAction::triggered,[this](){
         this->selfBuildGame(false); //起点建图
     });
 
@@ -31,18 +34,12 @@ MainScene::MainScene(QWidget *parent)
     });
 
     //退出游戏
-    connect(this->ui->actionquit,&QAction::triggered,[=](){
+    connect(this->ui->actionquit,&QAction::triggered,[](){
         exit(0);
     });
 
     //登录用户
-    connect(this->ui->actionLogin,&QAction::triggered,[=](){
-        this->userLogin();
-    });
-
-
-    //初始化用户管理员
-    this->usermanager = new UserManager;
+    connect(this->ui->actionLogin,&QAction::triggered,this,&MainScene::onUserLogin);
 
     //显示选关六边形
     showSelectBtn();
@@ -58,42 +55,23 @@ void MainScene::paintEvent(QPaintEvent *)
 
     //加载背景
     QPixmap pix;
-    pix = pix.scaled(this->size(),Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    //pix = pix.scaled(this->size(),Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     pix.load(BACKGROUDPATH);
     painter.drawPixmap(0,0,pix);
 
 }
 
-//显示选关六边形
+//显示选关六边形  监听进入游戏场景
 void MainScene::showSelectBtn()
 {
-    QVBoxLayout * layout = new QVBoxLayout(this);
     //初始化六边形按钮
     for(int i=0;i<SELECTBTNNUMBER;i++)
     {
-        selectBtns[i] = new Hexagon(i);
-        selectBtns[i]->setParent(this);
-
-        layout->addWidget(selectBtns[i]);
+        m_selectBtns[i] = new Hexagon(i);
+        m_selectBtns[i]->setParent(this);
 
         //监听六边形被点击的信号  进入游戏场景
-        connect(selectBtns[i],&Hexagon::beClicked,[=](int gameLevel){
-            gameScene = new GameScene(gameLevel,m_userName,usermanager,this);
-            this->hide();
-            gameScene->setGeometry(this->geometry());
-            gameScene->show();
-
-            //监听返回来的信号
-            connect(gameScene,&GameScene::changeBack,[=](){
-                gameScene->hide();
-                this->setGeometry(gameScene->geometry());
-                this->show();
-
-                //手动释放
-                delete gameScene;
-                gameScene = nullptr;
-            });
-        });
+        connect(m_selectBtns[i],&Hexagon::beClicked,this,&MainScene::onHexagonClicked);
     }
 
     //六边形起始点
@@ -105,7 +83,7 @@ void MainScene::showSelectBtn()
     //显示上半部分
     for(int i = 0;i < 22;i++)
     {
-        selectBtns[i]->move(x,y);
+        m_selectBtns[i]->move(x,y);
 
         x+=90;
         if(k%cnt == 0)
@@ -126,7 +104,7 @@ void MainScene::showSelectBtn()
     //显示下半部分
     for(int i = 22;i < 37;i++)
     {
-        selectBtns[i]->move(x,y);
+        m_selectBtns[i]->move(x,y);
 
         x += 90;
         if(k%cnt == 0)
@@ -139,60 +117,93 @@ void MainScene::showSelectBtn()
         }
         k++;
     }
-
-    setLayout(layout);
 }
 
 //自建地图
 void MainScene::selfBuildGame(bool buildWay)
 {
-    mydialog = new myDialog(this);
-    mydialog->show();
+    // 显示对话框
+    showBuildDialog(buildWay);
+}
 
-    connect(mydialog,&myDialog::getedInfo,[=](){
-        int gameLevel,gameStep,bugX,bugY,bugDirection;
-        gameLevel = mydialog->num1;
-        gameStep = mydialog->num2;
-        bugX = mydialog->num3;
-        bugY = mydialog->num4;
-        bugDirection = mydialog->num5;
+//显示建图对话框
+void MainScene::showBuildDialog(bool buildWay)
+{
+    //显示对话框
+    m_mydialog = new myDialog(this);
+    m_mydialog->show();
 
-        //进入游戏场景 由玩家自行改变地图
-        gameScene = new GameScene(gameLevel,m_userName, this->usermanager,this);
-        this->hide();
-        gameScene->setGeometry(this->geometry());
-        gameScene->show();
-
-        //返回来的信号
-        connect(gameScene,&GameScene::changeBack,[=](){
-            gameScene->hide();
-            this->setGeometry(gameScene->geometry());
-            this->show();
-
-            delete gameScene;
-            gameScene = nullptr;
-        });
-
-        //保存自建地图
-        //保存按钮
-        QPushButton * saveBtn = new QPushButton(gameScene);
-        saveBtn->setText("保 存");
-        saveBtn->setFont(QFont("华文新魏",15));
-        saveBtn->setFixedSize(120,50);
-        saveBtn->move(BACKGROUDWIDTH-saveBtn->width(),BACKGROUDHEIGHT- 4 * saveBtn->height());
-        saveBtn->show();
-        connect(saveBtn,&QPushButton::clicked,[=](){
-            int ret = QMessageBox::question(this,"问题","确定保存游戏？");
-            if(ret == QMessageBox::Yes)
-            {
-                this->gameScene->saveGame(buildWay,gameStep,bugX,bugY,bugDirection);
-            }
-        });
+    //从对话框获取信息
+    connect(m_mydialog,&myDialog::getedInfo,this,[=](){
+        onDialogInfoReceived(buildWay);
     });
 }
 
+// 进入游戏场景
+void MainScene::enterGameScene(int gameLevel, int gameStep, int bugX, int bugY, int bugDirection, int enterWay)
+{
+    m_gameScene = new GameScene(gameLevel, m_userName, this->m_usermanager, this);
+    this->hide();
+    m_gameScene->setGeometry(this->geometry());
+    m_gameScene->show();
+
+    // 监听返回信号
+    connect(m_gameScene, &GameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
+
+    if (enterWay==3)  //游戏模式
+        return;
+
+    //自建图模式
+    //断开提交按钮
+    m_gameScene->submitBtn->setDisabled(true);
+    m_gameScene->submitBtn->hide();
+
+    // 创建保存按钮
+    createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
+}
+
+// 处理返回信号
+void MainScene::onGameSceneChangeBack()
+{
+    m_gameScene->hide();
+    this->setGeometry(m_gameScene->geometry());
+    this->show();
+
+    if (m_gameScene)  // 释放 m_gameScene
+    {
+        delete m_gameScene;
+        m_gameScene = nullptr;
+    }
+}
+
+// 创建保存按钮
+void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, bool buildWay)
+{
+    QPushButton *saveBtn = new QPushButton(m_gameScene);
+    saveBtn->setText("保 存");
+    saveBtn->setFont(QFont("华文新魏", 15));
+    saveBtn->setFixedSize(120, 50);
+    saveBtn->move(BACKGROUDWIDTH - saveBtn->width(), BACKGROUDHEIGHT - 4 * saveBtn->height());
+    saveBtn->show();
+
+    connect(saveBtn, &QPushButton::clicked, this, [this, gameStep, bugX, bugY, bugDirection, buildWay]() {
+        handleSaveButtonClicked(buildWay, gameStep, bugX, bugY, bugDirection);
+    });
+}
+
+// 处理保存按钮点击事件
+void MainScene::handleSaveButtonClicked(bool buildWay, int gameStep, int bugX, int bugY, int bugDirection)
+{
+    int ret = QMessageBox::question(this, "问题", "确定保存游戏？");
+    if (ret == QMessageBox::Yes)
+    {
+        m_gameScene->saveGame(buildWay, gameStep, bugX, bugY, bugDirection);
+    }
+}
+
+
 //用户登录
-void MainScene::userLogin()
+void MainScene::onUserLogin()
 {
     //登录对话框
     LoginWindow * loginWindow = new LoginWindow();
@@ -209,8 +220,8 @@ void MainScene::userLogin()
 
 
     //获取登录信息
-    connect(loginWindow,&LoginWindow::userConfirmed,[=]()mutable{
-        int ret = this->usermanager->verifyUserInfo(loginWindow->userName,loginWindow->password);
+    connect(loginWindow,&LoginWindow::userConfirmed,this,[=]()mutable{
+        int ret = this->m_usermanager->verifyUserInfo(loginWindow->getUserName(),loginWindow->getUserPassword());
 
         //提示信息所在位置
         QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
@@ -221,8 +232,8 @@ void MainScene::userLogin()
             QToolTip::showText(pos,"登录成功",this,this->rect(),5000);
 
             //记录用户信息
-            this->m_userName = loginWindow->userName;
-            this->m_password = loginWindow->password;
+            this->m_userName = loginWindow->getUserName();
+            this->m_password = loginWindow->getUserPassword();
 
             this->show();
             delete loginWindow;
@@ -242,7 +253,7 @@ void MainScene::userLogin()
 
     //用户注册
     connect(loginWindow,&LoginWindow::userRegistered,this,[=]() mutable {
-        int ret = this->usermanager->verifyUserInfo(loginWindow->userName,loginWindow->password);
+        int ret = this->m_usermanager->verifyUserInfo(loginWindow->getUserName(),loginWindow->getUserPassword());
 
         //提示信息所在位置
         QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width()/2 - 35,loginWindow->height() + 100));
@@ -254,8 +265,8 @@ void MainScene::userLogin()
         }
         else //注册成功
         {
-            this->m_userName = loginWindow->userName;
-            this->m_password = loginWindow->password;
+            this->m_userName = loginWindow->getUserName();
+            this->m_password = loginWindow->getUserPassword();
 
             //显示提示信息
             QToolTip::showText(pos,"注册成功，自动登录",this,this->rect(),5000);
@@ -265,9 +276,28 @@ void MainScene::userLogin()
             loginWindow = nullptr;
 
             //添加用户信息
-            this->usermanager->addUser(this->m_userName,this->m_password);
+            this->m_usermanager->addUser(this->m_userName,this->m_password);
         }
     });
+}
+
+void MainScene::onHexagonClicked(int gameLevel)
+{
+    enterGameScene(gameLevel);
+}
+
+//从对话框中获取信息
+void MainScene::onDialogInfoReceived(bool buildWay)
+{
+    int gameLevel,gameStep,bugX,bugY,bugDirection;
+    gameLevel = m_mydialog->getNum1();
+    gameStep = m_mydialog->getNum2();
+    bugX = m_mydialog->getNum3();
+    bugY = m_mydialog->getNum4();
+    bugDirection = m_mydialog->getNum5();
+
+    //进入游戏场景
+    enterGameScene(gameLevel,gameStep,bugX,bugY,bugDirection,buildWay);
 }
 
 void MainScene::userRegister()
@@ -280,6 +310,6 @@ MainScene::~MainScene()
 {
     delete ui;
 
-    delete usermanager;
-    usermanager = nullptr;
+    delete m_usermanager;
+    m_usermanager = nullptr;
 }

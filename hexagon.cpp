@@ -2,18 +2,18 @@
 
 
 Hexagon::Hexagon(int id ,QPushButton * parent):
-    QPushButton(parent) ,id(id+1)
+    QPushButton(parent) ,m_id(id+1)
 {
     //加载按钮图片资源
-    pix.load(HEXAGONPATH);
+    m_pix.load(HEXAGONPATH);
     //设置按钮大小
-    this->setFixedSize(pix.size());
+    this->setFixedSize(m_pix.size());
     //设置边框为不规则
     this->setStyleSheet("QPushButton{border:0px; aspect-ratio: 1}");
     //设置图标
-    this->setIcon(pix);
+    this->setIcon(m_pix);
     //设置图标大小
-    this->setIconSize(QSize(pix.width(),pix.height()));
+    this->setIconSize(QSize(m_pix.width(),m_pix.height()));
 
     //test
     // connect(this,&QPushButton::clicked,[=](){
@@ -22,11 +22,11 @@ Hexagon::Hexagon(int id ,QPushButton * parent):
 
 
     //设置按钮的文字
-    this->setText(QString::number(this->id));
+    this->setText(QString::number(this->m_id));
 
     //告诉主场景被点击
     connect(this,&QPushButton::clicked,[=](){
-        emit beClicked(this->id);
+        emit beClicked(this->m_id);
     });
 
 }
@@ -40,7 +40,7 @@ void Hexagon::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
 
     // 绘制图标
-    painter.drawPixmap(0,0,pix);
+    painter.drawPixmap(0,0,m_pix);
 
     // 绘制文本
     QFont font;

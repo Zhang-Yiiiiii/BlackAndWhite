@@ -1,6 +1,12 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
+/*
+ * class: LoginWindow （登录窗口）
+ *
+ * 用处: 显示登录界面、显示注册界面、记录用户信息
+ */
+
 #include <QWidget>
 #include "config.h"
 #include <QPixmap>
@@ -17,19 +23,26 @@ class LoginWindow : public QWidget
     Q_OBJECT
 
 public:
+    //构造和析构
     explicit LoginWindow(QWidget *parent = nullptr);
+    ~LoginWindow();
 
-    //用户名
-    QString userName;
+    //获取用户名
+    QString getUserName();
 
-    //用户密码
-    QString password;
+    //获取用户信息
+    QString getUserPassword();
+
 
     //重写画图事件
     void paintEvent(QPaintEvent *) override;
 
+private:
+    //用户名
+    QString m_userName;
 
-    ~LoginWindow();
+    //用户密码
+    QString m_password;
 
 signals:
     void userConfirmed();  //用户点击登录按钮
@@ -37,13 +50,13 @@ signals:
     void userRegistered(); //用户点击注册按钮
 
 private slots:
-    void loginAccount();  //用户点击登录按钮
+    void onLoginAccount();  //用户点击登录按钮
 
-    void registerAccount();  //用户点击确定注册按钮
+    void onRegisterAccount();  //用户点击确定注册按钮
 
-    void back();  //用户点击返回按钮
+    void onBack();  //用户点击返回按钮
 
-    void requestRegister();  //用户点击请求注册按钮
+    void onRequestRegister();  //用户点击请求注册按钮
 
 private:
     Ui::LoginWindow *ui;

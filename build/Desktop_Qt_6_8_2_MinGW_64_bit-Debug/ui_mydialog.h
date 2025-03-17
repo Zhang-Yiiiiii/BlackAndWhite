@@ -154,7 +154,7 @@ public:
 };
 
 namespace Ui {
-    class myDialog: public Ui_myDialog {};
+    class MyDialog: public Ui_myDialog {};
 } // namespace Ui
 
 QT_END_NAMESPACE

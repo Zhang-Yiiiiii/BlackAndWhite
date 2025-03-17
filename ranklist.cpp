@@ -2,7 +2,7 @@
 #include "ui_ranklist.h"
 
 RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
-    : QFrame(parent), vRankList(v)
+    : QFrame(parent), m_vRankList(v)
     , ui(new Ui::RankList)
 {
     ui->setupUi(this);
@@ -21,7 +21,7 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
     QScrollArea *scrollArea = new QScrollArea(this);
 
     // 创建 QTableWidget
-    QTableWidget *tableWidget = new QTableWidget(vRankList.size(), 3); // 3 列：排名、名字、时间
+    QTableWidget *tableWidget = new QTableWidget(m_vRankList.size(), 3); // 3 列：排名、名字、时间
     tableWidget->setHorizontalHeaderLabels({"Rank", "Name", "Time"}); // 设置表头
 
 
@@ -34,7 +34,7 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
     // 添加用户至榜单
     int ranking = 1;
     int row = 0;
-    for (const auto &i : vRankList) {
+    for (const auto &i : m_vRankList) {
         QString name = i.first;
         int time = i.second;
 
