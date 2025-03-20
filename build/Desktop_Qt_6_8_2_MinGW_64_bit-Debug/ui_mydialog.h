@@ -154,7 +154,7 @@ public:
 };
 
 namespace Ui {
-    class MyDialog: public Ui_myDialog {};
+    class BuildMapDialog: public Ui_myDialog {};
 } // namespace Ui
 
 QT_END_NAMESPACE

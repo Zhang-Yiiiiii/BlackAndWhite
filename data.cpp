@@ -22,9 +22,9 @@ void Data::getData()
     //获取关卡数 步数 bug信息
     int gameLevel = 0;
     int gameStep = 0;
-    int x,y,dir;
+    int x, y, dir;
 
-    std::ifstream ifs(DATAPATH,std::ios::in);
+    std::ifstream ifs(DATAPATH, std::ios::in);
 
     while (ifs >> gameLevel >> gameStep >> x >> y >> dir && m_totalLevel < SELECTBTNNUMBER)
     {
@@ -56,11 +56,11 @@ void Data::getData()
 
         //将数据放入map容器
         m_stepArray[gameLevel] = gameStep;    //游戏步数
-        m_bugPos.insert(gameLevel,QPoint(x,y));   //bug位置
-        m_bugDir.insert(gameLevel,dir);   //bug方向
+        m_bugPos.insert(gameLevel, QPoint(x, y)); //bug位置
+        m_bugDir.insert(gameLevel, dir);  //bug方向
 
-        m_gameArray.insert(gameLevel,v1); //游戏数组
-        m_ansArray.insert(gameLevel,v2);  //答案数组
+        m_gameArray.insert(gameLevel, v1); //游戏数组
+        m_ansArray.insert(gameLevel, v2); //答案数组
 
         this->m_totalLevel++;
     }
@@ -72,30 +72,32 @@ void Data::getData()
 Data::~Data()
 {
     //输出 并且 清空文件所有内容的方式打开文件
-    std::ofstream ofs(DATAPATH,std::ios::out | std::ios::trunc);
+    std::ofstream ofs(DATAPATH, std::ios::out | std::ios::trunc);
 
-    for (int i=1;i<=m_totalLevel;i++)
+    for (int i = 1; i <= m_totalLevel; i++)
     {
-        ofs<<i<<std::endl;
-        ofs<<m_stepArray[i]<<std::endl;
-        ofs<<m_bugPos[i].x()<<" "<<m_bugPos[i].y()<<" "<<m_bugDir[i]<<std::endl;
+        ofs << i << std::endl;
+        ofs << m_stepArray[i] << std::endl;
+        ofs << m_bugPos[i].x() << " " << m_bugPos[i].y() << " " << m_bugDir[i] << std::endl;
 
-        for (int x=0;x<BOARDSIDELENGTH;x++)
+        for (int x = 0; x < BOARDSIDELENGTH; x++)
         {
-            for (int y=0;y<BOARDSIDELENGTH;y++)
+            for (int y = 0; y < BOARDSIDELENGTH; y++)
             {
-                ofs<<m_gameArray[i][x][y]<<" ";
+                ofs << m_gameArray[i][x][y] << " ";
             }
-            ofs<<std::endl;
+
+            ofs << std::endl;
         }
 
-        for (int x=0;x<BOARDSIDELENGTH;x++)
+        for (int x = 0; x < BOARDSIDELENGTH; x++)
         {
-            for (int y=0;y<BOARDSIDELENGTH;y++)
+            for (int y = 0; y < BOARDSIDELENGTH; y++)
             {
-                ofs<<m_ansArray[i][x][y]<<" ";
+                ofs << m_ansArray[i][x][y] << " ";
             }
-            ofs<<std::endl;
+
+            ofs << std::endl;
         }
     }
 

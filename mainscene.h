@@ -14,10 +14,11 @@
 #include <QMenu>
 #include <QPainter>
 #include "hexagon.h"
-#include "mydialog.h"
+#include "buildmapdialog.h"
 #include "usermanager.h"
 #include <QToolTip>
 #include <QLayout>
+#include "loginwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -47,13 +48,10 @@ private:
     GameScene * m_gameScene = nullptr;
 
     //自建地图的对话框
-    myDialog * m_mydialog;
+    BuildMapDialog * m_mydialog;
 
     //游戏管理员
     UserManager * m_usermanager = nullptr;
-
-    //用户注册
-    void userRegister();
 
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
@@ -76,6 +74,9 @@ private:
     //处理保存按钮点击
     void handleSaveButtonClicked(bool buildWay, int gameStep, int bugX,int bugY,int bugDirection);
 
+    //显示登录对话框
+    LoginWindow * showLoginWindow();
+
 private:
     Ui::MainScene *ui;
 
@@ -91,6 +92,12 @@ private slots:
 
     //处理返回信号
     void onGameSceneChangeBack();
+
+    //处理登录信息
+    void onUserConfirmLogin(LoginWindow * loginWindow);
+
+    //用户确定注册
+    void onUserConfirmRegister(LoginWindow * loginWindow);
 
 
 };

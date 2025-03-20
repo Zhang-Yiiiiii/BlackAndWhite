@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    buildmapdialog.cpp \
     data.cpp \
     gamescene.cpp \
     gridbutton.cpp \
@@ -16,12 +17,13 @@ SOURCES += \
     loginwindow.cpp \
     main.cpp \
     mainscene.cpp \
-    mydialog.cpp \
+    onlinewindow.cpp \
     ranklist.cpp \
     user.cpp \
     usermanager.cpp
 
 HEADERS += \
+    buildmapdialog.h \
     config.h \
     data.h \
     gamescene.h \
@@ -29,15 +31,16 @@ HEADERS += \
     hexagon.h \
     loginwindow.h \
     mainscene.h \
-    mydialog.h \
+    onlinewindow.h \
     ranklist.h \
     user.h \
     usermanager.h
 
 FORMS += \
+    buildmapdialog.ui \
     loginwindow.ui \
     mainscene.ui \
-    mydialog.ui \
+    onlinewindow.ui \
     ranklist.ui
 
 # Default rules for deployment.

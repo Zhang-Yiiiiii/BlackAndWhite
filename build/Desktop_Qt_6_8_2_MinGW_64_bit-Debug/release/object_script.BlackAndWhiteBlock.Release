@@ -1,3 +1,4 @@
+release/buildmapdialog.o
 release/data.o
 release/gamescene.o
 release/gridbutton.o
@@ -5,15 +6,16 @@ release/hexagon.o
 release/loginwindow.o
 release/main.o
 release/mainscene.o
-release/mydialog.o
+release/onlinewindow.o
 release/ranklist.o
 release/user.o
 release/usermanager.o
 release/qrc_res.o
+release/moc_buildmapdialog.o
 release/moc_gamescene.o
 release/moc_gridbutton.o
 release/moc_hexagon.o
 release/moc_loginwindow.o
 release/moc_mainscene.o
-release/moc_mydialog.o
+release/moc_onlinewindow.o
 release/moc_ranklist.o

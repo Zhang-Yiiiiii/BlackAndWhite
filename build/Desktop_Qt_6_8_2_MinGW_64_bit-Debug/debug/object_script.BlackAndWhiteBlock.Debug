@@ -1,3 +1,4 @@
+debug/buildmapdialog.o
 debug/data.o
 debug/gamescene.o
 debug/gridbutton.o
@@ -5,15 +6,16 @@ debug/hexagon.o
 debug/loginwindow.o
 debug/main.o
 debug/mainscene.o
-debug/mydialog.o
+debug/onlinewindow.o
 debug/ranklist.o
 debug/user.o
 debug/usermanager.o
 debug/qrc_res.o
+debug/moc_buildmapdialog.o
 debug/moc_gamescene.o
 debug/moc_gridbutton.o
 debug/moc_hexagon.o
 debug/moc_loginwindow.o
 debug/moc_mainscene.o
-debug/moc_mydialog.o
+debug/moc_onlinewindow.o
 debug/moc_ranklist.o

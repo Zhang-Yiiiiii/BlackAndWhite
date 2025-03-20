@@ -12,10 +12,9 @@
 #include <QPixmap>
 #include <QPainter>
 
-
-
-namespace Ui {
-class LoginWindow;
+namespace Ui
+{
+    class LoginWindow;
 }
 
 class LoginWindow : public QWidget
@@ -33,9 +32,10 @@ public:
     //获取用户信息
     QString getUserPassword();
 
-
     //重写画图事件
-    void paintEvent(QPaintEvent *) override;
+    void paintEvent(QPaintEvent*) override;
+
+    void closeEvent(QCloseEvent*);
 
 private:
     //用户名
@@ -49,6 +49,8 @@ signals:
 
     void userRegistered(); //用户点击注册按钮
 
+    void userClose();   //用户点击关闭按钮
+
 private slots:
     void onLoginAccount();  //用户点击登录按钮
 
@@ -59,7 +61,7 @@ private slots:
     void onRequestRegister();  //用户点击请求注册按钮
 
 private:
-    Ui::LoginWindow *ui;
+    Ui::LoginWindow* ui;
 };
 
 #endif // LOGINWINDOW_H

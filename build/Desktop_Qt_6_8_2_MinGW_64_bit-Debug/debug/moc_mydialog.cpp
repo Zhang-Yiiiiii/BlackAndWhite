@@ -31,13 +31,13 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 QT_WARNING_DISABLE_GCC("-Wuseless-cast")
 namespace {
-struct qt_meta_tag_ZN8myDialogE_t {};
+struct qt_meta_tag_ZN14BuildMapDialogE_t {};
 } // unnamed namespace
 
 
 #ifdef QT_MOC_HAS_STRINGDATA
-static constexpr auto qt_meta_stringdata_ZN8myDialogE = QtMocHelpers::stringData(
-    "myDialog",
+static constexpr auto qt_meta_stringdata_ZN14BuildMapDialogE = QtMocHelpers::stringData(
+    "BuildMapDialog",
     "getedInfo",
     "",
     "confirmButtonClicked"
@@ -46,7 +46,7 @@ static constexpr auto qt_meta_stringdata_ZN8myDialogE = QtMocHelpers::stringData
 #error "qtmochelpers.h not found or too old."
 #endif // !QT_MOC_HAS_STRINGDATA
 
-Q_CONSTINIT static const uint qt_meta_data_ZN8myDialogE[] = {
+Q_CONSTINIT static const uint qt_meta_data_ZN14BuildMapDialogE[] = {
 
  // content:
       12,       // revision
@@ -74,15 +74,15 @@ Q_CONSTINIT static const uint qt_meta_data_ZN8myDialogE[] = {
        0        // eod
 };
 
-Q_CONSTINIT const QMetaObject myDialog::staticMetaObject = { {
+Q_CONSTINIT const QMetaObject BuildMapDialog::staticMetaObject = { {
     QMetaObject::SuperData::link<QDialog::staticMetaObject>(),
-    qt_meta_stringdata_ZN8myDialogE.offsetsAndSizes,
-    qt_meta_data_ZN8myDialogE,
+    qt_meta_stringdata_ZN14BuildMapDialogE.offsetsAndSizes,
+    qt_meta_data_ZN14BuildMapDialogE,
     qt_static_metacall,
     nullptr,
-    qt_incomplete_metaTypeArray<qt_meta_tag_ZN8myDialogE_t,
+    qt_incomplete_metaTypeArray<qt_meta_tag_ZN14BuildMapDialogE_t,
         // Q_OBJECT / Q_GADGET
-        QtPrivate::TypeAndForceComplete<myDialog, std::true_type>,
+        QtPrivate::TypeAndForceComplete<BuildMapDialog, std::true_type>,
         // method 'getedInfo'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'confirmButtonClicked'
@@ -91,9 +91,9 @@ Q_CONSTINIT const QMetaObject myDialog::staticMetaObject = { {
     nullptr
 } };
 
-void myDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void BuildMapDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    auto *_t = static_cast<myDialog *>(_o);
+    auto *_t = static_cast<BuildMapDialog *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->getedInfo(); break;
@@ -104,8 +104,8 @@ void myDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
     if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _q_method_type = void (myDialog::*)();
-            if (_q_method_type _q_method = &myDialog::getedInfo; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
+            using _q_method_type = void (BuildMapDialog::*)();
+            if (_q_method_type _q_method = &BuildMapDialog::getedInfo; *reinterpret_cast<_q_method_type *>(_a[1]) == _q_method) {
                 *result = 0;
                 return;
             }
@@ -113,20 +113,20 @@ void myDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
     }
 }
 
-const QMetaObject *myDialog::metaObject() const
+const QMetaObject *BuildMapDialog::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *myDialog::qt_metacast(const char *_clname)
+void *BuildMapDialog::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_ZN8myDialogE.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_ZN14BuildMapDialogE.stringdata0))
         return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
-int myDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int BuildMapDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)
@@ -145,7 +145,7 @@ int myDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void myDialog::getedInfo()
+void BuildMapDialog::getedInfo()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }

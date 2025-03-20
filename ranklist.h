@@ -19,9 +19,9 @@
 #include <QTableWidget>
 #include <QHeaderView>
 
-
-namespace Ui {
-class RankList;
+namespace Ui
+{
+    class RankList;
 }
 
 class RankList : public QFrame
@@ -30,14 +30,12 @@ class RankList : public QFrame
 
 public:
     //构造和析构
-    explicit RankList(QVector<std::pair<QString,int>> &,QWidget *parent = nullptr);
+    explicit RankList(QVector<std::pair<QString, int>> &, QWidget *parent = nullptr);
     ~RankList();
 
 private:
     //榜单排行
-    QVector<std::pair<QString,int>> m_vRankList;
-
-
+    QVector<std::pair<QString, int>> m_vRankList;
 
 private:
     Ui::RankList *ui;

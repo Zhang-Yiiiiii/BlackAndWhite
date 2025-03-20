@@ -32,20 +32,28 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
     tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch); // 自适应列宽
 
     // 添加用户至榜单
-    int ranking = 1;
+    int ranking = 0;
     int row = 0;
-    for (const auto &i : m_vRankList) {
+    int last = -2;   //记录上一名的成绩
+    for (const auto &i : m_vRankList)
+    {
         QString name = i.first;
         int time = i.second;
 
         if (time == -1) continue; // 用户没有通关游戏
+
+        if(last != time)  //分数与上一名不同
+        {
+            ranking++;
+            last = time;
+        }
 
         int secs = time % 60;
         int mins = (time / 60) % 60;
         int hours = time / 3600;
 
         // 设置排名
-        tableWidget->setItem(row, 0, new QTableWidgetItem(QString::number(ranking++)));
+        tableWidget->setItem(row, 0, new QTableWidgetItem(QString::number(ranking)));
 
         // 设置名字
         tableWidget->setItem(row, 1, new QTableWidgetItem(name));

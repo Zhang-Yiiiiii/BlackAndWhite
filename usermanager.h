@@ -22,9 +22,8 @@ public:
     UserManager();
     ~UserManager();
 
-
     //关卡的排序
-    QVector<std::pair<QString,int>> m_rankList;
+    QVector<std::pair<QString, int>> m_rankList;
 
     //添加用户的函数
     void addUser(QString userName, QString pwd);
@@ -33,17 +32,17 @@ public:
     void userSort(int level);
 
     //更新用户时间
-    void updatePassTime(QString username ,int totalTime, int level);
+    void updatePassTime(QString username, int totalTime, int level);
 
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
-    int verifyUserInfo(QString name,QString password);
+    int verifyUserInfo(QString name, QString password);
 
 private:
     //记录用户人数
     int m_userNum;
 
     //用户数组指针
-    User ** m_userArray;
+    User** m_userArray;
 
     //判断文件是否为空
     bool m_fileIsEmpty;
@@ -59,7 +58,6 @@ private:
 
     //初始化用户
     void initUser();
-
 };
 
 #endif // USERMANAGER_H

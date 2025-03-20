@@ -7,12 +7,12 @@
 
 UserManager::UserManager()
 {
-    std::ifstream ifs(USERDATAPATH,std::ios::in);
+    std::ifstream ifs(USERDATAPATH, std::ios::in);
 
     //文件不存在
     if(!ifs.is_open())
     {
-        qDebug()<<QString("文件不存在").arg(USERDATAPATH);
+        qDebug() << QString("文件不存在").arg(USERDATAPATH);
 
         this->m_userNum = 0;
         this->m_userArray = nullptr;
@@ -24,10 +24,11 @@ UserManager::UserManager()
 
     //文件存在但为空
     char ch;
-    ifs>>ch;
+    ifs >> ch;
+
     if(ifs.eof())
     {
-        qDebug()<<QString("文件为空").arg(USERDATAPATH);
+        qDebug() << QString("文件为空").arg(USERDATAPATH);
 
         this->m_userNum = 0;
         this->m_userArray = nullptr;
@@ -51,10 +52,10 @@ void UserManager::addUser(QString userName, QString pwd)
     this->m_userNum++;
 
     //开辟新空间
-    User ** newSpace = new User* [this->m_userNum];
+    User** newSpace = new User* [this->m_userNum];
 
     //拷贝旧数据
-    for(int i=0;i<this->m_userNum - 1;i++)
+    for(int i = 0; i < this->m_userNum - 1; i++)
     {
         newSpace[i] = this->m_userArray[i];
     }
@@ -71,7 +72,6 @@ void UserManager::addUser(QString userName, QString pwd)
     //更改新空间指向
     this->m_userArray = newSpace;
 
-
     //保存到文件
     this->save();
     this->m_fileIsEmpty = false;
@@ -79,18 +79,19 @@ void UserManager::addUser(QString userName, QString pwd)
 
 void UserManager::save()
 {
-    std::ofstream ofs(USERDATAPATH,std::ios::out);
+    std::ofstream ofs(USERDATAPATH, std::ios::out);
 
-    for(int i=0;i<this->m_userNum;i++)
+    for(int i = 0; i < this->m_userNum; i++)
     {
 
-        ofs<<this->m_userArray[i]->getUserName().toStdString()<<" "
-            <<this->m_userArray[i]->getUserPassword().toStdString()<<std::endl;
+        ofs << this->m_userArray[i]->getUserName().toStdString() << " "
+            << this->m_userArray[i]->getUserPassword().toStdString() << std::endl;
 
         QMap<int, int>::iterator it;
+
         for (it = this->m_userArray[i]->m_gameRecord.begin(); it != this->m_userArray[i]->m_gameRecord.end(); it++)
         {
-            ofs<<it.key()<<" "<<it.value()<<std::endl;
+            ofs << it.key() << " " << it.value() << std::endl;
         }
     }
 
@@ -102,21 +103,21 @@ int UserManager::getUserNum()
     //记录用户人数
     int cnt = 0;
 
-    std::ifstream ifs(USERDATAPATH,std::ios::in);
+    std::ifstream ifs(USERDATAPATH, std::ios::in);
 
     std::string name;
     std::string pwd;
 
-    while(ifs>>name && ifs>>pwd)
+    while(ifs >> name && ifs >> pwd)
     {
         //读取用户记录
-        for(int i=0;i<SELECTBTNNUMBER;i++)
+        for(int i = 0; i < SELECTBTNNUMBER; i++)
         {
             int level;
             int record;
 
-            ifs>>level;
-            ifs>>record;
+            ifs >> level;
+            ifs >> record;
         }
 
         cnt++;
@@ -129,7 +130,7 @@ int UserManager::getUserNum()
 
 void UserManager::initUser()
 {
-    std::ifstream ifs(USERDATAPATH,std::ios::in);
+    std::ifstream ifs(USERDATAPATH, std::ios::in);
 
     std::string name;
     std::string pwd;
@@ -137,20 +138,20 @@ void UserManager::initUser()
     int index = 0;  //用于添加用户
 
     //读取用户名和密码
-    while(ifs>>name && ifs>>pwd)
+    while(ifs >> name && ifs >> pwd)
     {
         User * user = new User;
         user->setUserName(QString::fromStdString(name));
         user->setUserPassword(QString::fromStdString(pwd));
 
         //读取用户记录
-        for(int i=0;i<SELECTBTNNUMBER;i++)
+        for(int i = 0; i < SELECTBTNNUMBER; i++)
         {
             int level;
             int record;
 
-            ifs>>level;
-            ifs>>record;
+            ifs >> level;
+            ifs >> record;
 
             user->m_gameRecord[level] = record;
         }
@@ -169,30 +170,36 @@ void UserManager::userSort(int level)
     m_rankList.clear();
 
     //将指定关卡的数据放入容器
-    for(int i=0;i<m_userNum;i++)
+    for(int i = 0; i < m_userNum; i++)
     {
         name = this->m_userArray[i]->getUserName();
         record = this->m_userArray[i]->m_gameRecord[level];
 
-        if(record == -1) continue; //用户没有通关
+        if(record == -1)
+        {
+            continue;    //用户没有通关
+        }
 
-        this->m_rankList.push_back(std::pair<QString,int>(name,record));
+        this->m_rankList.push_back(std::pair<QString, int>(name, record));
     }
 
     //对容器进行排序
-    std::sort(m_rankList.begin(), m_rankList.end(), [](const std::pair<QString, int>& a, const std::pair<QString, int>& b) {
-        if (a.second == b.second) {
+    std::sort(m_rankList.begin(), m_rankList.end(), [](const std::pair<QString, int>& a, const std::pair<QString, int>& b)
+    {
+        if (a.second == b.second)
+        {
             return a.first < b.first; // 如果 record 相同，按名字排序
         }
+
         return a.second < b.second; // 按 int 排序
     });
 }
 
-User * UserManager::findUser(QString userName)
+User* UserManager::findUser(QString userName)
 {
     User * user = nullptr;
 
-    for(int i=0;i<m_userNum;i++)
+    for(int i = 0; i < m_userNum; i++)
     {
         if(m_userArray[i]->getUserName() == userName)
         {
@@ -221,7 +228,7 @@ void UserManager::updatePassTime(QString username, int totalTime, int level)
     }
     else
     {
-        minTotalTime = std::min(user->m_gameRecord[level],totalTime);
+        minTotalTime = std::min(user->m_gameRecord[level], totalTime);
     }
 
     user->m_gameRecord[level] = minTotalTime;
@@ -233,11 +240,12 @@ int UserManager::verifyUserInfo(QString name, QString password)
     //验证用户信息
 
     //返回值 1：不存在用户 2：密码错误 3：登录成功
-    for(int i=0;i<this->m_userNum;i++)
+    for(int i = 0; i < this->m_userNum; i++)
     {
         QString tempName = this->m_userArray[i]->getUserName();
         QString tempPwd = this->m_userArray[i]->getUserPassword();
-        if(tempName == name && tempPwd ==password)
+
+        if(tempName == name && tempPwd == password)
         {
             return 3;  //成功找到
         }
@@ -246,6 +254,7 @@ int UserManager::verifyUserInfo(QString name, QString password)
             return 2;  //密码错误
         }
     }
+
     return 1;  //未找到用户
 }
 
