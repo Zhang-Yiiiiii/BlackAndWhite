@@ -44,6 +44,7 @@ static constexpr auto qt_meta_stringdata_ZN9MainSceneE = QtMocHelpers::stringDat
     "onHexagonClicked",
     "gameLevel",
     "onDialogInfoReceived",
+    "gameMode",
     "buildWay",
     "onGameSceneChangeBack",
     "onUserConfirmLogin",
@@ -72,17 +73,17 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
        1,    0,   50,    2, 0x08,    1 /* Private */,
        3,    1,   51,    2, 0x08,    2 /* Private */,
        5,    1,   54,    2, 0x08,    4 /* Private */,
-       7,    0,   57,    2, 0x08,    6 /* Private */,
-       8,    1,   58,    2, 0x08,    7 /* Private */,
-      11,    1,   61,    2, 0x08,    9 /* Private */,
+       8,    0,   57,    2, 0x08,    6 /* Private */,
+       9,    1,   58,    2, 0x08,    7 /* Private */,
+      12,    1,   61,    2, 0x08,    9 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
-    QMetaType::Void, QMetaType::Bool,    6,
+    QMetaType::Void, 0x80000000 | 6,    7,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 9,   10,
-    QMetaType::Void, 0x80000000 | 9,   10,
+    QMetaType::Void, 0x80000000 | 10,   11,
+    QMetaType::Void, 0x80000000 | 10,   11,
 
        0        // eod
 };
@@ -103,7 +104,7 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'onDialogInfoReceived'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<bool, std::false_type>,
+        QtPrivate::TypeAndForceComplete<gameMode, std::false_type>,
         // method 'onGameSceneChangeBack'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onUserConfirmLogin'
@@ -123,7 +124,7 @@ void MainScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         switch (_id) {
         case 0: _t->onUserLogin(); break;
         case 1: _t->onHexagonClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 2: _t->onDialogInfoReceived((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 2: _t->onDialogInfoReceived((*reinterpret_cast< std::add_pointer_t<gameMode>>(_a[1]))); break;
         case 3: _t->onGameSceneChangeBack(); break;
         case 4: _t->onUserConfirmLogin((*reinterpret_cast< std::add_pointer_t<LoginWindow*>>(_a[1]))); break;
         case 5: _t->onUserConfirmRegister((*reinterpret_cast< std::add_pointer_t<LoginWindow*>>(_a[1]))); break;

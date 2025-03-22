@@ -54,6 +54,7 @@ color: rgb(66, 66, 66);</string>
     <property name="title">
      <string>工具</string>
     </property>
+    <addaction name="online"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -90,6 +91,11 @@ color: rgb(66, 66, 66);</string>
   <action name="actionLogin">
    <property name="text">
     <string>登录</string>
+   </property>
+  </action>
+  <action name="online">
+   <property name="text">
+    <string>联机</string>
    </property>
   </action>
  </widget>

@@ -395,14 +395,25 @@ void GameScene::updateRankList()
 }
 
 //保存总用时
-void GameScene::saveTotalTime()
+int GameScene::saveTotalTime()
+{
+    //计算总时间
+    int totalTime = getTotalTime();
+
+    //更新时间
+    m_usermanager->updatePassTime(this->m_userName, totalTime, this->m_gameLevel);
+
+    return totalTime;
+}
+
+//获取用户当前所用总时间
+int GameScene::getTotalTime()
 {
     //计算总时间
     int totalTime = m_elapsedTimer->elapsed() / 1000;
     totalTime += m_penaltyTime;
 
-    //更新时间
-    m_usermanager->updatePassTime(this->m_userName, totalTime, this->m_gameLevel);
+    return totalTime;
 }
 
 //初始化步数label
@@ -512,9 +523,16 @@ void GameScene::showPushButton()
         //判断是否胜利
         if(isWin())
         {
-            QMessageBox::about(this, "通过", "恭喜你成功通过此关");
-            saveTotalTime();
-            emit changeBack();  //进行返回
+            if(m_gameMode == playMode)
+            {
+                QMessageBox::about(this, "通过", "恭喜你成功通过此关");
+                saveTotalTime();
+                emit changeBack();  //进行返回
+            }
+            else if (m_gameMode == onlineMode)
+            {
+                emit gameOver(saveTotalTime());
+            }
         }
         else
         {
@@ -545,7 +563,7 @@ void GameScene::showPushButton()
     });
 }
 
-//更新时间
+//更新显示时间
 void GameScene::updateTime()
 {
     int secs = m_elapsedTimer->elapsed() / 1000;

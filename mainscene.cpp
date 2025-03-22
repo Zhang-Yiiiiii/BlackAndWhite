@@ -25,13 +25,13 @@ MainScene::MainScene(QWidget *parent)
     //起点建图
     connect(this->ui->actionstartingPoint, &QAction::triggered, this, [this]()
     {
-        this->selfBuildGame(false); //起点建图
+        this->selfBuildGame(startingPointMode); //起点建图
     });
 
     //终点建图
     connect(this->ui->actiondestination, &QAction::triggered, this, [ = ]()
     {
-        this->selfBuildGame(true);  //终点建图
+        this->selfBuildGame(destinationMode);  //终点建图
     });
 
     //退出游戏
@@ -42,6 +42,26 @@ MainScene::MainScene(QWidget *parent)
 
     //登录用户
     connect(this->ui->actionLogin, &QAction::triggered, this, &MainScene::onUserLogin);
+
+    //进行联机
+    connect(ui->online, &QAction::triggered, this, [ = ]()
+    {
+        this->m_onlineWindow = new OnlineWindow();
+
+        //监听是否连接成功
+        connect(m_onlineWindow, &OnlineWindow::connectSuccessfully, this, [ = ]()
+        {
+            m_isOnlineMode = true;
+        });
+
+        m_onlineWindow->show();
+
+        //监听对方进入游戏
+        connect(m_onlineWindow, &OnlineWindow::rivalEnterGame, this, [ = ](int gameLevel)
+        {
+            enterGameScene(gameLevel, onlineMode);
+        });
+    });
 
     //显示选关六边形
     showSelectBtn();
@@ -59,7 +79,6 @@ void MainScene::paintEvent(QPaintEvent*)
     //pix = pix.scaled(this->size(),Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     pix.load(BACKGROUDPATH);
     painter.drawPixmap(0, 0, pix);
-
 }
 
 //显示选关六边形  监听进入游戏场景
@@ -73,6 +92,16 @@ void MainScene::showSelectBtn()
 
         //监听六边形被点击的信号  进入游戏场景
         connect(m_selectBtns[i], &Hexagon::beClicked, this, &MainScene::onHexagonClicked);
+
+        //联机模式 告诉对方也进入
+        if(m_isOnlineMode)
+        {
+            connect(m_selectBtns[i], &Hexagon::beClicked, this, [ = ](int gameLevel)
+            {
+                m_onlineWindow->m_clientConnection->write("ENTER_GAME" + QString::number(gameLevel).toLatin1());
+            });
+        }
+
     }
 
     //六边形起始点
@@ -124,14 +153,14 @@ void MainScene::showSelectBtn()
 }
 
 //自建地图
-void MainScene::selfBuildGame(bool buildWay)
+void MainScene::selfBuildGame(gameMode buildWay)
 {
     // 显示对话框
     showBuildDialog(buildWay);
 }
 
 //显示建图对话框
-void MainScene::showBuildDialog(bool buildWay)
+void MainScene::showBuildDialog(gameMode buildWay)
 {
     //显示对话框
     m_mydialog = new BuildMapDialog(this);
@@ -145,28 +174,57 @@ void MainScene::showBuildDialog(bool buildWay)
 }
 
 // 进入游戏场景
-void MainScene::enterGameScene(int gameLevel, int gameStep, int bugX, int bugY, int bugDirection, int enterWay)
+void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
     m_gameScene = new GameScene(gameLevel, m_userName, this->m_usermanager, this);
     this->hide();
     m_gameScene->setGeometry(this->geometry());
     m_gameScene->show();
 
+    m_gameScene->m_gameMode = enterWay;
+
     // 监听返回信号
     connect(m_gameScene, &GameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
 
-    if (enterWay == 3) //游戏模式
+    if (enterWay == playMode) //游戏模式
     {
         return;
     }
+    else if (enterWay == startingPointMode || enterWay == destinationMode)  //自建图模式
+    {
+        //断开提交按钮
+        m_gameScene->submitBtn->setDisabled(true);
+        m_gameScene->submitBtn->hide();
 
-    //自建图模式
-    //断开提交按钮
-    m_gameScene->submitBtn->setDisabled(true);
-    m_gameScene->submitBtn->hide();
+        // 创建保存按钮
+        createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
+    }
+    else    //联机模式
+    {
+        //监听我方完成游戏的信号
+        connect(m_gameScene, &GameScene::gameOver, this, [ = ](int totalTime)
+        {
+            m_onlineWindow->m_clientConnection->write("WINGAME" + QString::number(totalTime).toUtf8());
+        });
 
-    // 创建保存按钮
-    createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
+        //监听对方完成游戏的信号
+        connect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, [ = ](int totalTime)
+        {
+            if (totalTime < m_gameScene->getTotalTime())    //对方胜利
+            {
+                QMessageBox::about(m_gameScene, "提醒", "对方已经胜利");
+                m_onlineWindow->m_clientConnection->write("YOUWIN");
+                m_gameScene->emit changeBack();
+            }
+        });
+
+        //监听我方赢得游戏
+        connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
+        {
+            QMessageBox::about(m_gameScene, "提醒", "我方已经胜利");
+            m_gameScene->emit changeBack();
+        });
+    }
 }
 
 // 处理返回信号
@@ -217,7 +275,7 @@ void MainScene::onUserConfirmLogin(LoginWindow * loginWindow)
 }
 
 // 创建保存按钮
-void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, bool buildWay)
+void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, gameMode buildWay)
 {
     QPushButton *saveBtn = new QPushButton(m_gameScene);
     saveBtn->setText("保 存");
@@ -233,7 +291,7 @@ void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirect
 }
 
 // 处理保存按钮点击事件
-void MainScene::handleSaveButtonClicked(bool buildWay, int gameStep, int bugX, int bugY, int bugDirection)
+void MainScene::handleSaveButtonClicked(gameMode buildWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
     int ret = QMessageBox::question(this, "问题", "确定保存游戏？");
 
@@ -291,8 +349,8 @@ void MainScene::onHexagonClicked(int gameLevel)
     enterGameScene(gameLevel);
 }
 
-//从对话框中获取信息
-void MainScene::onDialogInfoReceived(bool buildWay)
+//从建图对话框中获取信息
+void MainScene::onDialogInfoReceived(gameMode buildWay)
 {
     int gameLevel, gameStep, bugX, bugY, bugDirection;
     gameLevel = m_mydialog->getNum1();
@@ -304,9 +362,10 @@ void MainScene::onDialogInfoReceived(bool buildWay)
     //判断信息是否正确
 
     //进入游戏场景
-    enterGameScene(gameLevel, gameStep, bugX, bugY, bugDirection, buildWay);
+    enterGameScene(gameLevel, buildWay, gameStep, bugX, bugY, bugDirection);
 }
 
+//用户确定注册
 void MainScene::onUserConfirmRegister(LoginWindow * loginWindow)
 {
     int ret = this->m_usermanager->verifyUserInfo(loginWindow->getUserName(), loginWindow->getUserPassword());

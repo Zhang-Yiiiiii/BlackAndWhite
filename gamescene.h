@@ -1,6 +1,8 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
+#pragma once
+
 /*
  * class: GameScene （游戏界面）
  *
@@ -22,6 +24,14 @@
 #include <QElapsedTimer>
 #include <QTimer>
 
+enum gameMode
+{
+    playMode,   //游戏模式
+    startingPointMode,  //起点建图
+    destinationMode,    //终点建图
+    onlineMode,     //联机模式
+};
+
 class GameScene : public QMainWindow
 {
     Q_OBJECT
@@ -33,11 +43,17 @@ public:
     //设置提交按钮
     QPushButton* submitBtn = nullptr;
 
+    //游戏模式
+    gameMode m_gameMode = playMode;
+
     //显示游戏说明
     void showRule();
 
     //保存地图的函数，用于自建地图  buildWay==0:起点建图  buildWay==1：终点建图
     void saveGame(bool buildWay, int step, int x, int y, int direction);
+
+    //获取用户当前总时间
+    int getTotalTime();
 
 private:
     //设置返回按钮
@@ -75,7 +91,7 @@ private:
     //定时器
     QElapsedTimer* m_elapsedTimer;
 
-    //控制显示时间
+    //控制显示时间定时器
     QTimer* m_showTimer;
 
     //更新排行榜
@@ -113,7 +129,7 @@ private:
     int m_penaltyTime = 0;
 
     //保存用户通关之后的时间
-    void saveTotalTime();
+    int saveTotalTime();
 
     //显示步数label
     void showStepLabel();
@@ -134,10 +150,11 @@ signals:
 
     //返回信号
     void changeBack();
+    void gameOver(int totalTime);
 
 public slots:
 
-    //更新时间
+    //更新显示时间
     void updateTime();
 
     //显示排行榜

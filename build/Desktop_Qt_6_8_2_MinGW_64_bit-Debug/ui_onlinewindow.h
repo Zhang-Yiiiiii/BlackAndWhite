@@ -20,7 +20,6 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -33,9 +32,7 @@ public:
     QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout_15;
-    QSpacerItem *horizontalSpacer_21;
     QVBoxLayout *verticalLayout;
-    QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout_5;
     QSpacerItem *horizontalSpacer_5;
     QLabel *labelLogin;
@@ -68,13 +65,12 @@ public:
     QSpacerItem *horizontalSpacer_22;
     QFrame *frameBackgroud;
     QMenuBar *menubar;
-    QStatusBar *statusbar;
 
     void setupUi(QMainWindow *OnlineWindow)
     {
         if (OnlineWindow->objectName().isEmpty())
             OnlineWindow->setObjectName("OnlineWindow");
-        OnlineWindow->resize(655, 397);
+        OnlineWindow->resize(647, 445);
         centralwidget = new QWidget(OnlineWindow);
         centralwidget->setObjectName("centralwidget");
         layoutWidget = new QWidget(centralwidget);
@@ -84,17 +80,10 @@ public:
         gridLayout->setObjectName("gridLayout");
         gridLayout->setContentsMargins(0, 0, 0, 0);
         horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setSpacing(0);
         horizontalLayout_15->setObjectName("horizontalLayout_15");
-        horizontalSpacer_21 = new QSpacerItem(18, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-
-        horizontalLayout_15->addItem(horizontalSpacer_21);
-
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName("verticalLayout");
-        verticalSpacer = new QSpacerItem(20, 30, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
-
-        verticalLayout->addItem(verticalSpacer);
-
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName("horizontalLayout_5");
         horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Minimum);
@@ -103,12 +92,13 @@ public:
 
         labelLogin = new QLabel(layoutWidget);
         labelLogin->setObjectName("labelLogin");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(labelLogin->sizePolicy().hasHeightForWidth());
         labelLogin->setSizePolicy(sizePolicy);
         labelLogin->setMinimumSize(QSize(180, 30));
+        labelLogin->setMaximumSize(QSize(180, 30));
         QFont font;
         font.setFamilies({QString::fromUtf8("Arial")});
         font.setPointSize(25);
@@ -125,7 +115,7 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_5);
 
-        verticalSpacer_2 = new QSpacerItem(50, 50, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
+        verticalSpacer_2 = new QSpacerItem(50, 30, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
 
         verticalLayout->addItem(verticalSpacer_2);
 
@@ -139,21 +129,26 @@ public:
         horizontalLayout->setObjectName("horizontalLayout");
         ipLabel = new QLabel(layoutWidget);
         ipLabel->setObjectName("ipLabel");
-        sizePolicy.setHeightForWidth(ipLabel->sizePolicy().hasHeightForWidth());
-        ipLabel->setSizePolicy(sizePolicy);
-        ipLabel->setMinimumSize(QSize(30, 30));
-        ipLabel->setMaximumSize(QSize(30, 30));
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(ipLabel->sizePolicy().hasHeightForWidth());
+        ipLabel->setSizePolicy(sizePolicy1);
+        ipLabel->setMinimumSize(QSize(40, 30));
+        ipLabel->setMaximumSize(QSize(40, 30));
         QFont font1;
         font1.setPointSize(12);
         ipLabel->setFont(font1);
+        ipLabel->setTextFormat(Qt::TextFormat::RichText);
+        ipLabel->setScaledContents(true);
         ipLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
         horizontalLayout->addWidget(ipLabel);
 
         ipEdit = new QLineEdit(layoutWidget);
         ipEdit->setObjectName("ipEdit");
-        sizePolicy.setHeightForWidth(ipEdit->sizePolicy().hasHeightForWidth());
-        ipEdit->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(ipEdit->sizePolicy().hasHeightForWidth());
+        ipEdit->setSizePolicy(sizePolicy1);
         ipEdit->setMinimumSize(QSize(140, 20));
         ipEdit->setMaximumSize(QSize(140, 25));
         ipEdit->setStyleSheet(QString::fromUtf8("border-color: rgb(0, 0, 0);"));
@@ -185,19 +180,20 @@ public:
         horizontalLayout_2->setObjectName("horizontalLayout_2");
         portLabel = new QLabel(layoutWidget);
         portLabel->setObjectName("portLabel");
-        sizePolicy.setHeightForWidth(portLabel->sizePolicy().hasHeightForWidth());
-        portLabel->setSizePolicy(sizePolicy);
-        portLabel->setMinimumSize(QSize(30, 30));
-        portLabel->setMaximumSize(QSize(30, 30));
+        sizePolicy1.setHeightForWidth(portLabel->sizePolicy().hasHeightForWidth());
+        portLabel->setSizePolicy(sizePolicy1);
+        portLabel->setMinimumSize(QSize(40, 30));
+        portLabel->setMaximumSize(QSize(40, 30));
         portLabel->setFont(font1);
+        portLabel->setScaledContents(true);
         portLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
         horizontalLayout_2->addWidget(portLabel);
 
         portEdit = new QLineEdit(layoutWidget);
         portEdit->setObjectName("portEdit");
-        sizePolicy.setHeightForWidth(portEdit->sizePolicy().hasHeightForWidth());
-        portEdit->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(portEdit->sizePolicy().hasHeightForWidth());
+        portEdit->setSizePolicy(sizePolicy1);
         portEdit->setMinimumSize(QSize(140, 20));
         portEdit->setMaximumSize(QSize(140, 25));
         portEdit->setAutoFillBackground(true);
@@ -223,25 +219,25 @@ public:
 
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName("horizontalLayout_7");
-        horizontalSpacer_9 = new QSpacerItem(50, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_9 = new QSpacerItem(50, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_7->addItem(horizontalSpacer_9);
 
         listenBtn = new QPushButton(layoutWidget);
         listenBtn->setObjectName("listenBtn");
-        sizePolicy.setHeightForWidth(listenBtn->sizePolicy().hasHeightForWidth());
-        listenBtn->setSizePolicy(sizePolicy);
-        listenBtn->setMinimumSize(QSize(100, 30));
+        sizePolicy1.setHeightForWidth(listenBtn->sizePolicy().hasHeightForWidth());
+        listenBtn->setSizePolicy(sizePolicy1);
+        listenBtn->setMinimumSize(QSize(120, 20));
         QFont font2;
         font2.setFamilies({QString::fromUtf8("Arial")});
-        font2.setPointSize(23);
+        font2.setPointSize(20);
         font2.setBold(true);
         listenBtn->setFont(font2);
         listenBtn->setIconSize(QSize(16, 16));
 
         horizontalLayout_7->addWidget(listenBtn);
 
-        horizontalSpacer_10 = new QSpacerItem(50, 20, QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_10 = new QSpacerItem(50, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_7->addItem(horizontalSpacer_10);
 
@@ -250,21 +246,22 @@ public:
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName("horizontalLayout_6");
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+        horizontalSpacer = new QSpacerItem(50, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_6->addItem(horizontalSpacer);
 
         joinBtn = new QPushButton(layoutWidget);
         joinBtn->setObjectName("joinBtn");
-        sizePolicy.setHeightForWidth(joinBtn->sizePolicy().hasHeightForWidth());
-        joinBtn->setSizePolicy(sizePolicy);
-        joinBtn->setMinimumSize(QSize(100, 30));
+        sizePolicy1.setHeightForWidth(joinBtn->sizePolicy().hasHeightForWidth());
+        joinBtn->setSizePolicy(sizePolicy1);
+        joinBtn->setMinimumSize(QSize(120, 20));
+        joinBtn->setMaximumSize(QSize(16777215, 30));
         joinBtn->setFont(font2);
         joinBtn->setIconSize(QSize(16, 16));
 
         horizontalLayout_6->addWidget(joinBtn);
 
-        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_7 = new QSpacerItem(50, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_6->addItem(horizontalSpacer_7);
 
@@ -276,8 +273,8 @@ public:
 
         framePic = new QFrame(layoutWidget);
         framePic->setObjectName("framePic");
-        sizePolicy.setHeightForWidth(framePic->sizePolicy().hasHeightForWidth());
-        framePic->setSizePolicy(sizePolicy);
+        sizePolicy1.setHeightForWidth(framePic->sizePolicy().hasHeightForWidth());
+        framePic->setSizePolicy(sizePolicy1);
         framePic->setMinimumSize(QSize(234, 341));
         framePic->setMaximumSize(QSize(234, 341));
         framePic->setFrameShape(QFrame::Shape::NoFrame);
@@ -304,11 +301,8 @@ public:
         OnlineWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(OnlineWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 655, 17));
+        menubar->setGeometry(QRect(0, 0, 647, 17));
         OnlineWindow->setMenuBar(menubar);
-        statusbar = new QStatusBar(OnlineWindow);
-        statusbar->setObjectName("statusbar");
-        OnlineWindow->setStatusBar(statusbar);
 
         retranslateUi(OnlineWindow);
 

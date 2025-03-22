@@ -260,6 +260,7 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 		../../BlackAndWhiteBlock.pro \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Widgets.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Gui.prl \
+		../../../../qt/6.8.2/mingw_64/lib/Qt6Network.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Core.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6EntryPoint.prl \
 		../../../../qt/6.8.2/mingw_64/mkspecs/features/build_pass.prf \
@@ -455,6 +456,7 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 ../../BlackAndWhiteBlock.pro:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Widgets.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Gui.prl:
+../../../../qt/6.8.2/mingw_64/lib/Qt6Network.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Core.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6EntryPoint.prl:
 ../../../../qt/6.8.2/mingw_64/mkspecs/features/build_pass.prf:

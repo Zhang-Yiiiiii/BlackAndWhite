@@ -19,11 +19,14 @@
 #include <QToolTip>
 #include <QLayout>
 #include "loginwindow.h"
+#include "onlinewindow.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainScene;
+namespace Ui
+{
+    class MainScene;
 }
+
 QT_END_NAMESPACE
 
 class MainScene : public QMainWindow
@@ -42,16 +45,22 @@ private:
     QString m_password = "";
 
     //关卡按钮数组
-    Hexagon *m_selectBtns[SELECTBTNNUMBER];
+    Hexagon* m_selectBtns[SELECTBTNNUMBER];
 
     //游戏关卡界面
-    GameScene * m_gameScene = nullptr;
+    GameScene* m_gameScene = nullptr;
 
     //自建地图的对话框
-    BuildMapDialog * m_mydialog;
+    BuildMapDialog* m_mydialog;
 
     //游戏管理员
-    UserManager * m_usermanager = nullptr;
+    UserManager* m_usermanager = nullptr;
+
+    //联机模式
+    OnlineWindow* m_onlineWindow = nullptr;
+
+    //是否是联机模式
+    bool m_isOnlineMode = false;
 
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
@@ -60,25 +69,29 @@ private:
     void showSelectBtn();
 
     //自建地图函数  buildWay==0:起点建图 buildWay==1:终点建图
-    void selfBuildGame(bool buildWay);
+    void selfBuildGame(gameMode buildWay);
 
     //显示自建地图对话框
-    void showBuildDialog(bool buildWay);
+    void showBuildDialog(gameMode buildWay);
 
     //进入游戏场景  enterWay-> 0:起点建图  1：终点建图   2：游戏模式
-    void enterGameScene(int gameLevel, int gameStep = 1, int bugX = 1, int bugY = 1, int bugDirection = 1, int enterWay = 3);
+    void enterGameScene
+    (int gameLevel, gameMode enterWay = playMode, int gameStep = 1, int bugX = 1, int bugY = 1,
+     int bugDirection = 1);
 
     //创建保存按钮
-    void createSaveButton(int gameStep, int bugX,int bugY,int bugDirection, bool buildWay);
+    void createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, gameMode buildWay);
 
     //处理保存按钮点击
-    void handleSaveButtonClicked(bool buildWay, int gameStep, int bugX,int bugY,int bugDirection);
+    void handleSaveButtonClicked(gameMode buildWay, int gameStep, int bugX, int bugY, int bugDirection);
 
     //显示登录对话框
-    LoginWindow * showLoginWindow();
+    LoginWindow* showLoginWindow();
+
+signals:
 
 private:
-    Ui::MainScene *ui;
+    Ui::MainScene* ui;
 
 private slots:
     //用户登录
@@ -88,7 +101,7 @@ private slots:
     void onHexagonClicked(int gameLevel);
 
     //处理对话框返回的信息
-    void onDialogInfoReceived(bool buildWay);
+    void onDialogInfoReceived(gameMode buildWay);
 
     //处理返回信号
     void onGameSceneChangeBack();
@@ -99,6 +112,6 @@ private slots:
     //用户确定注册
     void onUserConfirmRegister(LoginWindow * loginWindow);
 
-
 };
+
 #endif // MAINSCENE_H

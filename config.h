@@ -26,10 +26,9 @@
 #define BOARDPOSY 50  //棋盘左上角的Y
 
 /************游戏数据配置数据******************/
-#define DATAPATH "D:/data.txt"  //游戏数据
-
+#define DATAPATH  "D:/QtProjects/BlackAndWhiteBlock/data.txt" //游戏数据
 /************用户管理配置数据******************/
-#define USERDATAPATH "D:/userData.txt"  //用户数据
+#define USERDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/userData.txt" //用户数据
 
 /************登录界面配置数据******************/
 #define USERACCOUNTICON ":/icon/userAccountIcon.png"      //用户账户图标
