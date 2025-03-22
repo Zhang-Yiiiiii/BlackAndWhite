@@ -12,6 +12,8 @@ MainScene::MainScene(QWidget *parent)
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
+    this->setAttribute(Qt::WA_DeleteOnClose);
+
     //初始化用户管理员
     this->m_usermanager = new UserManager;
 
@@ -43,18 +45,28 @@ MainScene::MainScene(QWidget *parent)
     //登录用户
     connect(this->ui->actionLogin, &QAction::triggered, this, &MainScene::onUserLogin);
 
+    //显示选关六边形
+    showSelectBtn();
+
     //进行联机
     connect(ui->online, &QAction::triggered, this, [ = ]()
     {
-        this->m_onlineWindow = new OnlineWindow();
+        this->m_onlineWindow = new OnlineWindow(this);
+        m_onlineWindow->show();
 
         //监听是否连接成功
         connect(m_onlineWindow, &OnlineWindow::connectSuccessfully, this, [ = ]()
         {
             m_isOnlineMode = true;
+            m_onlineWindow->hide();
         });
 
-        m_onlineWindow->show();
+        //监听断开连接
+        connect(m_onlineWindow->m_clientConnection, &QTcpSocket::disconnected, this, [ = ]()
+        {
+            m_isOnlineMode = false;
+            QMessageBox::about(this, "提醒", "联机已断开");
+        });
 
         //监听对方进入游戏
         connect(m_onlineWindow, &OnlineWindow::rivalEnterGame, this, [ = ](int gameLevel)
@@ -62,9 +74,6 @@ MainScene::MainScene(QWidget *parent)
             enterGameScene(gameLevel, onlineMode);
         });
     });
-
-    //显示选关六边形
-    showSelectBtn();
 }
 
 //重写绘图事件
@@ -91,23 +100,23 @@ void MainScene::showSelectBtn()
         m_selectBtns[i]->setParent(this);
 
         //监听六边形被点击的信号  进入游戏场景
-        connect(m_selectBtns[i], &Hexagon::beClicked, this, &MainScene::onHexagonClicked);
-
-        //联机模式 告诉对方也进入
-        if(m_isOnlineMode)
+        connect(m_selectBtns[i], &Hexagon::beClicked, this, [ = ](int gameLevel)
         {
-            connect(m_selectBtns[i], &Hexagon::beClicked, this, [ = ](int gameLevel)
+            onHexagonClicked(gameLevel);
+
+            //联机模式 告诉对方也进入
+            if(m_isOnlineMode)
             {
                 m_onlineWindow->m_clientConnection->write("ENTER_GAME" + QString::number(gameLevel).toLatin1());
-            });
-        }
-
+                m_onlineWindow->m_clientConnection->flush();
+            }
+        });
     }
 
     //六边形起始点
     int x = 950;
     int y = 200;
-    int k = 1;
+    int k = 1;  //每行个数
     int cnt = 4;  //计算每行六边形数量
 
     //显示上半部分
@@ -169,7 +178,7 @@ void MainScene::showBuildDialog(gameMode buildWay)
     //从对话框获取信息
     connect(m_mydialog, &BuildMapDialog::getedInfo, this, [ = ]()
     {
-        onDialogInfoReceived(buildWay);
+        onMapingInfoReceived(buildWay);
     });
 }
 
@@ -177,11 +186,10 @@ void MainScene::showBuildDialog(gameMode buildWay)
 void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
     m_gameScene = new GameScene(gameLevel, m_userName, this->m_usermanager, this);
-    this->hide();
+    m_gameScene->m_gameMode = enterWay;  //标记游戏模式
     m_gameScene->setGeometry(this->geometry());
+    this->hide();
     m_gameScene->show();
-
-    m_gameScene->m_gameMode = enterWay;
 
     // 监听返回信号
     connect(m_gameScene, &GameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
@@ -204,7 +212,10 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         //监听我方完成游戏的信号
         connect(m_gameScene, &GameScene::gameOver, this, [ = ](int totalTime)
         {
-            m_onlineWindow->m_clientConnection->write("WINGAME" + QString::number(totalTime).toUtf8());
+            m_onlineWindow->m_clientConnection->write("WIN_GAME" + QString::number(totalTime).toUtf8());
+            m_onlineWindow->m_clientConnection->flush();
+
+            m_isWeFinished = true;
         });
 
         //监听对方完成游戏的信号
@@ -212,9 +223,18 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         {
             if (totalTime < m_gameScene->getTotalTime())    //对方胜利
             {
-                QMessageBox::about(m_gameScene, "提醒", "对方已经胜利");
-                m_onlineWindow->m_clientConnection->write("YOUWIN");
-                m_gameScene->emit changeBack();
+                qDebug() << "dui方：" << totalTime << "  wo方： " << m_gameScene->getTotalTime();
+                m_onlineWindow->m_clientConnection->write("YOU_WIN");
+                m_onlineWindow->m_clientConnection->flush();
+                QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+                emit m_gameScene->changeBack();
+            }
+            else if(m_isWeFinished) //我方胜利
+            {
+                m_onlineWindow->m_clientConnection->write("YOU_LOSE" + QString::number(totalTime).toUtf8());
+                m_onlineWindow->m_clientConnection->flush();
+                QMessageBox::about(m_gameScene, "提醒", "我方胜利");
+                emit m_gameScene->changeBack();
             }
         });
 
@@ -222,7 +242,14 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
         {
             QMessageBox::about(m_gameScene, "提醒", "我方已经胜利");
-            m_gameScene->emit changeBack();
+            emit m_gameScene->changeBack();
+        });
+
+        //监听我方输了游戏
+        connect(m_onlineWindow, &OnlineWindow::weLoseGame, this, [ = ]()
+        {
+            QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+            emit m_gameScene->changeBack();
         });
     }
 }
@@ -230,15 +257,9 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
 // 处理返回信号
 void MainScene::onGameSceneChangeBack()
 {
-    m_gameScene->hide();
     this->setGeometry(m_gameScene->geometry());
+    m_gameScene->hide();
     this->show();
-
-    if (m_gameScene)  // 释放 m_gameScene
-    {
-        delete m_gameScene;
-        m_gameScene = nullptr;
-    }
 }
 
 //处理用户登录
@@ -346,11 +367,18 @@ void MainScene::onUserLogin()
 //选关按钮被点击
 void MainScene::onHexagonClicked(int gameLevel)
 {
-    enterGameScene(gameLevel);
+    gameMode mode = playMode;
+
+    if(m_isOnlineMode)
+    {
+        mode = onlineMode;
+    }
+
+    enterGameScene(gameLevel, mode);
 }
 
 //从建图对话框中获取信息
-void MainScene::onDialogInfoReceived(gameMode buildWay)
+void MainScene::onMapingInfoReceived(gameMode buildWay)
 {
     int gameLevel, gameStep, bugX, bugY, bugDirection;
     gameLevel = m_mydialog->getNum1();

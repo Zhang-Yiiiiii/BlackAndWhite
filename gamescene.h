@@ -50,7 +50,7 @@ public:
     void showRule();
 
     //保存地图的函数，用于自建地图  buildWay==0:起点建图  buildWay==1：终点建图
-    void saveGame(bool buildWay, int step, int x, int y, int direction);
+    void saveGame(gameMode buildWay, int step, int x, int y, int direction);
 
     //获取用户当前总时间
     int getTotalTime();
@@ -88,6 +88,12 @@ private:
     //罚时label
     QLabel* m_timePenaltyLabel;
 
+    //罚时的秒数
+    int m_penaltyTime = 0;
+
+    //经过时间的秒数
+    int m_passingTime = 0;
+
     //定时器
     QElapsedTimer* m_elapsedTimer;
 
@@ -124,9 +130,6 @@ private:
     //判断是否有解
     bool startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir, int step); //已知起点
     bool destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, int step); //已知终点
-
-    //罚时的秒数
-    int m_penaltyTime = 0;
 
     //保存用户通关之后的时间
     int saveTotalTime();

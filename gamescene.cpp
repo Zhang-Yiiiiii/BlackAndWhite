@@ -14,6 +14,8 @@ GameScene::GameScene(int gameLevel, QString userName, UserManager * usermanager,
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
+    this->setAttribute(Qt::WA_DeleteOnClose);
+
     initGameInfo();    //初始化游戏信息
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
@@ -143,7 +145,6 @@ void GameScene::showBug()
     //设置属性
     bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
     bugBtn->setEnabled(false);  //设置不能点击
-
 }
 
 //重写绘图事件
@@ -365,10 +366,10 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
 }
 
 //保存自建地图 buildWay==0：起点建图  buildWay==1：终点建图
-void GameScene::saveGame(bool buildWay, int step, int x, int y, int direction)
+void GameScene::saveGame(gameMode buildWay, int step, int x, int y, int direction)
 {
     //判断是否可解 并且保存地图
-    if(buildWay == 0) //起点建图
+    if(buildWay == startingPointMode) //起点建图
     {
         if(!startingPointMaping(this->m_gameArray, QPoint(x, y), direction, step)) //不可解
         {
@@ -410,7 +411,7 @@ int GameScene::saveTotalTime()
 int GameScene::getTotalTime()
 {
     //计算总时间
-    int totalTime = m_elapsedTimer->elapsed() / 1000;
+    int totalTime = m_passingTime;
     totalTime += m_penaltyTime;
 
     return totalTime;
@@ -469,7 +470,7 @@ void GameScene::initTimer()
     m_elapsedTimer->start();
 
     m_showTimer = new QTimer(this);
-    m_showTimer->start(500);
+    m_showTimer->start(100);
 
     //监听showTimer对用户通关时间进行更新
     connect(m_showTimer, &QTimer::timeout, this, &GameScene::updateTime);
@@ -531,14 +532,16 @@ void GameScene::showPushButton()
             }
             else if (m_gameMode == onlineMode)
             {
-                emit gameOver(saveTotalTime());
+                const int totalTime = getTotalTime();
+                saveTotalTime();
+                m_showTimer->stop();
+                emit gameOver(totalTime);
             }
         }
         else
         {
             QMessageBox::about(this, "失败", "答案错误，罚时30秒");
             this->resetGame(); //重置棋盘
-
             this->m_penaltyTime += 30; //罚时增加
         }
     });
@@ -555,10 +558,8 @@ void GameScene::showPushButton()
 
         if(ret == QMessageBox::Yes)
         {
-            for(int i = 0; i < 20; i++)
-            {
-                this->resetGame(); //进行重置
-            }
+            this->resetGame(); //进行重置
+            m_penaltyTime += 30;
         }
     });
 }
@@ -567,6 +568,8 @@ void GameScene::showPushButton()
 void GameScene::updateTime()
 {
     int secs = m_elapsedTimer->elapsed() / 1000;
+    m_passingTime = secs;
+
     int mins = secs / 60;
     int hours = mins / 60;
     secs %= 60;

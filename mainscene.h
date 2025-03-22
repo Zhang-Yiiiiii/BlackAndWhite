@@ -5,6 +5,7 @@
  * class: MainScene （主场景类）
  *
  * 用处： 用于显示主页面、显示选关按钮、进行登录、用户注册、创建地图、说明游戏规则
+ *       进行联机
  *
  */
 
@@ -53,14 +54,17 @@ private:
     //自建地图的对话框
     BuildMapDialog* m_mydialog;
 
-    //游戏管理员
+    //用户管理员
     UserManager* m_usermanager = nullptr;
 
-    //联机模式
+    //联机窗口
     OnlineWindow* m_onlineWindow = nullptr;
 
     //是否是联机模式
     bool m_isOnlineMode = false;
+
+    //我方是否已经完成游戏
+    bool m_isWeFinished = false;
 
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
@@ -68,13 +72,13 @@ private:
     //显示选关六边形
     void showSelectBtn();
 
-    //自建地图函数  buildWay==0:起点建图 buildWay==1:终点建图
+    //自建地图函数
     void selfBuildGame(gameMode buildWay);
 
     //显示自建地图对话框
     void showBuildDialog(gameMode buildWay);
 
-    //进入游戏场景  enterWay-> 0:起点建图  1：终点建图   2：游戏模式
+    //进入游戏场景
     void enterGameScene
     (int gameLevel, gameMode enterWay = playMode, int gameStep = 1, int bugX = 1, int bugY = 1,
      int bugDirection = 1);
@@ -100,8 +104,8 @@ private slots:
     //进入游戏场景
     void onHexagonClicked(int gameLevel);
 
-    //处理对话框返回的信息
-    void onDialogInfoReceived(gameMode buildWay);
+    //处理建图对话框返回的信息
+    void onMapingInfoReceived(gameMode buildWay);
 
     //处理返回信号
     void onGameSceneChangeBack();

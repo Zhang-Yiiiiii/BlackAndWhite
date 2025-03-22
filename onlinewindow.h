@@ -25,7 +25,6 @@ public:
     QString m_ip;
     unsigned short m_port;
 
-    //作为服务器
     QTcpServer* m_server = nullptr;
     QTcpSocket* m_clientConnection = nullptr;
 
@@ -37,6 +36,7 @@ signals:
     void rivalEnterGame(int gameLevel); //对手进入游戏
     void rivalOverGame(int totalTime);  //对手完成游戏
     void weWinGame();  //我方赢得游戏
+    void weLoseGame(); //我方输了游戏
 
 private slots:
     void onListenBtnClicked();  //创建房间

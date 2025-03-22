@@ -9,7 +9,7 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
+    //this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
 
     this->setFixedSize(517, 363);
 
@@ -26,7 +26,7 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
     this->ui->joinBtn->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
 
     // 置于顶层
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);
+    //this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     //设置默认ip和port
     this->ui->portEdit->setText("8888");
@@ -35,7 +35,6 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
     //监听按钮的点击
     connect(ui->listenBtn, &QPushButton::clicked, this, &OnlineWindow::onListenBtnClicked); //创建房间
     connect(ui->joinBtn, &QPushButton::clicked, this, &OnlineWindow::onJoinBtnClicked); //加入房间
-
 }
 
 OnlineWindow::~OnlineWindow()
@@ -45,17 +44,12 @@ OnlineWindow::~OnlineWindow()
 
 void OnlineWindow::paintEvent(QPaintEvent*)
 {
-
     QPainter painter(this);
     QPixmap loginPic;
 
     //画窗口背景
     loginPic.load(LOGINBACKGROUND);
     painter.drawPixmap(0, 0, loginPic.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    //画白色背景
-    // loginPic.load(LOGINWIHTEBACKGROUND);
-    // painter.drawPixmap(15,17,loginPic);
 
     //画机器人图片
     loginPic.load(LOGINROBOT);
@@ -65,38 +59,38 @@ void OnlineWindow::paintEvent(QPaintEvent*)
 //作为服务端 监听连接
 void OnlineWindow::onListenBtnClicked()
 {
-    //删除之前的套接字
-    if(m_clientConnection)
+    if(!m_server)
+    {
+        m_server = new QTcpServer(this);
+    }
+
+    if (m_clientConnection)
     {
         m_clientConnection->close();
         delete m_clientConnection;
         m_clientConnection = nullptr;
     }
 
-    if(!m_server)
-    {
-        m_server = new QTcpServer(this);
-    }
-
     if(m_server->isListening())
     {
         QMessageBox::about(this, "提醒", "已经开创房间");
+        return;
     }
 
+    //获取ip port
     QString ip = ui->ipEdit->text();
     unsigned short port = ui->portEdit->text().toUShort();
 
     this->m_server->listen(QHostAddress(ip), port);
 
+    //连接成功
     connect(m_server, &QTcpServer::newConnection, this, [ = ]()
     {
+        m_clientConnection = m_server->nextPendingConnection();
         QMessageBox::about(this, "提醒", "连接成功");
-
-        emit connectSuccessfully();
-
         this->hide();
 
-        m_clientConnection = m_server->nextPendingConnection();
+        emit connectSuccessfully();
 
         //处理得到的信息
         connect(m_clientConnection, &QTcpSocket::readyRead, this, &OnlineWindow::handleInfo);
@@ -107,12 +101,8 @@ void OnlineWindow::onListenBtnClicked()
 void OnlineWindow::onJoinBtnClicked()
 {
     //删除服务器
-    if(!m_server)
+    if(m_server)
     {
-        m_clientConnection->close();
-        delete m_clientConnection;
-        m_clientConnection = nullptr;
-
         m_server->close();
         delete m_server;
         m_server = nullptr;
@@ -123,24 +113,27 @@ void OnlineWindow::onJoinBtnClicked()
         m_clientConnection = new QTcpSocket(this);
     }
 
+    //获取ip port
     QString ip = ui->ipEdit->text();
     unsigned short port = ui->portEdit->text().toUShort();
 
     m_clientConnection->connectToHost(QHostAddress(ip), port);
 
+    //连接成功
     connect(m_clientConnection, &QTcpSocket::connected, this, [ = ]()
     {
-        QMessageBox::about(this, "提醒", "连接成功");
-
         emit connectSuccessfully();
 
-        this->hide();
+        //处理得到的信息
+        connect(m_clientConnection, &QTcpSocket::readyRead, this, &OnlineWindow::handleInfo);
+        QMessageBox::about(this, "提醒", "连接成功");
     });
 }
 
 void OnlineWindow::handleInfo()
 {
     QString data = m_clientConnection->readAll();
+    qDebug() << data;
 
     //进入游戏
     if(data.startsWith("ENTER_GAME"))
@@ -149,14 +142,18 @@ void OnlineWindow::handleInfo()
         const int gameLevel = data.mid(numberPos).toInt();
         emit rivalEnterGame(gameLevel);
     }
-    else if(data.startsWith("WINGAME"))
+    else if(data.startsWith("WIN_GAME"))
     {
-        const int timePos = 7;
+        const int timePos = 8;
         const int totalTime = data.mid(timePos).toInt();
         emit rivalOverGame(totalTime);
     }
-    else if(data.startsWith("YOUWIN"))
+    else if(data == "YOU_WIN")
     {
         emit weWinGame();
+    }
+    else if(data == "YOU_LOSE")
+    {
+        emit weLoseGame();
     }
 }

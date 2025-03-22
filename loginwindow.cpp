@@ -44,7 +44,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     this->ui->registerButton->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
 
     // 置于顶层
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);
+    //this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     // 登录 按钮的点击
     connect(this->ui->loginButton, &QPushButton::clicked, this, &LoginWindow::onLoginAccount);
