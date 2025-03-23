@@ -68,7 +68,7 @@ void UserManager::addUser(QString userName, QString pwd)
     newSpace[this->m_userNum - 1] = newUser;
 
     //释放原有空间
-    delete[] this->m_userArray;
+    releaseUserArray();
     //更改新空间指向
     this->m_userArray = newSpace;
 
@@ -162,6 +162,24 @@ void UserManager::initUser()
     ifs.close();
 }
 
+void UserManager::releaseUserArray()
+{
+    if(m_userArray)
+    {
+        for(int i = 0; i < m_userNum; i++)
+        {
+            if(m_userArray[i])
+            {
+                delete m_userArray[i];
+                m_userArray[i] = nullptr;
+            }
+        }
+
+        delete[] m_userArray;
+        m_userArray = nullptr;
+    }
+}
+
 void UserManager::userSort(int level)
 {
     QString name;
@@ -210,7 +228,7 @@ User* UserManager::findUser(QString userName)
     return user;
 }
 
-void UserManager::updatePassTime(QString username, int totalTime, int level)
+void UserManager::updateTotalTime(QString username, int totalTime, int level)
 {
     User * user = findUser(username);
 
@@ -239,7 +257,7 @@ int UserManager::verifyUserInfo(QString name, QString password)
 {
     //验证用户信息
 
-    //返回值 1：不存在用户 2：密码错误 3：登录成功
+    //返回值 1：不存在用户  2：密码错误  3：登录成功
     for(int i = 0; i < this->m_userNum; i++)
     {
         QString tempName = this->m_userArray[i]->getUserName();
@@ -261,4 +279,6 @@ int UserManager::verifyUserInfo(QString name, QString password)
 UserManager::~UserManager()
 {
     this->save();
+
+    releaseUserArray();
 }

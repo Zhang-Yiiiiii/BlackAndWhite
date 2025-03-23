@@ -35,7 +35,7 @@ public:
     //重写画图事件
     void paintEvent(QPaintEvent*) override;
 
-    void closeEvent(QCloseEvent*);
+    void closeEvent(QCloseEvent*) override;
 
 private:
     //用户名

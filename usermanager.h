@@ -32,7 +32,7 @@ public:
     void userSort(int level);
 
     //更新用户时间
-    void updatePassTime(QString username, int totalTime, int level);
+    void updateTotalTime(QString username, int totalTime, int level);
 
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
     int verifyUserInfo(QString name, QString password);
@@ -58,6 +58,9 @@ private:
 
     //初始化用户
     void initUser();
+
+    //释放用户数组
+    void releaseUserArray();
 };
 
 #endif // USERMANAGER_H

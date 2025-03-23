@@ -8,7 +8,7 @@
 #define MYTITLE "黑白格"  //窗口标题
 #define MYICON ":/icon/debug1.png"  //窗口图标
 #define SELECTBTNNUMBER 37  //选关按钮数量
-#define RULEPATH "D:/rule.txt" //说明文件的路径
+#define RULEPATH "D:/QtProjects/BlackAndWhiteBlock/rule.txt" //说明文件的路径
 
 /************六边形按钮配置数据******************/
 #define HEXAGONPATH ":/icon/hexagon.png"  //六边形图片

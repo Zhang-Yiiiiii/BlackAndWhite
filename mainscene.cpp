@@ -12,8 +12,6 @@ MainScene::MainScene(QWidget *parent)
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
-    this->setAttribute(Qt::WA_DeleteOnClose);
-
     //初始化用户管理员
     this->m_usermanager = new UserManager;
 
@@ -182,11 +180,11 @@ void MainScene::showBuildDialog(gameMode buildWay)
     });
 }
 
-// 进入游戏场景
+//进入游戏场景
 void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
     m_gameScene = new GameScene(gameLevel, m_userName, this->m_usermanager, this);
-    m_gameScene->m_gameMode = enterWay;  //标记游戏模式
+    m_gameScene->m_gameMode = enterWay;  // 标记游戏模式
     m_gameScene->setGeometry(this->geometry());
     this->hide();
     m_gameScene->show();
@@ -194,58 +192,70 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
     // 监听返回信号
     connect(m_gameScene, &GameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
 
-    if (enterWay == playMode) //游戏模式
+    if (enterWay == playMode) // 游戏模式
     {
         return;
     }
-    else if (enterWay == startingPointMode || enterWay == destinationMode)  //自建图模式
+    else if (enterWay == startingPointMode || enterWay == destinationMode)  // 自建图模式
     {
-        //断开提交按钮
+        // 断开提交按钮
         m_gameScene->submitBtn->setDisabled(true);
         m_gameScene->submitBtn->hide();
 
         // 创建保存按钮
         createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
     }
-    else    //联机模式
+    else    // 联机模式
     {
-        //监听我方完成游戏的信号
-        connect(m_gameScene, &GameScene::gameOver, this, [ = ](int totalTime)
+        // 断开已有的连接
+        disconnect(m_gameScene, &GameScene::gameOver, this, nullptr);
+        disconnect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, nullptr);
+        disconnect(m_onlineWindow, &OnlineWindow::weWinGame, this, nullptr);
+        disconnect(m_onlineWindow, &OnlineWindow::weLoseGame, this, nullptr);
+
+        m_isWeFinished = false; // 我方未完成游戏
+        m_isRivalFinished = false; // 对方未完成游戏
+        m_ourTotalTime = 0;
+        m_rivalTotalTime = 0;
+
+        // 监听我方完成游戏的信号
+        connect(m_gameScene, &GameScene::gameOver, this, [ & ](int totalTime)
         {
+            m_isWeFinished = true;
+            m_ourTotalTime = totalTime;
+
+            // 发送胜利消息给对方
             m_onlineWindow->m_clientConnection->write("WIN_GAME" + QString::number(totalTime).toUtf8());
             m_onlineWindow->m_clientConnection->flush();
 
-            m_isWeFinished = true;
+            // 检查对方是否已经完成游戏
+            if (m_isRivalFinished)
+            {
+                compareResults(m_ourTotalTime, m_rivalTotalTime);
+            }
         });
 
-        //监听对方完成游戏的信号
+        // 监听对方完成游戏的信号
         connect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, [ = ](int totalTime)
         {
-            if (totalTime < m_gameScene->getTotalTime())    //对方胜利
+            m_isRivalFinished = true;
+            m_rivalTotalTime = totalTime;
+
+            // 检查我方是否已经完成游戏
+            if (m_isWeFinished)
             {
-                qDebug() << "dui方：" << totalTime << "  wo方： " << m_gameScene->getTotalTime();
-                m_onlineWindow->m_clientConnection->write("YOU_WIN");
-                m_onlineWindow->m_clientConnection->flush();
-                QMessageBox::about(m_gameScene, "提醒", "对方胜利");
-                emit m_gameScene->changeBack();
-            }
-            else if(m_isWeFinished) //我方胜利
-            {
-                m_onlineWindow->m_clientConnection->write("YOU_LOSE" + QString::number(totalTime).toUtf8());
-                m_onlineWindow->m_clientConnection->flush();
-                QMessageBox::about(m_gameScene, "提醒", "我方胜利");
-                emit m_gameScene->changeBack();
+                compareResults(m_ourTotalTime, m_rivalTotalTime);
             }
         });
 
-        //监听我方赢得游戏
+        // 监听我方赢得游戏
         connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
         {
             QMessageBox::about(m_gameScene, "提醒", "我方已经胜利");
             emit m_gameScene->changeBack();
         });
 
-        //监听我方输了游戏
+        // 监听我方输了游戏
         connect(m_onlineWindow, &OnlineWindow::weLoseGame, this, [ = ]()
         {
             QMessageBox::about(m_gameScene, "提醒", "对方胜利");
@@ -254,21 +264,44 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
     }
 }
 
+// 比较结果
+void MainScene::compareResults(int ourTime, int rivalTime)
+{
+    if (ourTime < rivalTime)
+    {
+        // 我方胜利
+        QMessageBox::about(m_gameScene, "提醒", "我方胜利");
+    }
+    else if (ourTime > rivalTime)
+    {
+        // 对方胜利
+        QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+    }
+    else
+    {
+        // 平局
+        QMessageBox::about(m_gameScene, "提醒", "平局");
+    }
+
+    emit m_gameScene->changeBack();
+}
+
 // 处理返回信号
 void MainScene::onGameSceneChangeBack()
 {
     this->setGeometry(m_gameScene->geometry());
-    m_gameScene->hide();
+    m_gameScene->close();
+    m_gameScene = nullptr;
     this->show();
 }
 
 //处理用户登录
-void MainScene::onUserConfirmLogin(LoginWindow * loginWindow)
+void MainScene::onUserConfirmLogin()
 {
-    int ret = this->m_usermanager->verifyUserInfo(loginWindow->getUserName(), loginWindow->getUserPassword());
+    int ret = this->m_usermanager->verifyUserInfo(m_loginWindow->getUserName(), m_loginWindow->getUserPassword());
 
     //提示信息所在位置
-    QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width() / 2 - 35, loginWindow->height() + 100));
+    QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
 
     if(ret == 3) //登录成功
     {
@@ -276,12 +309,10 @@ void MainScene::onUserConfirmLogin(LoginWindow * loginWindow)
         QToolTip::showText(pos, "登录成功", this, this->rect(), 5000);
 
         //记录用户信息
-        this->m_userName = loginWindow->getUserName();
-        this->m_password = loginWindow->getUserPassword();
+        this->m_userName = m_loginWindow->getUserName();
+        this->m_password = m_loginWindow->getUserPassword();
 
         this->show();
-        delete loginWindow;
-        loginWindow = nullptr;
     }
     else if(ret == 2) //密码错误
     {
@@ -323,44 +354,46 @@ void MainScene::handleSaveButtonClicked(gameMode buildWay, int gameStep, int bug
 }
 
 //显示登录对话框
-LoginWindow* MainScene::showLoginWindow()
+void MainScene::showLoginWindow()
 {
-    LoginWindow * loginWindow = new LoginWindow();
-    loginWindow->setWindowIcon(QIcon(MYICON));
-    loginWindow->move((this->width() - loginWindow->width()) / 2, (this->height() - loginWindow->height()) / 2);
+    if(!m_loginWindow)
+    {
+        m_loginWindow = new LoginWindow();
+    }
+
+    m_loginWindow->setWindowIcon(QIcon(MYICON));
+    m_loginWindow->move((this->width() - m_loginWindow->width()) / 2, (this->height() - m_loginWindow->height()) / 2);
 
     this->hide();
-    loginWindow->show();
+    m_loginWindow->show();
 
     //关闭对话框时重新显示主页面
-    connect(loginWindow, &LoginWindow::userClose, this, [ = ]() mutable
+    connect(m_loginWindow, &LoginWindow::userClose, this, [ = ]() mutable
     {
 
         this->show();   //显示游戏界面
 
-        delete loginWindow;
-        loginWindow = nullptr;
+        delete m_loginWindow;
+        m_loginWindow = nullptr;
     });
-
-    return loginWindow;
 }
 
 //用户登录
 void MainScene::onUserLogin()
 {
     //显示登录对话框
-    LoginWindow * loginWindow = showLoginWindow();
+    showLoginWindow();
 
     //获取登录信息
-    connect(loginWindow, &LoginWindow::userConfirmed, this, [this, loginWindow]()mutable
+    connect(m_loginWindow, &LoginWindow::userConfirmed, this, [this]()mutable
     {
-        onUserConfirmLogin(loginWindow);
+        onUserConfirmLogin();
     });
 
     //用户注册
-    connect(loginWindow, &LoginWindow::userRegistered, this, [this, loginWindow]() mutable
+    connect(m_loginWindow, &LoginWindow::userRegistered, this, [this]() mutable
     {
-        onUserConfirmRegister(loginWindow);
+        onUserConfirmRegister();
     });
 }
 
@@ -394,12 +427,12 @@ void MainScene::onMapingInfoReceived(gameMode buildWay)
 }
 
 //用户确定注册
-void MainScene::onUserConfirmRegister(LoginWindow * loginWindow)
+void MainScene::onUserConfirmRegister()
 {
-    int ret = this->m_usermanager->verifyUserInfo(loginWindow->getUserName(), loginWindow->getUserPassword());
+    int ret = this->m_usermanager->verifyUserInfo(m_loginWindow->getUserName(), m_loginWindow->getUserPassword());
 
     //提示信息所在位置
-    QPoint pos = loginWindow->mapToGlobal(QPoint(loginWindow->width() / 2 - 35, loginWindow->height() + 100));
+    QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
 
     if(ret == 3 || ret == 2) //用户存在
     {
@@ -408,15 +441,14 @@ void MainScene::onUserConfirmRegister(LoginWindow * loginWindow)
     }
     else //注册成功
     {
-        this->m_userName = loginWindow->getUserName();
-        this->m_password = loginWindow->getUserPassword();
+        this->m_userName = m_loginWindow->getUserName();
+        this->m_password = m_loginWindow->getUserPassword();
 
         //显示提示信息
         QToolTip::showText(pos, "注册成功，自动登录", this, this->rect(), 5000);
 
+        m_loginWindow->hide();
         this->show();
-        delete loginWindow;
-        loginWindow = nullptr;
 
         //添加用户信息
         this->m_usermanager->addUser(this->m_userName, this->m_password);
@@ -427,6 +459,25 @@ MainScene::~MainScene()
 {
     delete ui;
 
-    delete m_usermanager;
-    m_usermanager = nullptr;
+    if(m_usermanager)
+    {
+        delete m_usermanager;
+        m_usermanager = nullptr;
+    }
+
+    if(m_loginWindow)
+    {
+        m_loginWindow->deleteLater();
+        m_loginWindow = nullptr;
+    }
+
+    //释放选关按钮
+    for(int i = 0 ; i < SELECTBTNNUMBER; i++)
+    {
+        if(m_selectBtns[i])
+        {
+            delete m_selectBtns[i];
+            m_selectBtns[i] = nullptr;
+        }
+    }
 }

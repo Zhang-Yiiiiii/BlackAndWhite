@@ -43,13 +43,11 @@ static constexpr auto qt_meta_stringdata_ZN9MainSceneE = QtMocHelpers::stringDat
     "",
     "onHexagonClicked",
     "gameLevel",
-    "onDialogInfoReceived",
+    "onMapingInfoReceived",
     "gameMode",
     "buildWay",
     "onGameSceneChangeBack",
     "onUserConfirmLogin",
-    "LoginWindow*",
-    "loginWindow",
     "onUserConfirmRegister"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
@@ -74,16 +72,16 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
        3,    1,   51,    2, 0x08,    2 /* Private */,
        5,    1,   54,    2, 0x08,    4 /* Private */,
        8,    0,   57,    2, 0x08,    6 /* Private */,
-       9,    1,   58,    2, 0x08,    7 /* Private */,
-      12,    1,   61,    2, 0x08,    9 /* Private */,
+       9,    0,   58,    2, 0x08,    7 /* Private */,
+      10,    0,   59,    2, 0x08,    8 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
     QMetaType::Void, 0x80000000 | 6,    7,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 10,   11,
-    QMetaType::Void, 0x80000000 | 10,   11,
+    QMetaType::Void,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -102,17 +100,15 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
         // method 'onHexagonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
-        // method 'onDialogInfoReceived'
+        // method 'onMapingInfoReceived'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<gameMode, std::false_type>,
         // method 'onGameSceneChangeBack'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onUserConfirmLogin'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<LoginWindow *, std::false_type>,
         // method 'onUserConfirmRegister'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<LoginWindow *, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
@@ -124,30 +120,11 @@ void MainScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         switch (_id) {
         case 0: _t->onUserLogin(); break;
         case 1: _t->onHexagonClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 2: _t->onDialogInfoReceived((*reinterpret_cast< std::add_pointer_t<gameMode>>(_a[1]))); break;
+        case 2: _t->onMapingInfoReceived((*reinterpret_cast< std::add_pointer_t<gameMode>>(_a[1]))); break;
         case 3: _t->onGameSceneChangeBack(); break;
-        case 4: _t->onUserConfirmLogin((*reinterpret_cast< std::add_pointer_t<LoginWindow*>>(_a[1]))); break;
-        case 5: _t->onUserConfirmRegister((*reinterpret_cast< std::add_pointer_t<LoginWindow*>>(_a[1]))); break;
+        case 4: _t->onUserConfirmLogin(); break;
+        case 5: _t->onUserConfirmRegister(); break;
         default: ;
-        }
-    }
-    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        switch (_id) {
-        default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 4:
-            switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-            case 0:
-                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< LoginWindow* >(); break;
-            }
-            break;
-        case 5:
-            switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-            case 0:
-                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< LoginWindow* >(); break;
-            }
-            break;
         }
     }
 }
@@ -177,7 +154,7 @@ int MainScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 6)
-            qt_static_metacall(this, _c, _id, _a);
+            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
         _id -= 6;
     }
     return _id;

@@ -1,8 +1,6 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
-#pragma once
-
 /*
  * class: GameScene （游戏界面）
  *
@@ -23,6 +21,7 @@
 #include <QLayout>
 #include <QElapsedTimer>
 #include <QTimer>
+#include "ranklist.h"
 
 enum gameMode
 {
@@ -100,8 +99,8 @@ private:
     //控制显示时间定时器
     QTimer* m_showTimer;
 
-    //更新排行榜
-    void updateRankList();
+    //排行榜窗口
+    RankList* m_rankWindow = nullptr;
 
     //黑白格子
     GridButton* m_board[20][20];

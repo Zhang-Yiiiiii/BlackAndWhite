@@ -1,6 +1,10 @@
 #include "gridbutton.h"
 #include "config.h"
 
+#include <QAnimationGroup>
+#include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
+
 GridButton::GridButton(bool flag, QWidget *parent)
     : QPushButton{parent}, flag(flag)
 {
@@ -21,6 +25,7 @@ GridButton::GridButton(bool flag, QWidget *parent)
 
 void GridButton::changeFlag()
 {
+
     if(flag)  //现在是白色 改成黑色
     {
         flag = false;

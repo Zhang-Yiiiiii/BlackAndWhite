@@ -40,6 +40,20 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
 OnlineWindow::~OnlineWindow()
 {
     delete ui;
+
+    if(m_server)
+    {
+        m_server->close();
+        m_server->deleteLater();
+        m_server = nullptr;
+    }
+
+    if(m_clientConnection)
+    {
+        m_clientConnection->close();
+        m_clientConnection->deleteLater();
+        m_clientConnection = nullptr;
+    }
 }
 
 void OnlineWindow::paintEvent(QPaintEvent*)
@@ -135,24 +149,41 @@ void OnlineWindow::handleInfo()
     QString data = m_clientConnection->readAll();
     qDebug() << data;
 
-    //进入游戏
-    if(data.startsWith("ENTER_GAME"))
+    if (data.startsWith("ENTER_GAME"))
     {
         const int numberPos = 10;
-        const int gameLevel = data.mid(numberPos).toInt();
-        emit rivalEnterGame(gameLevel);
+        bool ok;
+        int gameLevel = data.mid(numberPos).toInt(&ok);
+
+        if (ok)
+        {
+            emit rivalEnterGame(gameLevel);
+        }
+        else
+        {
+            qDebug() << "Invalid game level received";
+        }
     }
-    else if(data.startsWith("WIN_GAME"))
+    else if (data.startsWith("WIN_GAME"))
     {
         const int timePos = 8;
-        const int totalTime = data.mid(timePos).toInt();
-        emit rivalOverGame(totalTime);
+        bool ok;
+        int totalTime = data.mid(timePos).toInt(&ok);
+
+        if (ok)
+        {
+            emit rivalOverGame(totalTime);
+        }
+        else
+        {
+            qDebug() << "Invalid time received";
+        }
     }
-    else if(data == "YOU_WIN")
+    else if (data == "YOU_WIN")
     {
         emit weWinGame();
     }
-    else if(data == "YOU_LOSE")
+    else if (data == "YOU_LOSE")
     {
         emit weLoseGame();
     }

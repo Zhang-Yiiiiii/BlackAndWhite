@@ -60,11 +60,22 @@ private:
     //联机窗口
     OnlineWindow* m_onlineWindow = nullptr;
 
+    //登录窗口
+    LoginWindow* m_loginWindow = nullptr;
+
     //是否是联机模式
     bool m_isOnlineMode = false;
 
-    //我方是否已经完成游戏
+    //记录双方时间
+    int m_ourTotalTime = 0;
+    int m_rivalTotalTime = 0;
+
+    //双方是否已经完成游戏
     bool m_isWeFinished = false;
+    bool m_isRivalFinished = false;
+
+    //比较双方结果
+    void compareResults(int ourTime, int rivalTime);
 
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
@@ -90,7 +101,7 @@ private:
     void handleSaveButtonClicked(gameMode buildWay, int gameStep, int bugX, int bugY, int bugDirection);
 
     //显示登录对话框
-    LoginWindow* showLoginWindow();
+    void showLoginWindow();
 
 signals:
 
@@ -111,10 +122,10 @@ private slots:
     void onGameSceneChangeBack();
 
     //处理登录信息
-    void onUserConfirmLogin(LoginWindow * loginWindow);
+    void onUserConfirmLogin();
 
     //用户确定注册
-    void onUserConfirmRegister(LoginWindow * loginWindow);
+    void onUserConfirmRegister();
 
 };
 

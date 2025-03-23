@@ -4,23 +4,18 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include "ranklist.h"
 
 GameScene::GameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent)
-    : QMainWindow{parent}, m_gameLevel(gameLevel), m_userName(userName), m_usermanager(usermanager)
+    : QMainWindow{parent}, m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
 {
     //设置窗口大小 标题 图标
     this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
-    this->setAttribute(Qt::WA_DeleteOnClose);
-
     initGameInfo();    //初始化游戏信息
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
-
-    this->setAttribute(Qt::WA_DeleteOnClose);      //设置关闭即释放
 
     initTimer();    //初始化定时器
 
@@ -40,7 +35,6 @@ GameScene::GameScene(int gameLevel, QString userName, UserManager * usermanager,
     QMenu * toolMenu = menubar->addMenu("工具");
 
     QAction * quitAction = startMenu->addAction("退出游戏");
-    QAction * saveAction = startMenu->addAction("保存");
 
     QAction * instructionAction = gameMenu->addAction("说明");
     QAction * rankAction = gameMenu->addAction("排行榜");
@@ -89,9 +83,15 @@ void GameScene::showRule()
 //显示排行榜
 void GameScene::showRankList()
 {
-    RankList * rankWindow = new RankList(this->m_usermanager->m_rankList, this);
-    rankWindow->move(20, 70);
-    rankWindow->show();
+    const QPoint pos(20, 70);
+
+    if(!m_rankWindow)
+    {
+        m_rankWindow = new RankList(this->m_usermanager->m_rankList, this);
+    }
+
+    m_rankWindow->move(pos);
+    m_rankWindow->show();
 }
 
 //显示棋盘的函数
@@ -196,7 +196,7 @@ void GameScene::resetGame()
 //判断是否有解  已知起点信息
 bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir, int step)
 {
-    bool gameArr[20][20];
+    bool tempArray[20][20];
     int tempStep = step;
 
     //起点
@@ -208,7 +208,7 @@ bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir
     {
         for(int j = 0; j < 20; j++)
         {
-            gameArr[i][j] = gameArray[i][j];
+            tempArray[i][j] = gameArray[i][j];
         }
     }
 
@@ -219,7 +219,7 @@ bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir
     while(tempStep--)
     {
         //改变前一格颜色
-        gameArr[x][y] = !gameArr[x][y];
+        tempArray[x][y] = !tempArray[x][y];
 
         //进行前进
         if(bugDir == 0)
@@ -240,7 +240,7 @@ bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir
         }
 
         //改变方向
-        if(gameArr[x][y])  //白色
+        if(tempArray[x][y])  //白色
         {
             bugDir++; //右转方向加一
             bugDir %= 4;
@@ -263,7 +263,7 @@ bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir
     {
         for(int j = 0; j < 20; j++)
         {
-            this->m_data->m_gameArray[m_gameLevel][i][j] = gameArr[i][j];
+            this->m_data->m_gameArray[m_gameLevel][i][j] = tempArray[i][j];
             this->m_data->m_ansArray[m_gameLevel][i][j] = gameArray[i][j];
         }
     }
@@ -278,7 +278,7 @@ bool GameScene::startingPointMaping(bool gameArray[][20], QPoint pos, int bugDir
 //判断是否有解  已知终点
 bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, int step) //棋盘 虫子位置 方向 步数
 {
-    bool gameArr[20][20];
+    bool tempArray[20][20];
     int tempStep = step;
     int dir = bugDir;
 
@@ -290,7 +290,7 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
     {
         for(int j = 0; j < 20; j++)
         {
-            gameArr[i][j] = gameArray[i][j];
+            tempArray[i][j] = gameArray[i][j];
         }
     }
 
@@ -298,11 +298,11 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
     // 1 将最后一个格子改变颜色 方便统一操作
     // 2 根据所在位置的格子颜色改变方向 黑色左转 白色右转 （黑色意味着之前是白色，当时右转，现在左转回来）
     // 3 后退一步，前一步格子颜色改变 step--
-    gameArr[x][y] = !gameArr[x][y]; //改变最后一格颜色
+    tempArray[x][y] = !tempArray[x][y]; //改变最后一格颜色
 
     while(tempStep--)
     {
-        if(gameArr[x][y])  //白色
+        if(tempArray[x][y])  //白色
         {
             bugDir++; //右转方向加一
             bugDir %= 4;
@@ -318,7 +318,7 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
         }
 
         //改变前一格颜色
-        gameArr[x][y] = !gameArr[x][y];
+        tempArray[x][y] = !tempArray[x][y];
 
         //进行后退
         if(bugDir == 0)
@@ -346,7 +346,7 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
     }
 
     //将第一格的颜色改变
-    gameArr[x][y] = !gameArr[x][y];
+    tempArray[x][y] = !tempArray[x][y];
 
     //将答案保存
     for(int i = 0; i < 20; i++)
@@ -354,7 +354,7 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
         for(int j = 0; j < 20; j++)
         {
             this->m_data->m_gameArray[m_gameLevel][i][j] = gameArray[i][j];
-            this->m_data->m_ansArray[m_gameLevel][i][j] = gameArr[i][j];
+            this->m_data->m_ansArray[m_gameLevel][i][j] = tempArray[i][j];
         }
     }
 
@@ -365,7 +365,7 @@ bool GameScene::destinationMaping(bool gameArray[][20], QPoint pos, int bugDir, 
     return true;
 }
 
-//保存自建地图 buildWay==0：起点建图  buildWay==1：终点建图
+//保存自建地图
 void GameScene::saveGame(gameMode buildWay, int step, int x, int y, int direction)
 {
     //判断是否可解 并且保存地图
@@ -390,11 +390,6 @@ void GameScene::saveGame(gameMode buildWay, int step, int x, int y, int directio
     emit changeBack();
 }
 
-void GameScene::updateRankList()
-{
-
-}
-
 //保存总用时
 int GameScene::saveTotalTime()
 {
@@ -402,7 +397,7 @@ int GameScene::saveTotalTime()
     int totalTime = getTotalTime();
 
     //更新时间
-    m_usermanager->updatePassTime(this->m_userName, totalTime, this->m_gameLevel);
+    m_usermanager->updateTotalTime(this->m_userName, totalTime, this->m_gameLevel);
 
     return totalTime;
 }
