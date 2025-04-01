@@ -10,6 +10,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    abstractgamescene.cpp \
+    antgame.cpp \
     buildmapdialog.cpp \
     data.cpp \
     gamescene.cpp \
@@ -24,6 +26,8 @@ SOURCES += \
     usermanager.cpp
 
 HEADERS += \
+    abstractgamescene.h \
+    antgame.h \
     buildmapdialog.h \
     config.h \
     data.h \

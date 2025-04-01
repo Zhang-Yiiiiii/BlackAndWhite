@@ -10,7 +10,7 @@
  */
 
 #include "config.h"
-#include "gamescene.h"
+#include "antgame.h"
 #include <QMainWindow>
 #include <QMenu>
 #include <QPainter>
@@ -49,7 +49,7 @@ private:
     Hexagon* m_selectBtns[SELECTBTNNUMBER];
 
     //游戏关卡界面
-    GameScene* m_gameScene = nullptr;
+    AntGame* m_gameScene = nullptr;
 
     //自建地图的对话框
     BuildMapDialog* m_mydialog;

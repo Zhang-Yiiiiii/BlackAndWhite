@@ -183,14 +183,14 @@ void MainScene::showBuildDialog(gameMode buildWay)
 //进入游戏场景
 void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
-    m_gameScene = new GameScene(gameLevel, m_userName, this->m_usermanager, this);
+    m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, this);
     m_gameScene->m_gameMode = enterWay;  // 标记游戏模式
     m_gameScene->setGeometry(this->geometry());
     this->hide();
     m_gameScene->show();
 
     // 监听返回信号
-    connect(m_gameScene, &GameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
+    connect(m_gameScene, &AntGame::changeBack, this, &MainScene::onGameSceneChangeBack);
 
     if (enterWay == playMode) // 游戏模式
     {
@@ -208,7 +208,7 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
     else    // 联机模式
     {
         // 断开已有的连接
-        disconnect(m_gameScene, &GameScene::gameOver, this, nullptr);
+        disconnect(m_gameScene, &AntGame::gameOver, this, nullptr);
         disconnect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, nullptr);
         disconnect(m_onlineWindow, &OnlineWindow::weWinGame, this, nullptr);
         disconnect(m_onlineWindow, &OnlineWindow::weLoseGame, this, nullptr);
@@ -219,7 +219,7 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         m_rivalTotalTime = 0;
 
         // 监听我方完成游戏的信号
-        connect(m_gameScene, &GameScene::gameOver, this, [ & ](int totalTime)
+        connect(m_gameScene, &AntGame::gameOver, this, [ & ](int totalTime)
         {
             m_isWeFinished = true;
             m_ourTotalTime = totalTime;
