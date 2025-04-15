@@ -5,6 +5,7 @@ release/data.o
 release/gamescene.o
 release/gridbutton.o
 release/hexagon.o
+release/lightoutgame.o
 release/loginwindow.o
 release/main.o
 release/mainscene.o
@@ -19,6 +20,7 @@ release/moc_buildmapdialog.o
 release/moc_gamescene.o
 release/moc_gridbutton.o
 release/moc_hexagon.o
+release/moc_lightoutgame.o
 release/moc_loginwindow.o
 release/moc_mainscene.o
 release/moc_onlinewindow.o

@@ -13,18 +13,6 @@ GameScene::GameScene(int gameLevel, QString userName, UserManager * usermanager,
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
 
-    initGameInfo();    //初始化游戏信息
-
-    usermanager->userSort(gameLevel);    //对本关的用户进行排序
-
-    initTimer();    //初始化定时器
-
-    showBoard();    //显示棋盘
-    showBug();  //显示虫子
-    showStepLabel();    //显示步数label
-    showTimeLabel();    //显示时间label
-    showPushButton();   //显示提交、返回、重置按钮
-
     //设置菜单栏
     QMenuBar * menubar = menuBar();
     menubar->setParent(this);
@@ -53,6 +41,15 @@ GameScene::GameScene(int gameLevel, QString userName, UserManager * usermanager,
     {
         exit(0);
     });
+
+    initGameInfo();    //初始化游戏信息
+    usermanager->userSort(gameLevel);    //对本关的用户进行排序
+    initTimer();    //初始化定时器
+    showBoard();    //显示棋盘
+    showBug();  //显示虫子
+    showStepLabel();    //显示步数label
+    showTimeLabel();    //显示时间label
+    showPushButton();   //显示提交、返回、重置按钮
 }
 
 //显示游戏说明

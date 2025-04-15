@@ -5,9 +5,11 @@
 #define BACKGROUDWIDTH 1500   //背景宽
 #define BACKGROUDHEIGHT 800   //背景高
 #define BACKGROUDPATH ":/image/mainScene.jpg"  //背景图片
-#define MYTITLE "黑白格"  //窗口标题
+#define MYTITLE "非黑即白"  //窗口标题
 #define MYICON ":/icon/debug1.png"  //窗口图标
-#define SELECTBTNNUMBER 37  //选关按钮数量
+#define SELECTBTNNUMBER 47  //选关按钮数量
+#define ANTGAMENUMBER 37    //兰顿蚂蚁的关卡数
+#define LIGHTGAMEBUMBER 10  //熄灯游戏的关卡数
 #define RULEPATH "D:/QtProjects/BlackAndWhiteBlock/rule.txt" //说明文件的路径
 
 /************六边形按钮配置数据******************/
@@ -26,9 +28,10 @@
 #define BOARDPOSY 50  //棋盘左上角的Y
 
 /************游戏数据配置数据******************/
-#define DATAPATH  "D:/QtProjects/BlackAndWhiteBlock/data.txt" //游戏数据
+#define ANTDATAPATH  "D:/QtProjects/BlackOrWhite/data.txt" //ant游戏数据
+#define LIGHTDATAPATH  "D:/QtProjects/BlackOrWhite/lightData.txt" //light游戏数据
 /************用户管理配置数据******************/
-#define USERDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/userData.txt" //用户数据
+#define USERDATAPATH  "D:/QtProjects/BlackOrWhite/userData.txt" //用户数据
 
 /************登录界面配置数据******************/
 #define USERACCOUNTICON ":/icon/userAccountIcon.png"      //用户账户图标

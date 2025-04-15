@@ -1,11 +1,12 @@
 #include "user.h"
+#include <QMessageBox>
 
 User::User()
 {
     //初始化
-    for(int i=0;i<SELECTBTNNUMBER;i++)
+    for(int i = 0; i < SELECTBTNNUMBER; i++)
     {
-        m_gameRecord[i+1] = -1;
+        m_gameRecord[i + 1] = -1;
     }
 }
 
@@ -19,12 +20,35 @@ QString User::getUserPassword()
     return this->m_password;
 }
 
-void User::setUserName(QString name)
+bool User::setUserName(QString name)
 {
-    this->m_userName = name;
+    //判断名字长度是否合适
+    const int size = name.size();
+
+    if(size > 0 && size <= 10)
+    {
+        this->m_userName = name;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
-void User::setUserPassword(QString pwd)
+bool User::setUserPassword(QString pwd)
 {
-    this->m_password = pwd;
+    //判断密码长度是否合适
+    const int size = pwd.size();
+
+    if(size >= 6 && size <= 12)
+    {
+        this->m_password = pwd;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
 }

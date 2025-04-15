@@ -22,11 +22,11 @@ public:
     QString getUserPassword();
 
     //设置用户名和密码
-    void setUserName(QString);
-    void setUserPassword(QString);
+    bool setUserName(QString);
+    bool setUserPassword(QString);
 
     //游戏记录
-    QMap<int,int> m_gameRecord;
+    QMap<int, int> m_gameRecord;
 
 private:
     //用户名

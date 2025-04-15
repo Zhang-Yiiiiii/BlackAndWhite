@@ -21,6 +21,8 @@
 #include <QLayout>
 #include "loginwindow.h"
 #include "onlinewindow.h"
+#include "lightoutgame.h"
+#include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -49,7 +51,7 @@ private:
     Hexagon* m_selectBtns[SELECTBTNNUMBER];
 
     //游戏关卡界面
-    AntGame* m_gameScene = nullptr;
+    AbstractGameScene* m_gameScene = nullptr;
 
     //自建地图的对话框
     BuildMapDialog* m_mydialog;
@@ -80,11 +82,17 @@ private:
     //重写绘图事件
     void paintEvent(QPaintEvent* e);
 
+    //初始化选关按钮
+    void initSelectBtn();
+
     //显示选关六边形
     void showSelectBtn();
 
-    //自建地图函数
-    void selfBuildGame(gameMode buildWay);
+    //自建ant地图函数
+    void buildAntGame(gameMode buildWay);
+
+    //自建light地图函数
+    void buildLightGame();
 
     //显示自建地图对话框
     void showBuildDialog(gameMode buildWay);
@@ -126,6 +134,9 @@ private slots:
 
     //用户确定注册
     void onUserConfirmRegister();
+
+    //用户点击联机按钮
+    void onOnlineTriggerd();
 
 };
 

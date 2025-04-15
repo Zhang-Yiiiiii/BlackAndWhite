@@ -42,13 +42,14 @@ color: rgb(66, 66, 66);</string>
     </property>
     <widget class="QMenu" name="menu_4">
      <property name="title">
-      <string>自建游戏地图</string>
+      <string>兰顿蚂蚁自建地图</string>
      </property>
      <addaction name="actionstartingPoint"/>
      <addaction name="actiondestination"/>
     </widget>
     <addaction name="menu_4"/>
     <addaction name="actioninstruction"/>
+    <addaction name="lightBuildMapAction"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -96,6 +97,11 @@ color: rgb(66, 66, 66);</string>
   <action name="online">
    <property name="text">
     <string>联机</string>
+   </property>
+  </action>
+  <action name="lightBuildMapAction">
+   <property name="text">
+    <string>熄灯游戏自建地图</string>
    </property>
   </action>
  </widget>

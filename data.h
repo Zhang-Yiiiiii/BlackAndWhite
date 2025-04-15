@@ -25,7 +25,7 @@ public:
     QMap<int, QVector<QVector<bool>>> m_ansArray;
 
     //步数数组
-    int m_stepArray[SELECTBTNNUMBER + 1]
+    int m_stepArray[ANTGAMENUMBER + 1]
     {
         0,
         1,
@@ -40,12 +40,24 @@ public:
     };
 
 private:
+    //读取AntGame的数据
+    void getAntGameData();
+
+    //读取LightGame的数据
+    void getLightGameData();
+
     //从文件中读入数据
     void getData();
 
     //记录关卡总数
-    int m_totalLevel = 0;
+    int m_antGameLevel = 0;
+    int m_lightGameLevel = 0;
 
+    //保存antData
+    void saveAntData();
+
+    //保存lightData
+    void saveLightData();
 };
 
 #endif // DATA_H

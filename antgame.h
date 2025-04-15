@@ -8,12 +8,21 @@ class AntGame : public AbstractGameScene
 {
     Q_OBJECT
 public:
-    explicit AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr);
+    explicit AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr, gameMode mode = playMode);
+    ~AntGame();
 
     //保存地图的函数，用于自建地图
     void saveGame() override {};
 
     void saveGame(gameMode buildWay, int step, int x, int y, int direction);
+
+    void initGameInfo() override;
+
+    void showTimeLabel() override;
+
+    void setSubmitBtn() override;
+
+    void setResetBtn() override;
 
 private:
     //判断是否有解
@@ -37,14 +46,20 @@ private:
     //罚时的秒数
     int m_penaltyTime = 0;
 
+    //初始化虫子信息
+    void initBugInfo();
+
     //显示虫子
     void showBug();
 
-    //答案数组
-    std::vector<std::vector<bool>> m_ansArray;
+    //显示步数label
+    void showStepLabel();
 
     //检验是否胜利
     bool isWin() override;
+
+public slots:
+    void updateTime() override;
 
 signals:
 

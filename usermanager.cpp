@@ -46,8 +46,28 @@ UserManager::UserManager()
     ifs.close();
 }
 
-void UserManager::addUser(QString userName, QString pwd)
+bool UserManager::addUser(QString userName, QString pwd)
 {
+    //判断用户名是否存在
+    if(verifyUserInfo(userName, pwd) != 1) //找到了用户
+    {
+        return false;   //用户已存在
+    }
+
+    //新用户
+    User * newUser = new User;
+
+    //判断添加是否合理
+    if(!this->isUserNameRight(userName))
+    {
+        return false;
+    }
+
+    if(!this->isPassWordRight(pwd))
+    {
+        return false;
+    }
+
     //用户人数加1
     this->m_userNum++;
 
@@ -60,21 +80,19 @@ void UserManager::addUser(QString userName, QString pwd)
         newSpace[i] = this->m_userArray[i];
     }
 
-    //添加新数据
-    User * newUser = new User;
-    newUser->setUserName(userName);
-    newUser->setUserPassword(pwd);
-
     newSpace[this->m_userNum - 1] = newUser;
 
     //释放原有空间
     releaseUserArray();
+
     //更改新空间指向
     this->m_userArray = newSpace;
 
     //保存到文件
     this->save();
     this->m_fileIsEmpty = false;
+
+    return true;
 }
 
 void UserManager::save()
@@ -274,6 +292,34 @@ int UserManager::verifyUserInfo(QString name, QString password)
     }
 
     return 1;  //未找到用户
+}
+
+bool UserManager::isUserNameRight(QString name)
+{
+    const unsigned int size = name.size();
+
+    //用户名长度 1-10
+    if(size > 0 && size <= 10)
+    {
+        return true;
+    }
+
+    qDebug() << size;
+    return false;
+}
+
+bool UserManager::isPassWordRight(QString pwd)
+{
+    const unsigned int size = pwd.size();
+
+    //密码长度 6-12
+    if(size >= 6 && size <= 12)
+    {
+        return true;
+    }
+
+    qDebug() << size;
+    return false;
 }
 
 UserManager::~UserManager()

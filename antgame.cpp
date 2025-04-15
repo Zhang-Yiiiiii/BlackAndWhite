@@ -1,8 +1,32 @@
 #include "antgame.h"
 
-AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent)
+AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
     : AbstractGameScene{gameLevel, userName, usermanager, parent}
 {
+    setboardSize(); //获取棋盘大小
+
+    initVector();   //初始化vector
+    initGameInfo();    //初始化游戏信息
+    initBugInfo();   //初始化bug信息
+    showBoard();    //显示棋盘
+    showBug();      //显示bug
+    usermanager->userSort(gameLevel);    //对本关的用户进行排序
+    initTimer();    //初始化定时器
+    showTimeLabel();    //显示时间label
+    showPushButton();   //显示提交、返回、重置按钮
+    showStepLabel();    //显示步数label
+}
+
+AntGame::~AntGame()
+{
+    //删除数据对象
+    delete m_data;
+    m_data = nullptr;
+
+    delete m_elapsedTimer;
+    m_elapsedTimer = nullptr;
+
+    m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
 
 }
 
@@ -29,6 +53,115 @@ void AntGame::saveGame(gameMode buildWay, int step, int x, int y, int direction)
 
     //进行返回操作
     emit changeBack();
+}
+
+void AntGame::initGameInfo()
+{
+    //初始化游戏信息对象
+    m_data = new Data;
+
+    //初始化信息
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+            m_ansArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
+        }
+    }
+
+    //初始化虫子所在位置、方向 750 400 游戏步数
+    m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
+    m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
+    m_bugDir = m_data->m_bugDir[m_gameLevel];
+    m_gameStep = m_data->m_stepArray[m_gameLevel];
+}
+
+void AntGame::showTimeLabel()
+{
+    //显示用时的label
+    m_timeLabel = new QLabel(this);
+    m_timeLabel->setFixedWidth(200);
+    m_timeLabel->setText("所用时间：00:00:00");
+    m_timeLabel->move(150, 400);
+    m_timeLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                               "font-weight: bold; "
+                               "font-size: 20px; color: #333333; "
+                               "background-color: #ffffff; "
+                               "border: 2px solid #ffffff; "
+                               "border-radius: 10px; }");
+
+    m_timeLabel->setAlignment(Qt::AlignCenter);
+
+    //罚时label
+    m_timePenaltyLabel = new QLabel(this);
+    m_timePenaltyLabel->setFixedWidth(200);
+    m_timePenaltyLabel->setText("所罚时间：00:00:00");
+    m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
+    m_timePenaltyLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                                      "font-weight: bold; "
+                                      "font-size: 20px; color: #333333; "
+                                      "background-color: #ffffff; "
+                                      "border: 2px solid #ffffff; "
+                                      "border-radius: 10px; }");
+
+    m_timePenaltyLabel->setAlignment(Qt::AlignCenter);
+}
+
+void AntGame::setSubmitBtn()
+{
+    //设置提交按钮
+    submitBtn = new QPushButton(this);
+    submitBtn->setText("提 交");
+    submitBtn->setFont(QFont("华文新魏", 15));
+    submitBtn->setFixedSize(120, 50);
+    submitBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
+    connect(submitBtn, &QPushButton::clicked, this, [ = ]()
+    {
+        //判断是否胜利
+        if(isWin())
+        {
+            if(m_gameMode == playMode)
+            {
+                QMessageBox::about(this, "通过", "恭喜你成功通过此关");
+                saveTotalTime();
+                emit changeBack();  //进行返回
+            }
+            else if (m_gameMode == onlineMode)
+            {
+                const int totalTime = getTotalTime();
+                saveTotalTime();
+                m_showTimer->stop();
+                emit gameOver(totalTime);
+            }
+        }
+        else
+        {
+            QMessageBox::about(this, "失败", "答案错误，罚时30秒");
+            this->resetGame(); //重置棋盘
+            this->m_penaltyTime += 30; //罚时增加
+        }
+    });
+}
+
+void AntGame::setResetBtn()
+{
+    //重置按钮
+    resetBtn = new QPushButton(this);
+    resetBtn->setText("重 置");
+    resetBtn->setFont(QFont("华文新魏", 15));
+    resetBtn->setFixedSize(120, 50);
+    resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
+    connect(resetBtn, &QPushButton::clicked, this, [ = ]()
+    {
+        int ret = QMessageBox::question(this, "问题", "是否确定重置？");
+
+        if(ret == QMessageBox::Yes)
+        {
+            this->resetGame(); //进行重置
+            m_penaltyTime += 30;
+        }
+    });
 }
 
 bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
@@ -210,6 +343,15 @@ int AntGame::getTotalTime()
     return totalTime;
 }
 
+void AntGame::initBugInfo()
+{
+    //初始化虫子所在位置、方向 750 400 游戏步数
+    m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
+    m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
+    m_bugDir = m_data->m_bugDir[m_gameLevel];
+    m_gameStep = m_data->m_stepArray[m_gameLevel];
+}
+
 void AntGame::showBug()
 {
     QPushButton * bugBtn = new QPushButton(this);
@@ -230,11 +372,24 @@ void AntGame::showBug()
     bugBtn->setEnabled(false);  //设置不能点击
 }
 
+//初始化步数label
+void AntGame::showStepLabel()
+{
+    //步数说明
+    QLabel * stepLabel = new QLabel(this);
+    stepLabel->setText(QString::number(this->m_gameStep));
+    stepLabel->move(40, 40);
+    QFont stepLabelFont;
+    stepLabelFont.setBold(true);
+    stepLabelFont.setPointSize(12);
+    stepLabel->setFont(stepLabelFont);
+}
+
 bool AntGame::isWin()
 {
-    for(int i = 0; i < 20; i++)
+    for(int i = 0; i < m_boardRow; i++)
     {
-        for(int j = 0; j < 20; j++)
+        for(int j = 0; j < m_boardCol; j++)
         {
             if(m_ansArray[i][j] != m_gameArray[i][j])
             {
@@ -244,4 +399,21 @@ bool AntGame::isWin()
     }
 
     return true;
+}
+
+void AntGame::updateTime()
+{
+    int secs = m_elapsedTimer->elapsed() / 1000;
+    m_passingTime = secs;
+
+    int mins = secs / 60;
+    int hours = mins / 60;
+    secs %= 60;
+    mins %= 60;
+    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+
+    secs = m_penaltyTime % 60;
+    mins = m_penaltyTime / 60 % 60;
+    hours = m_penaltyTime / 3600;
+    m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
 }

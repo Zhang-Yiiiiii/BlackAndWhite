@@ -5,6 +5,7 @@ debug/data.o
 debug/gamescene.o
 debug/gridbutton.o
 debug/hexagon.o
+debug/lightoutgame.o
 debug/loginwindow.o
 debug/main.o
 debug/mainscene.o
@@ -19,6 +20,7 @@ debug/moc_buildmapdialog.o
 debug/moc_gamescene.o
 debug/moc_gridbutton.o
 debug/moc_hexagon.o
+debug/moc_lightoutgame.o
 debug/moc_loginwindow.o
 debug/moc_mainscene.o
 debug/moc_onlinewindow.o

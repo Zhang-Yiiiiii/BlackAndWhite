@@ -5,25 +5,13 @@
 #include <sstream>
 #include <fstream>
 
-AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent)
-    : QMainWindow{parent}, m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
+AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
+    : QMainWindow{parent}, m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager), m_gameMode(mode)
 {
-    setboardSize();
-
     //设置窗口大小 标题 图标
     this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
-
-    initGameInfo();    //初始化游戏信息
-
-    usermanager->userSort(gameLevel);    //对本关的用户进行排序
-
-    initTimer();    //初始化定时器
-
-    showBoard();    //显示棋盘
-    showTimeLabel();    //显示时间label
-    showPushButton();   //显示提交、返回、重置按钮
 
     //设置菜单栏
     QMenuBar * menubar = menuBar();
@@ -78,6 +66,20 @@ void AbstractGameScene::showRule()
     QString fileContent = QString::fromStdString(buffer.str());
 
     QMessageBox::about(this, "说明", fileContent);
+}
+
+void AbstractGameScene::initVector()
+{
+    m_board.resize(m_boardRow);
+    m_gameArray.resize(m_boardRow);
+    m_ansArray.resize(m_boardRow);
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        m_board[i].resize(m_boardCol);
+        m_gameArray[i].resize(m_boardCol);
+        m_ansArray[i].resize(m_boardCol);
+    }
 }
 
 //得到棋盘尺寸
@@ -231,8 +233,26 @@ void AbstractGameScene::initGameInfo()
     }
 }
 
-//初始化按钮
-void AbstractGameScene::showPushButton()
+void AbstractGameScene::setSubmitBtn()
+{
+    //重置按钮
+    resetBtn = new QPushButton(this);
+    resetBtn->setText("重 置");
+    resetBtn->setFont(QFont("华文新魏", 15));
+    resetBtn->setFixedSize(120, 50);
+    resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
+    connect(resetBtn, &QPushButton::clicked, this, [ = ]()
+    {
+        int ret = QMessageBox::question(this, "问题", "是否确定重置？");
+
+        if(ret == QMessageBox::Yes)
+        {
+            this->resetGame(); //进行重置
+        }
+    });
+}
+
+void AbstractGameScene::setBackBtn()
 {
     //设置返回按钮
     backBtn = new QPushButton(this);
@@ -244,7 +264,10 @@ void AbstractGameScene::showPushButton()
     {
         emit changeBack();
     });
+}
 
+void AbstractGameScene::setResetBtn()
+{
     //设置提交按钮
     submitBtn = new QPushButton(this);
     submitBtn->setText("提 交");
@@ -272,26 +295,18 @@ void AbstractGameScene::showPushButton()
         }
         else
         {
-            QMessageBox::about(this, "失败", "答案错误，罚时30秒");
+            QMessageBox::about(this, "失败", "答案错误");
             this->resetGame(); //重置棋盘
         }
     });
+}
 
-    //重置按钮
-    resetBtn = new QPushButton(this);
-    resetBtn->setText("重 置");
-    resetBtn->setFont(QFont("华文新魏", 15));
-    resetBtn->setFixedSize(120, 50);
-    resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
-    connect(resetBtn, &QPushButton::clicked, this, [ = ]()
-    {
-        int ret = QMessageBox::question(this, "问题", "是否确定重置？");
-
-        if(ret == QMessageBox::Yes)
-        {
-            this->resetGame(); //进行重置
-        }
-    });
+//初始化按钮
+void AbstractGameScene::showPushButton()
+{
+    setBackBtn();
+    setSubmitBtn();
+    setResetBtn();
 }
 
 //更新显示时间
@@ -317,14 +332,4 @@ AbstractGameScene::~AbstractGameScene()
     m_elapsedTimer = nullptr;
 
     m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
-
-    //释放board
-    for (int i = 0; i < m_boardRow; i++)
-    {
-        for (int j = 0; j < m_boardCol; j++)
-        {
-            delete m_board[i][j];
-            m_board[i][j] = nullptr;
-        }
-    }
 }

@@ -26,7 +26,7 @@ public:
     QVector<std::pair<QString, int>> m_rankList;
 
     //添加用户的函数
-    void addUser(QString userName, QString pwd);
+    bool addUser(QString userName, QString pwd);
 
     //对用户的通关时间进行排序
     void userSort(int level);
@@ -36,6 +36,12 @@ public:
 
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
     int verifyUserInfo(QString name, QString password);
+
+    //判断用户名是否符合标准
+    bool isUserNameRight(QString name);
+
+    //判断密码是否符合标准
+    bool isPassWordRight(QString pwd);
 
 private:
     //记录用户人数

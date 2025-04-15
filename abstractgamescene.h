@@ -21,6 +21,7 @@
 enum gameMode
 {
     playMode,   //游戏模式
+    lightBuildMode,     //熄灯建图
     startingPointMode,  //起点建图
     destinationMode,    //终点建图
     onlineMode,     //联机模式
@@ -31,7 +32,7 @@ class AbstractGameScene : public QMainWindow
     Q_OBJECT
 public:
     //构造和析构
-    explicit AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr);
+    explicit AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr, gameMode mode = playMode);
     ~AbstractGameScene();
 
     //设置提交按钮
@@ -90,17 +91,23 @@ protected:
     //黑白格子
     std::vector<std::vector<GridButton*>> m_board;
 
+    //初始化vector大小
+    void initVector();
+
     //得到棋盘尺寸
     void setboardSize();
 
     //显示棋盘
-    void showBoard();
+    virtual void showBoard();
 
     //重写绘图事件
     void paintEvent(QPaintEvent * e) override;
 
     //游戏数组
     std::vector<std::vector<bool>> m_gameArray;
+
+    //答案数组
+    std::vector<std::vector<bool>> m_ansArray;
 
     //检验是否胜利
     virtual bool isWin() = 0;
@@ -112,13 +119,18 @@ protected:
     int saveTotalTime();
 
     //显示时间label
-    void showTimeLabel();
+    virtual void showTimeLabel();
 
     //初始化定时器
     void initTimer();
 
     //初始化游戏信息
-    void initGameInfo();
+    virtual void initGameInfo();
+
+    //设置提交、返回、重置按钮
+    virtual void setSubmitBtn();
+    virtual void setBackBtn();
+    virtual void setResetBtn();
 
     //显示提交、返回、重置按钮
     void showPushButton();
@@ -132,7 +144,7 @@ signals:
 public slots:
 
     //更新显示时间
-    void updateTime();
+    virtual void updateTime();
 
     //显示排行榜
     void showRankList();

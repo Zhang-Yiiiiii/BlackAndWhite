@@ -17,6 +17,7 @@ SOURCES += \
     gamescene.cpp \
     gridbutton.cpp \
     hexagon.cpp \
+    lightoutgame.cpp \
     loginwindow.cpp \
     main.cpp \
     mainscene.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     gamescene.h \
     gridbutton.h \
     hexagon.h \
+    lightoutgame.h \
     loginwindow.h \
     mainscene.h \
     onlinewindow.h \
