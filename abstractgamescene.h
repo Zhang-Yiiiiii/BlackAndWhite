@@ -2,7 +2,6 @@
 #define ABSTRACTGAMESCENE_H
 
 #include <QMainWindow>
-#include "data.h"
 #include <QApplication>
 #include <QString>
 #include <QLabel>
@@ -10,13 +9,15 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPainter>
-#include "gridbutton.h"
-#include "usermanager.h"
 #include <QLayout>
 #include <QElapsedTimer>
 #include <QTimer>
-#include "ranklist.h"
 #include <vector>
+
+#include "ranklist.h"
+#include "gridbutton.h"
+#include "usermanager.h"
+#include "data.h"
 
 enum gameMode
 {
@@ -47,39 +48,37 @@ public:
     //保存地图的函数，用于自建地图
     virtual void saveGame() = 0;
 
-    //获取用户当前总时间
-    virtual int getTotalTime() = 0;
-
 protected:
+
     //设置返回按钮
     QPushButton* backBtn = nullptr;
 
     //重置按钮
     QPushButton* resetBtn = nullptr;
 
-    //用户名
-    QString m_userName;
-
     //游戏关数
     const int m_gameLevel;
 
-    //信息对象
-    Data* m_data ;
+    //用户名
+    QString m_userName = "";
+
+    //游戏信息对象
+    Data* m_data = nullptr;
 
     //用户管理员
-    UserManager* m_usermanager;
+    UserManager* m_usermanager = nullptr;
 
     //时间label
-    QLabel* m_timeLabel;
+    QLabel* m_timeLabel = nullptr;
 
     //经过时间的秒数
     int m_passingTime = 0;
 
     //定时器
-    QElapsedTimer* m_elapsedTimer;
+    QElapsedTimer* m_elapsedTimer = nullptr;
 
     //控制显示时间定时器
-    QTimer* m_showTimer;
+    QTimer* m_showTimer = nullptr;
 
     //排行榜窗口
     RankList* m_rankWindow = nullptr;
@@ -91,38 +90,41 @@ protected:
     //黑白格子
     std::vector<std::vector<GridButton*>> m_board;
 
-    //初始化vector大小
-    void initVector();
-
-    //得到棋盘尺寸
-    void setboardSize();
-
-    //显示棋盘
-    virtual void showBoard();
-
-    //重写绘图事件
-    void paintEvent(QPaintEvent * e) override;
-
     //游戏数组
     std::vector<std::vector<bool>> m_gameArray;
 
     //答案数组
     std::vector<std::vector<bool>> m_ansArray;
 
-    //检验是否胜利
-    virtual bool isWin() = 0;
+    //重写绘图事件
+    void paintEvent(QPaintEvent * e) override;
+
+    //得到棋盘尺寸
+    void setboardSize();
+
+    //初始化vector大小
+    void initVector();
 
     //重置棋盘
     void resetGame();
 
+    //初始化定时器
+    void initTimer();
+
     //保存用户通关之后的时间
     int saveTotalTime();
 
+    //获取用户当前总时间
+    virtual int getTotalTime() = 0;
+
+    //检验是否胜利
+    virtual bool isWin() = 0;
+
+    //显示棋盘
+    virtual void showBoard();
+
     //显示时间label
     virtual void showTimeLabel();
-
-    //初始化定时器
-    void initTimer();
 
     //初始化游戏信息
     virtual void initGameInfo();
@@ -149,6 +151,9 @@ public slots:
     //显示排行榜
     void showRankList();
 
+    virtual void onSubmitBtnClicked();
+
+    virtual void onResetBtnClicked();
 };
 
 #endif // ABSTRACTGAMESCENE_H

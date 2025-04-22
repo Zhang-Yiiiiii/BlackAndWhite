@@ -16,21 +16,7 @@ public:
 
     void saveGame(gameMode buildWay, int step, int x, int y, int direction);
 
-    void initGameInfo() override;
-
-    void showTimeLabel() override;
-
-    void setSubmitBtn() override;
-
-    void setResetBtn() override;
-
 private:
-    //判断是否有解
-    bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知起点
-    bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知终点
-
-    //获取用户当前总时间
-    int getTotalTime() override;
 
     //游戏步数
     int m_gameStep;
@@ -40,26 +26,38 @@ private:
     QPoint m_bugPos;
     int m_bugDir;
 
-    //罚时label
-    QLabel* m_timePenaltyLabel;
+    QLabel* m_timePenaltyLabel;     //罚时label
 
-    //罚时的秒数
-    int m_penaltyTime = 0;
+    int m_penaltyTime = 0;          //罚时的秒数
 
-    //初始化虫子信息
-    void initBugInfo();
+    void initGameInfo() override;   //初始化游戏信息
 
-    //显示虫子
-    void showBug();
+    void showTimeLabel() override;  //显示时间label
 
-    //显示步数label
-    void showStepLabel();
+    int getTotalTime() override;    //获取总时间
 
-    //检验是否胜利
-    bool isWin() override;
+    //void setSubmitBtn() override;   //设置提交按钮
+
+    //void setResetBtn() override;    //设置重置按钮
+
+    void initBugInfo();             //初始化虫子信息
+
+    void showBug();                 //显示虫子
+
+    void showStepLabel();           //显示步数label
+
+    bool isWin() override;          //检验是否胜利
+
+    //判断是否有解
+    bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知起点
+    bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知终点
 
 public slots:
     void updateTime() override;
+
+    void onSubmitBtnClicked() override;
+
+    void onResetBtnClicked() override;
 
 signals:
 

@@ -4,15 +4,19 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     : AbstractGameScene{gameLevel, userName, usermanager, parent}
 {
     setboardSize(); //获取棋盘大小
+    initVector();   //初始化棋盘vector
 
-    initVector();   //初始化vector
     initGameInfo();    //初始化游戏信息
     initBugInfo();   //初始化bug信息
+
     showBoard();    //显示棋盘
     showBug();      //显示bug
+
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
+
     initTimer();    //初始化定时器
     showTimeLabel();    //显示时间label
+
     showPushButton();   //显示提交、返回、重置按钮
     showStepLabel();    //显示步数label
 }
@@ -108,61 +112,30 @@ void AntGame::showTimeLabel()
     m_timePenaltyLabel->setAlignment(Qt::AlignCenter);
 }
 
-void AntGame::setSubmitBtn()
-{
-    //设置提交按钮
-    submitBtn = new QPushButton(this);
-    submitBtn->setText("提 交");
-    submitBtn->setFont(QFont("华文新魏", 15));
-    submitBtn->setFixedSize(120, 50);
-    submitBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
-    connect(submitBtn, &QPushButton::clicked, this, [ = ]()
-    {
-        //判断是否胜利
-        if(isWin())
-        {
-            if(m_gameMode == playMode)
-            {
-                QMessageBox::about(this, "通过", "恭喜你成功通过此关");
-                saveTotalTime();
-                emit changeBack();  //进行返回
-            }
-            else if (m_gameMode == onlineMode)
-            {
-                const int totalTime = getTotalTime();
-                saveTotalTime();
-                m_showTimer->stop();
-                emit gameOver(totalTime);
-            }
-        }
-        else
-        {
-            QMessageBox::about(this, "失败", "答案错误，罚时30秒");
-            this->resetGame(); //重置棋盘
-            this->m_penaltyTime += 30; //罚时增加
-        }
-    });
-}
+// void AntGame::setSubmitBtn()
+// {
+//     //设置提交按钮
+// submitBtn = new QPushButton(this);
+// submitBtn->setText("提 交");
+// submitBtn->setFont(QFont("华文新魏", 15));
+// submitBtn->setFixedSize(120, 50);
+// submitBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
+// connect(submitBtn, &QPushButton::clicked, this, &AntGame::onSubmitBtnClicked);
+// }
 
-void AntGame::setResetBtn()
-{
-    //重置按钮
-    resetBtn = new QPushButton(this);
-    resetBtn->setText("重 置");
-    resetBtn->setFont(QFont("华文新魏", 15));
-    resetBtn->setFixedSize(120, 50);
-    resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
-    connect(resetBtn, &QPushButton::clicked, this, [ = ]()
-    {
-        int ret = QMessageBox::question(this, "问题", "是否确定重置？");
+// void AntGame::setResetBtn()
+// {
+//     //重置按钮
+// resetBtn = new QPushButton(this);
+// resetBtn->setText("重 置");
+// resetBtn->setFont(QFont("华文新魏", 15));
+// resetBtn->setFixedSize(120, 50);
+// resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
+// connect(resetBtn, &QPushButton::clicked, this, [ = ]()
+// {
 
-        if(ret == QMessageBox::Yes)
-        {
-            this->resetGame(); //进行重置
-            m_penaltyTime += 30;
-        }
-    });
-}
+// });
+// }
 
 bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
@@ -416,4 +389,42 @@ void AntGame::updateTime()
     mins = m_penaltyTime / 60 % 60;
     hours = m_penaltyTime / 3600;
     m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
+}
+
+void AntGame::onSubmitBtnClicked()
+{
+    //判断是否胜利
+    if(isWin())
+    {
+        if(m_gameMode == playMode)
+        {
+            QMessageBox::about(this, "通过", "恭喜你成功通过此关");
+            saveTotalTime();
+            emit changeBack();  //进行返回
+        }
+        else if (m_gameMode == onlineMode)
+        {
+            const int totalTime = getTotalTime();
+            saveTotalTime();
+            m_showTimer->stop();
+            emit gameOver(totalTime);
+        }
+    }
+    else
+    {
+        QMessageBox::about(this, "失败", "答案错误，罚时30秒");
+        this->resetGame(); //重置棋盘
+        this->m_penaltyTime += 30; //罚时增加
+    }
+}
+
+void AntGame::onResetBtnClicked()
+{
+    int ret = QMessageBox::question(this, "问题", "是否确定重置？重置罚时30秒");
+
+    if(ret == QMessageBox::Yes)
+    {
+        this->resetGame(); //进行重置
+        m_penaltyTime += 30;
+    }
 }

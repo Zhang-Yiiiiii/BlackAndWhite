@@ -217,7 +217,7 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
     {
         return;
     }
-    else if (enterWay == startingPointMode || enterWay == destinationMode || lightBuildMode)  // 自建图模式
+    else if (enterWay == startingPointMode || enterWay == destinationMode || enterWay == lightBuildMode)  // 自建图模式
     {
         // 断开提交按钮
         m_gameScene->submitBtn->setDisabled(true);
