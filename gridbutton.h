@@ -21,8 +21,8 @@ public:
     void changeFlag();
 
     //格子标号
-    int posx;
-    int posy;
+    int posx = 0;
+    int posy = 0;
 
 private:
     //加载图片
@@ -32,6 +32,7 @@ private:
     bool flag = true;   //true 表示格子为白色 false表示格子为黑色
 
 signals:
+    void beClicked(int x, int y);
 };
 
 #endif // GRIDBUTTON_H

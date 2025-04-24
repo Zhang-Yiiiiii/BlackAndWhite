@@ -18,20 +18,28 @@
 #include <QPainter>
 #include <QDebug>
 #include <QRect>
-
-
+#include <QMouseEvent>
+#include <QPainterPath>
 
 class Hexagon : public QPushButton
 {
     Q_OBJECT
 public:
-    Hexagon(int id ,QPushButton * parent = nullptr);
+    Hexagon(int id, QPushButton * parent = nullptr);
 
-    //按钮图片
-    QPixmap m_pix;
+    void setId(int id);
+
+    int getId() const;
+
+    int getSideLength() const;
+
+private:
 
     //按钮序号
     int m_id = 0;
+
+    //边长
+    const int m_sideLength = 48;
 
     //重写绘图函数
     void paintEvent(QPaintEvent *event) override;

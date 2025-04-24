@@ -63,47 +63,6 @@ bool LightOutGame::isWin()
     return true;
 }
 
-void LightOutGame::showBoard()
-{
-    //棋盘位置
-    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
-    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
-
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            m_board[i][j] = new GridButton(m_gameArray[i][j], this);
-
-            m_board[i][j]->posx = i;
-            m_board[i][j]->posy = j;
-
-            //监听格子被点击时翻转
-            if(m_gameMode == playMode)  //翻转自身和周围
-            {
-                connect(m_board[i][j], &QPushButton::clicked, this, [ = ]()
-                {
-                    flipCells(i, j);
-                });
-            }
-            else if(m_gameMode == lightBuildMode)   //只翻转自身
-            {
-                connect(m_board[i][j], &QPushButton::clicked, this, [ = ]()
-                {
-                    m_board[i][j]->changeFlag();
-                    m_gameArray[i][j] = !m_gameArray[i][j];
-                });
-            }
-
-            m_board[i][j]->move(x, y);
-            x += GRIDSIZE + 1;
-        }
-
-        x = (BACKGROUDWIDTH - m_boardCol * GRIDSIZE) / 2;
-        y += GRIDSIZE + 1;
-    }
-}
-
 void LightOutGame::flipCells(const int x, const int y)
 {
     //翻转自身
@@ -216,5 +175,18 @@ void LightOutGame::saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, 
             this->m_data->m_ansArray[m_gameLevel][i][j] = ans[i][j];
         }
     }
+}
 
+void LightOutGame::onBoardClicked(int x, int y)
+{
+    //监听格子被点击时翻转
+    if(m_gameMode == playMode)  //翻转自身和周围
+    {
+        flipCells(x, y);
+    }
+    else if(m_gameMode == lightBuildMode)   //只翻转自身
+    {
+        m_board[x][y]->changeFlag();
+        m_gameArray[x][y] = !m_gameArray[x][y];
+    }
 }

@@ -112,31 +112,6 @@ void AntGame::showTimeLabel()
     m_timePenaltyLabel->setAlignment(Qt::AlignCenter);
 }
 
-// void AntGame::setSubmitBtn()
-// {
-//     //设置提交按钮
-// submitBtn = new QPushButton(this);
-// submitBtn->setText("提 交");
-// submitBtn->setFont(QFont("华文新魏", 15));
-// submitBtn->setFixedSize(120, 50);
-// submitBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
-// connect(submitBtn, &QPushButton::clicked, this, &AntGame::onSubmitBtnClicked);
-// }
-
-// void AntGame::setResetBtn()
-// {
-//     //重置按钮
-// resetBtn = new QPushButton(this);
-// resetBtn->setText("重 置");
-// resetBtn->setFont(QFont("华文新魏", 15));
-// resetBtn->setFixedSize(120, 50);
-// resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
-// connect(resetBtn, &QPushButton::clicked, this, [ = ]()
-// {
-
-// });
-// }
-
 bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
     bool tempArray[20][20];
@@ -148,12 +123,10 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
 
     //拷贝数组
     for(int i = 0; i < 20; i++)
-    {
         for(int j = 0; j < 20; j++)
         {
             tempArray[i][j] = gameArray[i][j];
         }
-    }
 
     //模拟前进过程
     // 1 向前走一步 step--
@@ -229,12 +202,10 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
 
     //拷贝数组
     for(int i = 0; i < 20; i++)
-    {
         for(int j = 0; j < 20; j++)
         {
             tempArray[i][j] = gameArray[i][j];
         }
-    }
 
     //模拟后退过程
     // 1 将最后一个格子改变颜色 方便统一操作
@@ -246,12 +217,12 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
     {
         if(tempArray[x][y])  //白色
         {
-            bugDir++; //右转方向加一
+            bugDir++; //右转  方向加一
             bugDir %= 4;
         }
         else
         {
-            bugDir--;  //左转方向减一
+            bugDir--;  //左转  方向减一
 
             if(bugDir < 0)
             {
@@ -350,12 +321,16 @@ void AntGame::showStepLabel()
 {
     //步数说明
     QLabel * stepLabel = new QLabel(this);
-    stepLabel->setText(QString::number(this->m_gameStep));
-    stepLabel->move(40, 40);
-    QFont stepLabelFont;
-    stepLabelFont.setBold(true);
-    stepLabelFont.setPointSize(12);
-    stepLabel->setFont(stepLabelFont);
+    stepLabel->setText("本关步数: " + QString::number(this->m_gameStep));
+    stepLabel->setFixedWidth(200);
+    stepLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                             "font-weight: bold; "
+                             "font-size: 20px; color: #333333; "
+                             "background-color: #ffffff; "
+                             "border: 2px solid #ffffff; "
+                             "border-radius: 10px; }");
+    stepLabel->move(150, 360);
+    stepLabel->setAlignment(Qt::AlignCenter);
 }
 
 bool AntGame::isWin()

@@ -1,14 +1,14 @@
 #include "ranklist.h"
 #include "ui_ranklist.h"
 
-RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
+RankList::RankList(QVector<std::pair<QString, int>> &v, QWidget *parent)
     : QFrame(parent), m_vRankList(v)
     , ui(new Ui::RankList)
 {
     ui->setupUi(this);
 
     // 创建一个关闭按钮
-    QPushButton *closeButton = new QPushButton("×", this);
+    QPushButton *closeButton = new QPushButton("×");
     connect(closeButton, &QPushButton::clicked, this, &QWidget::close);
 
     // 创建一个水平布局用于标题栏
@@ -23,7 +23,6 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
     // 创建 QTableWidget
     QTableWidget *tableWidget = new QTableWidget(m_vRankList.size(), 3); // 3 列：排名、名字、时间
     tableWidget->setHorizontalHeaderLabels({"Rank", "Name", "Time"}); // 设置表头
-
 
     // 设置表格属性
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers); // 禁止编辑
@@ -60,10 +59,10 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
 
         // 设置时间
         tableWidget->setItem(row, 2, new QTableWidgetItem(
-                                         QString("%1:%2:%3")
-                                             .arg(hours, 2, 10, QLatin1Char('0'))
-                                             .arg(mins, 2, 10, QLatin1Char('0'))
-                                             .arg(secs, 2, 10, QLatin1Char('0'))));
+                                 QString("%1:%2:%3")
+                                 .arg(hours, 2, 10, QLatin1Char('0'))
+                                 .arg(mins, 2, 10, QLatin1Char('0'))
+                                 .arg(secs, 2, 10, QLatin1Char('0'))));
 
         row++;
     }
@@ -71,7 +70,6 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
     // 将 QTableWidget 添加到滚动区域
     scrollArea->setWidget(tableWidget);
     scrollArea->setWidgetResizable(true); // 允许 QTableWidget 自适应大小
-
 
     // 创建一个垂直布局
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -83,7 +81,6 @@ RankList::RankList(QVector<std::pair<QString,int>> &v,QWidget *parent)
 
     // 设置排行榜窗口的布局
     setLayout(layout);
-
 }
 
 RankList::~RankList()

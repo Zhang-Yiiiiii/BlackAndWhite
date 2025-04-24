@@ -154,6 +154,8 @@ public slots:
     virtual void onSubmitBtnClicked();
 
     virtual void onResetBtnClicked();
+
+    virtual void onBoardClicked(int x, int y);
 };
 
 #endif // ABSTRACTGAMESCENE_H

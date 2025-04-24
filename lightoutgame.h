@@ -13,18 +13,16 @@ public:
     //保存地图的函数，用于自建地图
     void saveGame() override;
 
-    void initGameInfo() override;
-
 private:
+
+    //初始化游戏信息
+    void initGameInfo() override;
 
     //获取用户当前总时间
     int getTotalTime() override;
 
     //检验是否胜利
     bool isWin() override;
-
-    //显示棋盘
-    void showBoard() override;
 
     //翻转周围格子
     void flipCells(const int x, const int y);
@@ -36,6 +34,9 @@ private:
     void saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, std::vector<std::vector<bool >> & ans);
 
 public slots:
+
+    //重写棋盘被点击的槽函数
+    void onBoardClicked(int x, int y) override;
 
 signals:
 };

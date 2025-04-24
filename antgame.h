@@ -36,10 +36,6 @@ private:
 
     int getTotalTime() override;    //获取总时间
 
-    //void setSubmitBtn() override;   //设置提交按钮
-
-    //void setResetBtn() override;    //设置重置按钮
-
     void initBugInfo();             //初始化虫子信息
 
     void showBug();                 //显示虫子
@@ -53,6 +49,7 @@ private:
     bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知终点
 
 public slots:
+
     void updateTime() override;
 
     void onSubmitBtnClicked() override;

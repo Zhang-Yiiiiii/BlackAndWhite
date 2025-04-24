@@ -117,8 +117,8 @@ void AbstractGameScene::initVector()
 void AbstractGameScene::showBoard()
 {
     //棋盘位置
-    int x = BOARDPOSX;
-    int y = BOARDPOSY;
+    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
 
     for(int i = 0; i < m_boardRow; i++)
     {
@@ -130,17 +130,13 @@ void AbstractGameScene::showBoard()
             m_board[i][j]->posy = j;
 
             //监听格子被点击时翻转
-            connect(m_board[i][j], &QPushButton::clicked, [ = ]()
-            {
-                m_board[i][j]->changeFlag();
-                m_gameArray[i][j] = !m_gameArray[i][j];
-            });
+            connect(m_board[i][j], &GridButton::beClicked, this, &AbstractGameScene::onBoardClicked);
 
             m_board[i][j]->move(x, y);
             x += GRIDSIZE + 1;
         }
 
-        x = BOARDPOSX;
+        x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
         y += GRIDSIZE + 1;
     }
 }
@@ -210,6 +206,12 @@ void AbstractGameScene::onResetBtnClicked()
     {
         this->resetGame(); //进行重置
     }
+}
+
+void AbstractGameScene::onBoardClicked(int x, int y)
+{
+    m_board[x][y]->changeFlag();
+    m_gameArray[x][y] = !m_gameArray[x][y];
 }
 
 //初始化定时器

@@ -73,9 +73,9 @@ void MainScene::paintEvent(QPaintEvent*)
     painter.drawPixmap(0, 0, pix);
 }
 
+//初始化六边形按钮
 void MainScene::initSelectBtn()
 {
-    //初始化六边形按钮
     for(int i = 0; i < SELECTBTNNUMBER; i++)
     {
         m_selectBtns[i] = new Hexagon(i);
@@ -100,6 +100,8 @@ void MainScene::initSelectBtn()
 void MainScene::showSelectBtn()
 {
     //六边形起始点
+    int posx = 950;
+    const int length = m_selectBtns[0]->getSideLength();
     int x = 950;
     int y = 200;
     int k = 1;  //每行个数
@@ -110,20 +112,21 @@ void MainScene::showSelectBtn()
     {
         m_selectBtns[i]->move(x, y);
 
-        x += 90;
+        x += length * pow(3, 0.5) + 4;
 
         if(k % cnt == 0)
         {
             k = 0;
-            y += 72;
-            x -= (cnt + 1) * 85 - 15;
+            y += 1.5 * length + 2;
+            //x -= (cnt + 1) * 85 - 15;
+            x = posx - (cnt - 3) * (length * pow(3, 0.5) * 0.5 + 2);
             cnt++;
         }
 
         k++;
     }
 
-    x += 85;
+    x += 2 * (length * pow(3, 0.5) * 0.5 + 2);
     cnt = 6;
     k = 1;
 
@@ -132,24 +135,23 @@ void MainScene::showSelectBtn()
     {
         m_selectBtns[i]->move(x, y);
 
-        x += 90;
+        x += length * pow(3, 0.5) + 4;
 
         if(k % cnt == 0)
         {
-            k = 0;
-            y += 72;
-            x -= (cnt) * 85 - 15;
-
             cnt--;
+            k = 0;
+            y += 1.5 * length + 2;
+            x = posx - (cnt - 4) * (length * pow(3, 0.5) * 0.5 + 2);
         }
 
         k++;
     }
 
     //显示lightGame的选关按钮
+    posx = 400;
     x = 400;
     y = 250;
-    cnt = 1;
     int level = ANTGAMENUMBER;
 
     for(int i = 0; i < 4; i++)
@@ -157,12 +159,11 @@ void MainScene::showSelectBtn()
         for(int j = 0; j <= i; j++)
         {
             m_selectBtns[level++]->move(x, y);
-            x += 90;
+            x += length * pow(3, 0.5) + 4;
         }
 
-        y += 72;
-        x -= (cnt + 1) * 85 - 29;
-        cnt++;
+        y += 1.5 * length + 2;
+        x = posx - (i + 1) * (length * pow(3, 0.5) * 0.5 + 2);
     }
 }
 
@@ -206,8 +207,8 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
     }
 
-    m_gameScene->setGeometry(this->geometry());
     this->hide();
+    m_gameScene->setGeometry(this->geometry());
     m_gameScene->show();
 
     // 监听返回信号
@@ -228,60 +229,7 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
     }
     else if(enterWay == onlineMode)    // 联机模式
     {
-        // 断开已有的连接
-        disconnect(m_gameScene, &AntGame::gameOver, this, nullptr);
-        disconnect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, nullptr);
-        disconnect(m_onlineWindow, &OnlineWindow::weWinGame, this, nullptr);
-        disconnect(m_onlineWindow, &OnlineWindow::weLoseGame, this, nullptr);
-
-        m_isWeFinished = false; // 我方未完成游戏
-        m_isRivalFinished = false; // 对方未完成游戏
-        m_ourTotalTime = 0;
-        m_rivalTotalTime = 0;
-
-        // 监听我方完成游戏的信号
-        connect(m_gameScene, &AntGame::gameOver, this, [ & ](int totalTime)
-        {
-            m_isWeFinished = true;
-            m_ourTotalTime = totalTime;
-
-            // 发送胜利消息给对方
-            m_onlineWindow->m_clientConnection->write("WIN_GAME" + QString::number(totalTime).toUtf8());
-            m_onlineWindow->m_clientConnection->flush();
-
-            // 检查对方是否已经完成游戏
-            if (m_isRivalFinished)
-            {
-                compareResults(m_ourTotalTime, m_rivalTotalTime);
-            }
-        });
-
-        // 监听对方完成游戏的信号
-        connect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, [ = ](int totalTime)
-        {
-            m_isRivalFinished = true;
-            m_rivalTotalTime = totalTime;
-
-            // 检查我方是否已经完成游戏
-            if (m_isWeFinished)
-            {
-                compareResults(m_ourTotalTime, m_rivalTotalTime);
-            }
-        });
-
-        // 监听我方赢得游戏
-        connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
-        {
-            QMessageBox::about(m_gameScene, "提醒", "我方已经胜利");
-            emit m_gameScene->changeBack();
-        });
-
-        // 监听我方输了游戏
-        connect(m_onlineWindow, &OnlineWindow::weLoseGame, this, [ = ]()
-        {
-            QMessageBox::about(m_gameScene, "提醒", "对方胜利");
-            emit m_gameScene->changeBack();
-        });
+        setOnlineMode();
     }
 }
 
@@ -414,6 +362,64 @@ void MainScene::showLoginWindow()
 
         delete m_loginWindow;
         m_loginWindow = nullptr;
+    });
+}
+
+void MainScene::setOnlineMode()
+{
+    // 断开已有的连接
+    disconnect(m_gameScene, &AntGame::gameOver, this, nullptr);
+    disconnect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, nullptr);
+    disconnect(m_onlineWindow, &OnlineWindow::weWinGame, this, nullptr);
+    disconnect(m_onlineWindow, &OnlineWindow::weLoseGame, this, nullptr);
+
+    m_isWeFinished = false; // 我方未完成游戏
+    m_isRivalFinished = false; // 对方未完成游戏
+    m_ourTotalTime = 0;
+    m_rivalTotalTime = 0;
+
+    // 监听我方完成游戏的信号
+    connect(m_gameScene, &AntGame::gameOver, this, [ & ](int totalTime)
+    {
+        m_isWeFinished = true;
+        m_ourTotalTime = totalTime;
+
+        // 发送胜利消息给对方
+        m_onlineWindow->m_clientConnection->write("WIN_GAME" + QString::number(totalTime).toUtf8());
+        m_onlineWindow->m_clientConnection->flush();
+
+        // 检查对方是否已经完成游戏
+        if (m_isRivalFinished)
+        {
+            compareResults(m_ourTotalTime, m_rivalTotalTime);
+        }
+    });
+
+    // 监听对方完成游戏的信号
+    connect(m_onlineWindow, &OnlineWindow::rivalOverGame, this, [ = ](int totalTime)
+    {
+        m_isRivalFinished = true;
+        m_rivalTotalTime = totalTime;
+
+        // 检查我方是否已经完成游戏
+        if (m_isWeFinished)
+        {
+            compareResults(m_ourTotalTime, m_rivalTotalTime);
+        }
+    });
+
+    // 监听我方赢得游戏
+    connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
+    {
+        QMessageBox::about(m_gameScene, "提醒", "我方已经胜利");
+        emit m_gameScene->changeBack();
+    });
+
+    // 监听我方输了游戏
+    connect(m_onlineWindow, &OnlineWindow::weLoseGame, this, [ = ]()
+    {
+        QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+        emit m_gameScene->changeBack();
     });
 }
 

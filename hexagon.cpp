@@ -1,52 +1,87 @@
 #include "hexagon.h"
 
-
-Hexagon::Hexagon(int id ,QPushButton * parent):
-    QPushButton(parent) ,m_id(id+1)
+Hexagon::Hexagon(int id, QPushButton * parent):
+    QPushButton(parent), m_id(id + 1)
 {
-    //加载按钮图片资源
-    m_pix.load(HEXAGONPATH);
     //设置按钮大小
-    this->setFixedSize(m_pix.size());
+    this->setFixedSize(110, 110);
+
     //设置边框为不规则
-    this->setStyleSheet("QPushButton{border:0px; aspect-ratio: 1}");
-    //设置图标
-    this->setIcon(m_pix);
-    //设置图标大小
-    this->setIconSize(QSize(m_pix.width(),m_pix.height()));
+    this->setStyleSheet("QPushButton{border:0px}");
 
-    //test
-    // connect(this,&QPushButton::clicked,[=](){
-    //     qDebug()<<"点击按钮"<<this->id;
-    // });
-
-
-    //设置按钮的文字
+    //设置按钮的数字
     this->setText(QString::number(this->m_id));
 
     //告诉主场景被点击
-    connect(this,&QPushButton::clicked,[=](){
+    connect(this, &QPushButton::clicked, this, [ = ]()
+    {
         emit beClicked(this->m_id);
     });
+}
 
+void Hexagon::setId(int id)
+{
+    m_id = id;
+}
+
+int Hexagon::getId() const
+{
+    return m_id;
+}
+
+int Hexagon::getSideLength() const
+{
+    return m_sideLength;
 }
 
 //重写绘图事件
 void Hexagon::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event)
+    // Q_UNUSED(event)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, true); // 启用平滑变换 （没设置之前有毛边)
 
-    // 绘制图标
-    painter.drawPixmap(0,0,m_pix);
+    // 创建一个六边形的 QPainterPath
+    QPainterPath hexagonPath;
+    QRect rect = contentsRect();
+    const int sideLength = m_sideLength; // 六边形的边长
+    const int radius = sideLength ;  // 六边形的外接圆半径
 
-    // 绘制文本
+    // 计算六边形的顶点
+    QPointF center(rect.center());
+
+    for (int i = 0; i < 6; ++i)
+    {
+        double angle = (i * 60.0 - 30.0) * M_PI / 180.0; // 每个顶点的角度
+        QPointF point(center.x() + radius * cos(angle), center.y() + radius * sin(angle));
+
+        if (i == 0)
+        {
+            hexagonPath.moveTo(point); // 移动到第一个顶点
+        }
+        else
+        {
+            hexagonPath.lineTo(point); // 连接到其他顶点
+        }
+    }
+
+    hexagonPath.closeSubpath(); // 闭合路径
+
+    // 设置画笔和画刷
+    painter.setBrush(Qt::black);
+    painter.setPen(Qt::white);
+    painter.drawPath(hexagonPath);
+
+    // 绘制按钮文本
     QFont font;
+    painter.setPen(Qt::white);
     font.setPointSize(20);
     font.setBold(true);
-    painter.setPen(Qt::white); // 设置文本颜色为白色（可根据需要调整）
-    painter.setFont(font);
-    painter.drawText(rect(), Qt::AlignCenter, text()); // 文本居中显示
+    painter.drawText(rect, Qt::AlignCenter, text());
+
+    // 将 QPainterPath 转换为 QRegion
+    QRegion hexagonRegion(hexagonPath.toFillPolygon().toPolygon());
+    this->setMask(hexagonRegion); // 设置按钮的遮罩
 }

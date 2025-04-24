@@ -8,21 +8,21 @@
  *       进行联机
  *
  */
-
-#include "config.h"
-#include "antgame.h"
+#include <QToolTip>
+#include <QLayout>
+#include <QInputDialog>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPainter>
+
+#include "config.h"
+#include "antgame.h"
 #include "hexagon.h"
 #include "buildmapdialog.h"
 #include "usermanager.h"
-#include <QToolTip>
-#include <QLayout>
 #include "loginwindow.h"
 #include "onlinewindow.h"
 #include "lightoutgame.h"
-#include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -110,6 +110,9 @@ private:
 
     //显示登录对话框
     void showLoginWindow();
+
+    //设置联机模式
+    void setOnlineMode();
 
 signals:
 

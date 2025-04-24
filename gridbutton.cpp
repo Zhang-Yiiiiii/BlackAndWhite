@@ -21,7 +21,13 @@ GridButton::GridButton(bool flag, QWidget *parent)
     this->setFixedSize(m_pix.size());
     this->setIcon(m_pix);
     this->setIconSize(m_pix.size());
-}
+
+    //改写被点击的信号发送
+    connect(this, &QPushButton::clicked, this, [ = ]()
+    {
+        emit beClicked(posx, posy);
+    });
+};
 
 void GridButton::changeFlag()
 {
