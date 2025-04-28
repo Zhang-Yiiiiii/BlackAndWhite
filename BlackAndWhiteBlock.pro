@@ -11,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     abstractgamescene.cpp \
+    animator.cpp \
     antgame.cpp \
     buildmapdialog.cpp \
     data.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     abstractgamescene.h \
+    animator.h \
     antgame.h \
     buildmapdialog.h \
     config.h \

@@ -25,7 +25,7 @@ bool User::setUserName(QString name)
     //判断名字长度是否合适
     const int size = name.size();
 
-    if(size > 0 && size <= 10)
+    if(size >= nameMinLen && size <= nameMaxLen)
     {
         this->m_userName = name;
         return true;
@@ -41,7 +41,7 @@ bool User::setUserPassword(QString pwd)
     //判断密码长度是否合适
     const int size = pwd.size();
 
-    if(size >= 6 && size <= 12)
+    if(size >= pwdMinLen && size <= pwdMaxLen)
     {
         this->m_password = pwd;
         return true;

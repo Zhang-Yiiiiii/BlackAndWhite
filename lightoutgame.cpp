@@ -5,10 +5,11 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
 {
     setboardSize(); //获取棋盘大小
 
-    initVector();   //初始化vector
+    initVector();   //初始化棋盘vector
     initGameInfo();    //初始化游戏信息
     showBoard();    //显示棋盘
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
+
     initTimer();    //初始化定时器
     showTimeLabel();    //显示时间label
     showPushButton();   //显示提交、返回、重置按钮
@@ -40,13 +41,14 @@ void LightOutGame::initGameInfo()
     }
 }
 
+//计算总时间
 int LightOutGame::getTotalTime()
 {
-    //计算总时间
     int totalTime = m_passingTime;
     return totalTime;
 }
 
+//判断是否胜利
 bool LightOutGame::isWin()
 {
     for (int i = 0; i < m_boardRow; i++)
@@ -63,6 +65,7 @@ bool LightOutGame::isWin()
     return true;
 }
 
+//翻转格子
 void LightOutGame::flipCells(const int x, const int y)
 {
     //翻转自身
@@ -98,9 +101,10 @@ void LightOutGame::flipCells(const int x, const int y)
     }
 }
 
+//判断是否有解
 bool LightOutGame::isSolvable()
 {
-    int solution = 0;
+    int solution = 0;   //第一行的按法
 
     //复制原数组
     std::vector<std::vector<bool>> gameArray(m_boardRow, std::vector<bool>(m_boardCol, 0));
@@ -114,7 +118,7 @@ bool LightOutGame::isSolvable()
     }
 
     //用二进制枚举第一行的解法
-    for(; solution < pow(2, m_boardCol); solution++)
+    for(; solution < (1 << m_boardCol); solution++)
     {
         //答案数组
         std::vector<std::vector<bool >> ans(m_boardRow, std::vector<bool>(m_boardCol, 0));
@@ -164,6 +168,7 @@ bool LightOutGame::isSolvable()
     return false;    //没有找到解
 }
 
+//保存数据
 void LightOutGame::saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, std::vector<std::vector<bool> >& ans)
 {
     //将结果传给data
@@ -177,6 +182,7 @@ void LightOutGame::saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, 
     }
 }
 
+//监听格子被点击
 void LightOutGame::onBoardClicked(int x, int y)
 {
     //监听格子被点击时翻转

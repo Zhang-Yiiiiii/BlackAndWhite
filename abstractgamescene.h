@@ -18,6 +18,7 @@
 #include "gridbutton.h"
 #include "usermanager.h"
 #include "data.h"
+#include "animator.h"
 
 enum gameMode
 {
@@ -34,7 +35,7 @@ class AbstractGameScene : public QMainWindow
 public:
     //构造和析构
     explicit AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr, gameMode mode = playMode);
-    ~AbstractGameScene();
+    virtual ~AbstractGameScene();
 
     //设置提交按钮
     QPushButton* submitBtn = nullptr;
@@ -136,6 +137,9 @@ protected:
 
     //显示提交、返回、重置按钮
     void showPushButton();
+
+    //设置动画效果
+    void setAniamtion();
 
 signals:
 

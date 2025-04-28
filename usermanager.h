@@ -8,12 +8,13 @@
  *      将新信息保存进入文件
  */
 
-#include "user.h"
 #include <QString>
 #include <QDebug>
 #include <QVector>
 #include <QMap>
 #include <QMessageBox>
+
+#include "user.h"
 
 class UserManager
 {
@@ -22,7 +23,7 @@ public:
     UserManager();
     ~UserManager();
 
-    //关卡的排序
+    //排行榜数组
     QVector<std::pair<QString, int>> m_rankList;
 
     //添加用户的函数
@@ -54,13 +55,13 @@ private:
     bool m_fileIsEmpty;
 
     //查找用户
-    User* findUser(QString userName);
+    User* findUser(QString userName) const;
 
     //保存到文件
-    void save();
+    void save() const;
 
     //统计文件中用户的数量
-    int getUserNum();
+    int getUserNum() const;
 
     //初始化用户
     void initUser();

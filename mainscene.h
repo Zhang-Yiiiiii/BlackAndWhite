@@ -14,6 +14,9 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QPainter>
+#include <QSequentialAnimationGroup>
+#include <QPropertyAnimation>
+#include <QPauseAnimation>
 
 #include "config.h"
 #include "antgame.h"
@@ -23,6 +26,7 @@
 #include "loginwindow.h"
 #include "onlinewindow.h"
 #include "lightoutgame.h"
+#include "animator.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -113,6 +117,10 @@ private:
 
     //设置联机模式
     void setOnlineMode();
+
+    //设置动画
+    void setAnimations();
+    void setAnimation(QWidget* widget, QSequentialAnimationGroup* animaltionGroup);
 
 signals:
 

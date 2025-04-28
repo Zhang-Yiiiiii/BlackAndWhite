@@ -38,17 +38,67 @@ UserManager::UserManager()
         return;
     }
 
+    ifs.close();
+
     //文件存在，记录数据
     this->m_userNum = getUserNum();
     this->m_userArray = new User * [this->m_userNum];
     this->initUser();
-
-    ifs.close();
 }
 
+//验证用户信息
+int UserManager::verifyUserInfo(QString name, QString password)
+{
+    //返回值 1：不存在用户  2：密码错误  3：登录成功
+    for(int i = 0; i < this->m_userNum; i++)
+    {
+        QString tempName = this->m_userArray[i]->getUserName();
+        QString tempPwd = this->m_userArray[i]->getUserPassword();
+
+        if(tempName == name && tempPwd == password)
+        {
+            return 3;  //成功找到
+        }
+        else if(tempName == name && tempPwd != password)
+        {
+            return 2;  //密码错误
+        }
+    }
+
+    return 1;  //未找到用户
+}
+
+bool UserManager::isUserNameRight(QString name)
+{
+    const unsigned int size = name.size();
+
+    //用户名长度 1-10
+    if(size > 0 && size <= 10)
+    {
+        return true;
+    }
+
+    qDebug() << size;
+    return false;
+}
+
+bool UserManager::isPassWordRight(QString pwd)
+{
+    const unsigned int size = pwd.size();
+
+    //密码长度 6-12
+    if(size >= 6 && size <= 12)
+    {
+        return true;
+    }
+
+    qDebug() << size;
+    return false;
+}
+
+//添加用户
 bool UserManager::addUser(QString userName, QString pwd)
 {
-    //判断用户名是否存在
     if(verifyUserInfo(userName, pwd) != 1) //找到了用户
     {
         return false;   //用户已存在
@@ -95,7 +145,8 @@ bool UserManager::addUser(QString userName, QString pwd)
     return true;
 }
 
-void UserManager::save()
+//保存信息到文件
+void UserManager::save() const
 {
     std::ofstream ofs(USERDATAPATH, std::ios::out);
 
@@ -116,9 +167,9 @@ void UserManager::save()
     ofs.close();
 }
 
-int UserManager::getUserNum()
+//获取用户人数
+int UserManager::getUserNum() const
 {
-    //记录用户人数
     int cnt = 0;
 
     std::ifstream ifs(USERDATAPATH, std::ios::in);
@@ -162,12 +213,12 @@ void UserManager::initUser()
         user->setUserName(QString::fromStdString(name));
         user->setUserPassword(QString::fromStdString(pwd));
 
+        int level;
+        int record;
+
         //读取用户记录
         for(int i = 0; i < SELECTBTNNUMBER; i++)
         {
-            int level;
-            int record;
-
             ifs >> level;
             ifs >> record;
 
@@ -231,7 +282,7 @@ void UserManager::userSort(int level)
     });
 }
 
-User* UserManager::findUser(QString userName)
+User* UserManager::findUser(QString userName) const
 {
     User * user = nullptr;
 
@@ -269,57 +320,6 @@ void UserManager::updateTotalTime(QString username, int totalTime, int level)
 
     user->m_gameRecord[level] = minTotalTime;
     this->save();
-}
-
-int UserManager::verifyUserInfo(QString name, QString password)
-{
-    //验证用户信息
-
-    //返回值 1：不存在用户  2：密码错误  3：登录成功
-    for(int i = 0; i < this->m_userNum; i++)
-    {
-        QString tempName = this->m_userArray[i]->getUserName();
-        QString tempPwd = this->m_userArray[i]->getUserPassword();
-
-        if(tempName == name && tempPwd == password)
-        {
-            return 3;  //成功找到
-        }
-        else if(tempName == name && tempPwd != password)
-        {
-            return 2;  //密码错误
-        }
-    }
-
-    return 1;  //未找到用户
-}
-
-bool UserManager::isUserNameRight(QString name)
-{
-    const unsigned int size = name.size();
-
-    //用户名长度 1-10
-    if(size > 0 && size <= 10)
-    {
-        return true;
-    }
-
-    qDebug() << size;
-    return false;
-}
-
-bool UserManager::isPassWordRight(QString pwd)
-{
-    const unsigned int size = pwd.size();
-
-    //密码长度 6-12
-    if(size >= 6 && size <= 12)
-    {
-        return true;
-    }
-
-    qDebug() << size;
-    return false;
 }
 
 UserManager::~UserManager()

@@ -7,6 +7,8 @@ BuildMapDialog::BuildMapDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
+    this->setWindowTitle("自建地图");
+
     //设置关闭属性 防止内存泄露
     this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -92,7 +94,7 @@ void BuildMapDialog::onConfirmButtonClicked()
     }
     else
     {
-        QMessageBox::warning(this, "警告", "bug行数为无效输入");
+        QMessageBox::warning(this, "警告", "bug所在行数为无效输入");
         return;
 
     }
@@ -107,7 +109,7 @@ void BuildMapDialog::onConfirmButtonClicked()
     }
     else
     {
-        QMessageBox::warning(this, "警告", "bug列数为无效输入");
+        QMessageBox::warning(this, "警告", "bug所在列数为无效输入");
         return;
     }
 

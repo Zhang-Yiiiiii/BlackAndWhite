@@ -11,11 +11,13 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
 
     //this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
 
-    this->setFixedSize(517, 363);
+    this->setFixedSize(517, 363);   //设置大小
 
     this->ui->labelLogin->setStyleSheet("QLabel { color: black; }");  // 设置字体颜色为黑色
 
-    this->setWindowIcon(QIcon(MYICON));
+    this->setWindowIcon(QIcon(MYICON)); //设置图标
+
+    this->setWindowTitle("联机窗口");
 
     //设置透明度
     this->ui->ipLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
@@ -78,6 +80,7 @@ void OnlineWindow::onListenBtnClicked()
         m_server = new QTcpServer(this);
     }
 
+    //关闭客服端
     if (m_clientConnection)
     {
         m_clientConnection->close();
@@ -101,10 +104,8 @@ void OnlineWindow::onListenBtnClicked()
     connect(m_server, &QTcpServer::newConnection, this, [ = ]()
     {
         m_clientConnection = m_server->nextPendingConnection();
-        QMessageBox::about(this, "提醒", "连接成功");
-        this->hide();
-
         emit connectSuccessfully();
+        QMessageBox::about(this, "提醒", "连接成功");
 
         //处理得到的信息
         connect(m_clientConnection, &QTcpSocket::readyRead, this, &OnlineWindow::handleInfo);
@@ -146,12 +147,11 @@ void OnlineWindow::onJoinBtnClicked()
 
 void OnlineWindow::handleInfo()
 {
-    QString data = m_clientConnection->readAll();
-    qDebug() << data;
+    QString data = m_clientConnection->readAll();   //读取信息
 
     if (data.startsWith("ENTER_GAME"))
     {
-        const int numberPos = 10;
+        const int numberPos = 10;   //有效数据的起始位置
         bool ok;
         int gameLevel = data.mid(numberPos).toInt(&ok);
 
@@ -161,12 +161,12 @@ void OnlineWindow::handleInfo()
         }
         else
         {
-            qDebug() << "Invalid game level received";
+            QMessageBox::about(this, "提醒", "Invalid game level received");
         }
     }
-    else if (data.startsWith("WIN_GAME"))
+    else if (data.startsWith("OVER_GAME"))
     {
-        const int timePos = 8;
+        const int timePos = 9;  //有效数据的起始位置
         bool ok;
         int totalTime = data.mid(timePos).toInt(&ok);
 
@@ -176,7 +176,7 @@ void OnlineWindow::handleInfo()
         }
         else
         {
-            qDebug() << "Invalid time received";
+            QMessageBox::about(this, "提醒", "Invalid time received");
         }
     }
     else if (data == "YOU_WIN")

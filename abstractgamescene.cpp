@@ -139,6 +139,8 @@ void AbstractGameScene::showBoard()
         x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
         y += GRIDSIZE + 1;
     }
+
+    setAniamtion();
 }
 
 //重置棋盘
@@ -319,6 +321,19 @@ void AbstractGameScene::showPushButton()
     setBackBtn();
     setSubmitBtn();
     setResetBtn();
+}
+
+//设置动画
+void AbstractGameScene::setAniamtion()
+{
+    for(auto btns : m_board)
+    {
+        for(auto btn : btns)
+        {
+            auto ani = Animator::createAnimation(btn, Animator::SlideFromTop);
+            ani->start();
+        }
+    }
 }
 
 //更新显示时间
