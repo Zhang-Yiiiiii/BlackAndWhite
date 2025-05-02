@@ -110,11 +110,15 @@ bool UserManager::addUser(QString userName, QString pwd)
     //判断添加是否合理
     if(!this->isUserNameRight(userName))
     {
+        delete newUser;
+        newUser = nullptr;
         return false;
     }
 
     if(!this->isPassWordRight(pwd))
     {
+        delete newUser;
+        newUser = nullptr;
         return false;
     }
 

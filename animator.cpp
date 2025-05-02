@@ -1,14 +1,14 @@
 #include "animator.h"
 
 Animator::Animator(QObject *parent)
-    : QObject{parent}
+    : QObject{parent}, m_animation(nullptr), m_opacityEffect(nullptr)
 {
 
 }
 
 Animator* Animator::resetAnimation(AnimationType type)
 {
-
+    return this;
 }
 
 void Animator::setupAnimation(QWidget* target, AnimationType type)
@@ -22,9 +22,10 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
             m_opacityEffect = new QGraphicsOpacityEffect(target);
             target->setGraphicsEffect(m_opacityEffect);
 
-            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity");
+            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
             m_animation->setStartValue(0.0);
             m_animation->setEndValue(1.0);
+            m_animation->setDuration(500);
             break;
         }
 
@@ -35,41 +36,36 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
             m_opacityEffect = new QGraphicsOpacityEffect(target);
             target->setGraphicsEffect(m_opacityEffect);
 
-            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity");
+            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
             m_animation->setStartValue(1.0);
             m_animation->setEndValue(0);
+            m_animation->setDuration(1000);
             break;
         }
 
         //滑动进入
         case SlideFromTop:
         {
-            m_animation = new QPropertyAnimation(target, "pos");
-            m_animation->setStartValue(QPoint(target->x() - rand() % 200, target->y() - rand() % 700));
+            m_animation = new QPropertyAnimation(target, "pos", target);
+            m_animation->setStartValue(QPoint(target->x() - rand() % 2000, target->y() - rand() % 7000));
             m_animation->setEndValue(target->pos());
+            m_animation->setDuration(600);
             break;
         }
     }
 
-    connect(m_animation, &QPropertyAnimation::finished, [target]()   //让动画结束后回到原位置
+    connect(m_animation, &QPropertyAnimation::finished, [&]()   //让动画结束后回到原位置
     {
-        target->move(target->pos()); // 强制刷新位置
+        //target->move(target->pos()); // 强制刷新位置
     });
 }
 
-Animator* Animator::createAnimation(QWidget * target, AnimationType type)
+Animator* Animator::createAnimator(QWidget * target, AnimationType type)
 {
-    // if(m_animationPool.contains(target))
-    // {
-    // return m_animationPool[target];
-    // }
-
     Animator* animator = new Animator(target);
     animator->setupAnimation(target, type);
-    animator->m_animation->setDuration(500);
+    //animator->m_animation->setDuration(500);
     animator->m_animation->setEasingCurve(QEasingCurve::OutQuad);
-
-    // m_animationPool[target] = animator;
 
     return animator;
 }

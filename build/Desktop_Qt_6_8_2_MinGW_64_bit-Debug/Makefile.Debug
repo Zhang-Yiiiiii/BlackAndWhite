@@ -199,6 +199,7 @@ debug/qrc_res.cpp: ../../res.qrc \
 		../../icon/white.png \
 		../../icon/unlock.png \
 		../../icon/manage.png \
+		../../icon/click.png \
 		../../icon/set.png \
 		../../icon/flush.png \
 		../../icon/userAccountIcon.png \
@@ -448,6 +449,7 @@ debug/moc_abstractgamescene.cpp: ../../abstractgamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -491,6 +493,15 @@ debug/moc_abstractgamescene.cpp: ../../abstractgamescene.h \
 		../../config.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\abstractgamescene.h -o debug\moc_abstractgamescene.cpp
@@ -920,6 +931,7 @@ debug/moc_antgame.cpp: ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -963,6 +975,15 @@ debug/moc_antgame.cpp: ../../antgame.h \
 		../../config.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\antgame.h -o debug\moc_antgame.cpp
@@ -2067,6 +2088,7 @@ debug/moc_lightoutgame.cpp: ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -2110,6 +2132,15 @@ debug/moc_lightoutgame.cpp: ../../lightoutgame.h \
 		../../config.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\lightoutgame.h -o debug\moc_lightoutgame.cpp
@@ -2555,6 +2586,7 @@ debug/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -2597,6 +2629,10 @@ debug/moc_mainscene.cpp: ../../mainscene.h \
 		../../user.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
@@ -2618,10 +2654,6 @@ debug/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/qtcpsocket.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/QHostAddress \
 		../../lightoutgame.h \
-		../../animator.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\mainscene.h -o debug\moc_mainscene.cpp
@@ -3333,6 +3365,7 @@ debug/abstractgamescene.o: ../../abstractgamescene.cpp ../../abstractgamescene.h
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -3375,7 +3408,16 @@ debug/abstractgamescene.o: ../../abstractgamescene.cpp ../../abstractgamescene.h
 		../../user.h \
 		../../config.h \
 		../../data.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\abstractgamescene.o ..\..\abstractgamescene.cpp
 
 debug/animator.o: ../../animator.cpp ../../animator.h \
@@ -3801,6 +3843,7 @@ debug/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -3843,7 +3886,16 @@ debug/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../user.h \
 		../../config.h \
 		../../data.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\antgame.o ..\..\antgame.cpp
 
 debug/buildmapdialog.o: ../../buildmapdialog.cpp ../../buildmapdialog.h \
@@ -5093,6 +5145,7 @@ debug/lightoutgame.o: ../../lightoutgame.cpp ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -5135,7 +5188,16 @@ debug/lightoutgame.o: ../../lightoutgame.cpp ../../lightoutgame.h \
 		../../user.h \
 		../../config.h \
 		../../data.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPropertyAnimation \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpropertyanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvariantanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\lightoutgame.o ..\..\lightoutgame.cpp
 
 debug/loginwindow.o: ../../loginwindow.cpp ../../loginwindow.h \
@@ -5603,6 +5665,7 @@ debug/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -5645,6 +5708,10 @@ debug/main.o: ../../main.cpp ../../mainscene.h \
 		../../user.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
@@ -5665,11 +5732,7 @@ debug/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/QTcpSocket \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/qtcpsocket.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/QHostAddress \
-		../../lightoutgame.h \
-		../../animator.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve
+		../../lightoutgame.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\..\main.cpp
 
 debug/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
@@ -5913,6 +5976,7 @@ debug/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QTimer \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
@@ -5955,6 +6019,10 @@ debug/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../user.h \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
+		../../animator.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
@@ -5976,10 +6044,6 @@ debug/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/qtcpsocket.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtNetwork/QHostAddress \
 		../../lightoutgame.h \
-		../../animator.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qgraphicseffect.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		ui_mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QVariant \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QAction \

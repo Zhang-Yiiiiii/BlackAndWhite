@@ -15,10 +15,11 @@
 /************六边形按钮配置数据******************/
 #define HEXAGONPATH ":/icon/hexagon.png"  //六边形图片
 
-/************黑白格配置数据******************/
+/************黑白格子配置数据******************/
 #define GRIDPATH1 ":/icon/white.png"  //白色格子
 #define GRIDPATH2 ":/icon/black.png"  //黑色格子
 #define GRIDSIZE 35  //格子的边长
+#define TIPPATH ":/icon/click.png"  //提示点击图片
 
 /************游戏场景配置数据******************/
 #define GRIDNUMBER 400  //格子总数

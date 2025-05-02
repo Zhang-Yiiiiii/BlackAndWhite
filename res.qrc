@@ -33,5 +33,6 @@
         <file>image/loginBackground.jpg</file>
         <file>image/loginWhitePic.png</file>
         <file>icon/timeIcon.png</file>
+        <file>icon/click.png</file>
     </qresource>
 </RCC>

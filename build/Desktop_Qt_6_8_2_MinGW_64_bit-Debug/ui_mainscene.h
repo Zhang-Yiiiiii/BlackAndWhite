@@ -30,6 +30,7 @@ public:
     QAction *actionLogin;
     QAction *online;
     QAction *lightBuildMapAction;
+    QAction *disConnect;
     QWidget *centralwidget;
     QMenuBar *menubar;
     QMenu *menu;
@@ -58,6 +59,8 @@ public:
         online->setObjectName("online");
         lightBuildMapAction = new QAction(MainScene);
         lightBuildMapAction->setObjectName("lightBuildMapAction");
+        disConnect = new QAction(MainScene);
+        disConnect->setObjectName("disConnect");
         centralwidget = new QWidget(MainScene);
         centralwidget->setObjectName("centralwidget");
         MainScene->setCentralWidget(centralwidget);
@@ -89,6 +92,7 @@ public:
         menu_4->addAction(actionstartingPoint);
         menu_4->addAction(actiondestination);
         menu_3->addAction(online);
+        menu_3->addAction(disConnect);
 
         retranslateUi(MainScene);
 
@@ -107,6 +111,7 @@ public:
         actionLogin->setText(QCoreApplication::translate("MainScene", "\347\231\273\345\275\225", nullptr));
         online->setText(QCoreApplication::translate("MainScene", "\350\201\224\346\234\272", nullptr));
         lightBuildMapAction->setText(QCoreApplication::translate("MainScene", "\347\206\204\347\201\257\346\270\270\346\210\217\350\207\252\345\273\272\345\234\260\345\233\276", nullptr));
+        disConnect->setText(QCoreApplication::translate("MainScene", "\346\226\255\345\274\200\350\201\224\346\234\272", nullptr));
         menu->setTitle(QCoreApplication::translate("MainScene", "\345\274\200\345\247\213", nullptr));
         menu_2->setTitle(QCoreApplication::translate("MainScene", "\346\270\270\346\210\217", nullptr));
         menu_4->setTitle(QCoreApplication::translate("MainScene", "\345\205\260\351\241\277\350\232\202\350\232\201\350\207\252\345\273\272\345\234\260\345\233\276", nullptr));

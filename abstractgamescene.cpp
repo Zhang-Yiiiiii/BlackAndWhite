@@ -12,16 +12,23 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
     this->setWindowTitle(MYTITLE);
     this->setWindowIcon(QIcon(MYICON));
+    this->m_background.load(BACKGROUDPATH);     //提前加载背景图片
+    this->setAttribute(Qt::WA_DeleteOnClose);   //设置自动释放内存
+
+    // 让 Qt 不先清空背景
+    // setAttribute(Qt::WA_OpaquePaintEvent);
+    // setAttribute(Qt::WA_NoSystemBackground);
+    // setAutoFillBackground(true);
 
     //设置菜单栏
-    QMenuBar * menubar = menuBar();
-    menubar->setParent(this);
-    menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(217, 217, 217, 150); color: rgb(66, 66, 66);");
+    m_menubar = menuBar();
+    m_menubar->setParent(this);
+    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(217, 217, 217, 150); color: rgb(66, 66, 66);");
 
     //设置菜单
-    QMenu * startMenu = menubar->addMenu("开始");
-    QMenu * gameMenu = menubar->addMenu("游戏");
-    QMenu * toolMenu = menubar->addMenu("工具");
+    QMenu * startMenu = m_menubar->addMenu("开始");
+    QMenu * gameMenu = m_menubar->addMenu("游戏");
+    QMenu * toolMenu = m_menubar->addMenu("工具");
 
     //设置菜单项
     QAction * quitAction = startMenu->addAction("退出游戏");
@@ -70,6 +77,12 @@ void AbstractGameScene::showRule()
     QMessageBox::about(this, "说明", fileContent);
 }
 
+//设置动画类型
+void AbstractGameScene::setAnimationType(Animator::AnimationType type)
+{
+    m_animationType = type;
+}
+
 //重写绘图事件
 void AbstractGameScene::paintEvent(QPaintEvent*)
 {
@@ -78,9 +91,7 @@ void AbstractGameScene::paintEvent(QPaintEvent*)
     painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
 
     //加载背景
-    QPixmap pix;
-    pix.load(BACKGROUDPATH);
-    painter.drawPixmap(0, 0, pix);
+    painter.drawPixmap(0, 0, m_background);
 }
 
 //设置棋盘尺寸
@@ -101,6 +112,10 @@ void AbstractGameScene::setboardSize()
 //初始化棋盘大小
 void AbstractGameScene::initVector()
 {
+    m_board.clear();
+    m_gameArray.clear();
+    m_ansArray.clear();
+
     m_board.resize(m_boardRow);
     m_gameArray.resize(m_boardRow);
     m_ansArray.resize(m_boardRow);
@@ -114,7 +129,7 @@ void AbstractGameScene::initVector()
 }
 
 //显示棋盘的函数
-void AbstractGameScene::showBoard()
+void AbstractGameScene::showBoard(bool isVisible)
 {
     //棋盘位置
     int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
@@ -125,7 +140,7 @@ void AbstractGameScene::showBoard()
         for(int j = 0; j < m_boardCol; j++)
         {
             m_board[i][j] = new GridButton(m_gameArray[i][j], this);
-
+            m_board[i][j]->setVisible(isVisible);
             m_board[i][j]->posx = i;
             m_board[i][j]->posy = j;
 
@@ -139,8 +154,6 @@ void AbstractGameScene::showBoard()
         x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
         y += GRIDSIZE + 1;
     }
-
-    setAniamtion();
 }
 
 //重置棋盘
@@ -166,7 +179,7 @@ void AbstractGameScene::showRankList()
 
     if(!m_rankWindow)
     {
-        m_rankWindow = new RankList(this->m_usermanager->m_rankList, this);
+        m_rankWindow = new RankList(m_usermanager->m_rankList, this);
     }
 
     m_rankWindow->move(pos);
@@ -299,6 +312,7 @@ void AbstractGameScene::setBackBtn()
 
     connect(backBtn, &QPushButton::clicked, this, [ = ]()
     {
+        m_isInternalclose = true;   //确定是内部返回的 而不是关闭窗口
         emit changeBack();
     });
 }
@@ -324,14 +338,22 @@ void AbstractGameScene::showPushButton()
 }
 
 //设置动画
-void AbstractGameScene::setAniamtion()
+void AbstractGameScene::setAnimation(int delay)
 {
+    int startTime = 0;
+
     for(auto btns : m_board)
     {
         for(auto btn : btns)
         {
-            auto ani = Animator::createAnimation(btn, Animator::SlideFromTop);
-            ani->start();
+            QTimer::singleShot(startTime, [ = ]()
+            {
+                auto ani = Animator::createAnimator(btn, m_animationType);
+                btn->setVisible(true);
+                ani ->start();
+            });
+
+            startTime += delay;
         }
     }
 }

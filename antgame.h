@@ -28,7 +28,13 @@ private:
 
     QLabel* m_timePenaltyLabel;     //罚时label
 
+    QLabel* m_currentStepsLabel = nullptr;    //当前步数label
+
+    int m_currentSteps = 0;         //当前步数
+
     int m_penaltyTime = 0;          //罚时的秒数
+
+    void updateCurrentSteps(unsigned int steps); //更新当前步数
 
     void initGameInfo() override;   //初始化游戏信息
 
@@ -50,11 +56,17 @@ private:
 
 public slots:
 
-    void updateTime() override;
+    void updateTime() override; //更新时间
 
-    void onSubmitBtnClicked() override;
+    void onSubmitBtnClicked() override; //提交按钮被点击
 
-    void onResetBtnClicked() override;
+    void onResetBtnClicked() override;  //重置按钮被点击
+
+    void onBoardClicked(int x, int y) override; //棋盘被点击
+
+    void onShowCurrentSteps();    //显示当前步数
+
+    //void onShowTips();  //提示下一步
 
 signals:
 

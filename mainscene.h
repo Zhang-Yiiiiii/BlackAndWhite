@@ -149,6 +149,9 @@ private slots:
     //用户点击联机按钮
     void onOnlineTriggerd();
 
+    //用户点击断开联机
+    void onDisconnectTriggerd();
+
 };
 
 #endif // MAINSCENE_H

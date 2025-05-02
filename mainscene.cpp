@@ -37,7 +37,7 @@ MainScene::MainScene(QWidget *parent)
     });
 
     //终点建图
-    connect(this->ui->actiondestination, &QAction::triggered, this, [ = ]()
+    connect(this->ui->actiondestination, &QAction::triggered, this, [this]()
     {
         this->buildAntGame(destinationMode);  //终点建图
     });
@@ -59,6 +59,9 @@ MainScene::MainScene(QWidget *parent)
 
     //进行联机
     connect(ui->online, &QAction::triggered, this, &MainScene::onOnlineTriggerd);
+
+    //断开联机
+    connect(ui->disConnect, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
 
     //设置动画
     setAnimations();
@@ -198,13 +201,14 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
 {
     if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
     {
-        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
+        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
     else if(gameLevel <= SELECTBTNNUMBER)   //熄灯游戏模式
     {
-        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
+        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
 
+    //延迟进入
     this->hide();
     m_gameScene->setGeometry(this->geometry());
     m_gameScene->show();
@@ -258,9 +262,13 @@ void MainScene::onGameSceneChangeBack()
 {
     this->setGeometry(m_gameScene->geometry());
     m_gameScene->close();
-    delete m_gameScene;
-    m_gameScene = nullptr;
     this->show();
+
+    if(m_gameScene)
+    {
+        delete m_gameScene;
+        m_gameScene = nullptr;
+    }
 }
 
 //处理用户登录
@@ -355,7 +363,6 @@ void MainScene::showLoginWindow()
     //关闭对话框时重新显示主页面
     connect(m_loginWindow, &LoginWindow::userClose, this, [ = ]() mutable
     {
-
         this->show();   //显示游戏界面
 
         delete m_loginWindow;
@@ -383,8 +390,7 @@ void MainScene::setOnlineMode()
         m_ourTotalTime = totalTime;
 
         // 发送胜利消息给对方
-        m_onlineWindow->m_clientConnection->write("OVER_GAME" + QString::number(totalTime).toUtf8());
-        m_onlineWindow->m_clientConnection->flush();
+        m_onlineWindow->write("OVER_GAME" + QString::number(totalTime).toUtf8())->flush();
 
         // 检查对方是否已经完成游戏
         if (m_isRivalFinished)
@@ -428,7 +434,7 @@ void MainScene::setOnlineMode()
 void MainScene::setAnimations()
 {
     // 创建动画组
-    QSequentialAnimationGroup *animationGroup = new QSequentialAnimationGroup(this);
+    //QSequentialAnimationGroup *animationGroup = new QSequentialAnimationGroup(this);
 
     for(auto btn : m_selectBtns)
     {
@@ -438,7 +444,7 @@ void MainScene::setAnimations()
         // btn->setGraphicsEffect(effect);
         // setAnimation(btn, animationGroup);
 
-        Animator * ani = Animator::createAnimation(btn, Animator::SlideFromTop);
+        Animator * ani = Animator::createAnimator(btn, Animator::SlideFromTop);
         ani->start();
 
     }
@@ -457,7 +463,7 @@ void MainScene::setAnimation(QWidget *widget, QSequentialAnimationGroup *animati
     fadeIn->setEndValue(1.0);
     fadeIn->setEasingCurve(QEasingCurve::InQuad); // 平滑曲线
 
-    connect(fadeIn, &QPropertyAnimation::finished, [widget]()   //让动画结束后回到原位置
+    connect(fadeIn, &QPropertyAnimation::finished, widget, [widget]()  //让动画结束后回到原位置
     {
         widget->move(widget->pos()); // 强制刷新位置
     });
@@ -494,8 +500,7 @@ void MainScene::onHexagonClicked(int gameLevel)
         mode = onlineMode;
 
         //联机模式 告诉对方也进入
-        m_onlineWindow->m_clientConnection->write("ENTER_GAME" + QString::number(gameLevel).toLatin1());
-        m_onlineWindow->m_clientConnection->flush();
+        m_onlineWindow->write("ENTER_GAME" + QString::number(gameLevel).toLatin1())->flush();
     }
 
     enterGameScene(gameLevel, mode);
@@ -573,10 +578,11 @@ void MainScene::onOnlineTriggerd()
     });
 
     //监听断开连接
-    connect(m_onlineWindow->m_clientConnection, &QTcpSocket::disconnected, this, [ = ]()
+    connect(m_onlineWindow, &OnlineWindow::disConnect, this, [ = ]()
     {
         m_isOnlineMode = false;
-        QMessageBox::about(this, "提醒", "联机已断开");
+        //m_onlineWindow->disconnectOnline();
+        QMessageBox::about(this, "联机提醒", "对手断开联机模式");
     });
 
     //监听对方进入游戏
@@ -584,6 +590,18 @@ void MainScene::onOnlineTriggerd()
     {
         enterGameScene(gameLevel, onlineMode);
     });
+}
+
+//用户断开联机
+void MainScene::onDisconnectTriggerd()
+{
+    if(m_onlineWindow)
+    {
+        m_onlineWindow->write("DISCONNECT");
+        m_onlineWindow->disconnectOnline();
+    }
+
+    QMessageBox::about(this, "联机提示", "已经断开联机");
 }
 
 MainScene::~MainScene()
@@ -601,5 +619,4 @@ MainScene::~MainScene()
         m_loginWindow->deleteLater();
         m_loginWindow = nullptr;
     }
-
 }

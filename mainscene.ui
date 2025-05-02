@@ -56,6 +56,7 @@ color: rgb(66, 66, 66);</string>
      <string>工具</string>
     </property>
     <addaction name="online"/>
+    <addaction name="disConnect"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -102,6 +103,11 @@ color: rgb(66, 66, 66);</string>
   <action name="lightBuildMapAction">
    <property name="text">
     <string>熄灯游戏自建地图</string>
+   </property>
+  </action>
+  <action name="disConnect">
+   <property name="text">
+    <string>断开联机</string>
    </property>
   </action>
  </widget>

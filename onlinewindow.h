@@ -22,6 +22,14 @@ public:
     explicit OnlineWindow(QWidget *parent = nullptr);
     ~OnlineWindow();
 
+    OnlineWindow* write(const char* data);     //发送信息
+    OnlineWindow* flush();
+
+    //断开联机
+    void disconnectOnline();
+
+private:
+
     QString m_ip;
     unsigned short m_port;
 
@@ -32,11 +40,12 @@ public:
     void paintEvent(QPaintEvent*) override;
 
 signals:
-    void connectSuccessfully();  //是否连接成功
-    void rivalEnterGame(int gameLevel); //对手进入游戏
-    void rivalOverGame(int totalTime);  //对手完成游戏
-    void weWinGame();  //我方赢得游戏
-    void weLoseGame(); //我方输了游戏
+    void connectSuccessfully();     //是否连接成功
+    void rivalEnterGame(int gameLevel);  //对手进入游戏
+    void rivalOverGame(int totalTime);   //对手完成游戏
+    void weWinGame();   //我方赢得游戏
+    void weLoseGame();  //我方输了游戏
+    void disConnect();  //断开连接
 
 private slots:
     void onListenBtnClicked();  //创建房间

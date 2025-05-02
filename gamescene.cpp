@@ -108,7 +108,7 @@ void GameScene::showBoard()
             m_board[i][j]->posy = j;
 
             //监听格子被点击时翻转
-            connect(m_board[i][j], &QPushButton::clicked, [ = ]()
+            connect(m_board[i][j], &QPushButton::clicked, this, [ = ]()
             {
                 m_board[i][j]->changeFlag();
                 m_gameArray[i][j] = !m_gameArray[i][j];
@@ -500,7 +500,7 @@ void GameScene::showPushButton()
     backBtn->setFont(QFont("华文新魏", 15));
     backBtn->setFixedSize(120, 50);
     backBtn->move(BACKGROUDWIDTH - backBtn->width(), BACKGROUDHEIGHT - backBtn->height());
-    connect(backBtn, &QPushButton::clicked, [ = ]()
+    connect(backBtn, &QPushButton::clicked, this, [ = ]()
     {
         emit changeBack();
     });

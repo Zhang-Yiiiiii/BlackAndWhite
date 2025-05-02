@@ -58,6 +58,26 @@ OnlineWindow::~OnlineWindow()
     }
 }
 
+OnlineWindow* OnlineWindow::write(const char* data)
+{
+    if(m_clientConnection)
+    {
+        m_clientConnection->write(data);
+    }
+
+    return this;
+}
+
+OnlineWindow* OnlineWindow::flush()
+{
+    if(m_clientConnection)
+    {
+        m_clientConnection->flush();
+    }
+
+    return this;
+}
+
 void OnlineWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
@@ -72,6 +92,20 @@ void OnlineWindow::paintEvent(QPaintEvent*)
     painter.drawPixmap(260, 17, loginPic.width() - 15, loginPic.height() - 15, loginPic);
 }
 
+//断开联机
+void OnlineWindow::disconnectOnline()
+{
+    if(m_clientConnection)
+    {
+        m_clientConnection->close();
+    }
+
+    if(m_server)
+    {
+        m_server->close();
+    }
+}
+
 //作为服务端 监听连接
 void OnlineWindow::onListenBtnClicked()
 {
@@ -80,18 +114,18 @@ void OnlineWindow::onListenBtnClicked()
         m_server = new QTcpServer(this);
     }
 
+    if(m_server->isListening())
+    {
+        QMessageBox::about(this, "提醒", "已经开创房间");
+        return;
+    }
+
     //关闭客服端
     if (m_clientConnection)
     {
         m_clientConnection->close();
         delete m_clientConnection;
         m_clientConnection = nullptr;
-    }
-
-    if(m_server->isListening())
-    {
-        QMessageBox::about(this, "提醒", "已经开创房间");
-        return;
     }
 
     //获取ip port
@@ -186,5 +220,10 @@ void OnlineWindow::handleInfo()
     else if (data == "YOU_LOSE")
     {
         emit weLoseGame();
+    }
+    else if(data == "DISCONNECT")
+    {
+        disconnectOnline();
+        emit disConnect();
     }
 }

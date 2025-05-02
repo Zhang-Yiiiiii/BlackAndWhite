@@ -13,6 +13,7 @@
 #include <QElapsedTimer>
 #include <QTimer>
 #include <vector>
+#include <QCloseEvent>
 
 #include "ranklist.h"
 #include "gridbutton.h"
@@ -49,7 +50,16 @@ public:
     //保存地图的函数，用于自建地图
     virtual void saveGame() = 0;
 
+    //设置动画类型
+    void setAnimationType(Animator::AnimationType);
+
 protected:
+
+    //背景图片
+    QPixmap m_background;
+
+    //菜单栏
+    QMenuBar* m_menubar;
 
     //设置返回按钮
     QPushButton* backBtn = nullptr;
@@ -97,6 +107,12 @@ protected:
     //答案数组
     std::vector<std::vector<bool>> m_ansArray;
 
+    //动画效果  默认是淡入
+    Animator::AnimationType m_animationType = Animator::FadeIn;
+
+    //关闭窗口的标志
+    bool m_isInternalclose = false;  //如果是点击窗口的关闭按钮则关闭程序
+
     //重写绘图事件
     void paintEvent(QPaintEvent * e) override;
 
@@ -122,7 +138,7 @@ protected:
     virtual bool isWin() = 0;
 
     //显示棋盘
-    virtual void showBoard();
+    virtual void showBoard(bool isVisible = true);
 
     //显示时间label
     virtual void showTimeLabel();
@@ -139,7 +155,7 @@ protected:
     void showPushButton();
 
     //设置动画效果
-    void setAniamtion();
+    void setAnimation(int delay = 4);
 
 signals:
 
@@ -155,10 +171,13 @@ public slots:
     //显示排行榜
     void showRankList();
 
+    //提交按钮被点击
     virtual void onSubmitBtnClicked();
 
+    //重置按钮被点击
     virtual void onResetBtnClicked();
 
+    //棋盘被点击
     virtual void onBoardClicked(int x, int y);
 };
 

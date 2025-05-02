@@ -1,7 +1,7 @@
 #include "antgame.h"
 
 AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
-    : AbstractGameScene{gameLevel, userName, usermanager, parent}
+    : AbstractGameScene{gameLevel, userName, usermanager, parent, mode}
 {
     setboardSize(); //获取棋盘大小
     initVector();   //初始化棋盘vector
@@ -9,7 +9,10 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     initGameInfo();    //初始化游戏信息
     initBugInfo();   //初始化bug信息
 
-    showBoard();    //显示棋盘
+    setAnimationType(Animator::FadeIn); //设置动画为淡入
+    showBoard(false);    //显示棋盘
+    setAnimation(); //设置动画
+
     showBug();      //显示bug
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
@@ -19,6 +22,17 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
 
     showPushButton();   //显示提交、返回、重置按钮
     showStepLabel();    //显示步数label
+
+    //工具菜单
+    QMenu* toolBar = qobject_cast<QMenu*>(m_menubar->children().at(3));
+
+    QAction* currentStepsAction = toolBar->addAction("显示当前步数");     //显示当前步数
+    connect(currentStepsAction, &QAction::triggered, this, &AntGame::onShowCurrentSteps);
+
+    //提示功能
+    // QAction* tipAction = toolBar->addAction("提示下一步");
+    // connect(tipAction, &QAction::triggered, this, &AntGame::onShowTips);
+
 }
 
 AntGame::~AntGame()
@@ -57,6 +71,17 @@ void AntGame::saveGame(gameMode buildWay, int step, int x, int y, int direction)
 
     //进行返回操作
     emit changeBack();
+}
+
+//更新当前步数
+void AntGame::updateCurrentSteps(unsigned int steps)
+{
+    m_currentSteps = steps;
+
+    if(m_currentStepsLabel)
+    {
+        m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
+    }
 }
 
 void AntGame::initGameInfo()
@@ -278,6 +303,36 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
     return true;
 }
 
+//显示当前步数
+void AntGame::onShowCurrentSteps()
+{
+    m_currentStepsLabel = new QLabel(this);
+    m_currentStepsLabel->setFixedWidth(200);
+    m_currentStepsLabel->setText(QString::asprintf("当前步数：%01d", m_currentSteps));
+    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
+    m_currentStepsLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                                       "font-weight: bold; "
+                                       "font-size: 20px; color: #333333; "
+                                       "background-color: #ffffff; "
+                                       "border: 2px solid #ffffff; "
+                                       "border-radius: 10px; }");
+
+    m_currentStepsLabel->setAlignment(Qt::AlignCenter);
+    m_currentStepsLabel->show();
+}
+
+//提示功能
+// void AntGame::onShowTips()
+// {
+// QMessageBox::about(this,"提示","提示功能需要先重置棋盘");
+// resetGame();
+
+// int x = m_bugPos.x();   //所在行数
+// int y = m_bugPos.y();   //所在列数
+// int dir = m_bugDir;     //方向
+
+// }
+
 int AntGame::getTotalTime()
 {
     //计算总时间
@@ -401,5 +456,12 @@ void AntGame::onResetBtnClicked()
     {
         this->resetGame(); //进行重置
         m_penaltyTime += 30;
+        updateCurrentSteps(0);
     }
+}
+
+void AntGame::onBoardClicked(int x, int y)
+{
+    updateCurrentSteps(++m_currentSteps);
+    AbstractGameScene::onBoardClicked(x, y);
 }

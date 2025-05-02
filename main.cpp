@@ -12,6 +12,8 @@ int main(int argc, char* argv[])
     QFont font("华文新魏", 15);
     a.setFont(font);
 
+    a.setWindowIcon(QIcon(MYICON));
+
     w.show();
     return a.exec();
 }
