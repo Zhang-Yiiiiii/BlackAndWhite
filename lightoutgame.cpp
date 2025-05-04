@@ -11,17 +11,15 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
     setAnimationType(Animator::SlideFromTop);   //设置动画效果是滑动
     showBoard(false);    //显示棋盘
     setAnimation(); //设置动画
+
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
 
     initTimer();    //初始化定时器
-    showTimeLabel();    //显示时间label
+    showTimeLabel();    //显示时间
+
     showPushButton();   //显示提交、返回、重置按钮
 
-    //工具菜单
-    QMenu* toolBar = qobject_cast<QMenu*>(m_menubar->children().at(3));
-
-    QAction* tipAction = toolBar->addAction("提示功能");     //提示功能
-    connect(tipAction, &QAction::triggered, this, &LightOutGame::onShowTips);
+    initClickRecord();  //初始化点击数组
 }
 
 void LightOutGame::saveGame()
@@ -117,15 +115,6 @@ bool LightOutGame::isSolvable()
 
     //复制原数组
     std::vector<std::vector<bool>> gameArray = m_gameArray;
-    //(m_boardRow, std::vector<bool>(m_boardCol, 0));
-
-    // for(int i = 0; i < m_boardRow; i++)
-    // {
-    // for(int j = 0; j < m_boardCol; j++)
-    // {
-    // gameArray[i][j] = m_gameArray[i][j];
-    // }
-    // }
 
     //用二进制枚举第一行的解法
     for(; solution < (1 << m_boardCol); solution++)
@@ -193,33 +182,16 @@ void LightOutGame::saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, 
     }
 }
 
-//监听格子被点击
-void LightOutGame::onBoardClicked(int x, int y)
+//初始化点击数组
+void LightOutGame::initClickRecord()
 {
-    //监听格子被点击时翻转
-    if(m_gameMode == playMode || m_gameMode == onlineMode) //翻转自身和周围
-    {
-        flipCells(x, y);
-    }
-    else if(m_gameMode == lightBuildMode)   //只翻转自身
-    {
-        m_board[x][y]->changeFlag();
-        m_gameArray[x][y] = !m_gameArray[x][y];
-    }
+    m_clickRecord.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
 }
 
-//提示功能
-void LightOutGame::onShowTips()
+//显示提示
+void LightOutGame::generateTipArray()
 {
-    // QMessageBox::about(this, "提示", "提示功能将会增加两分钟的时长");
-    // m_passingTime += 120;
-
-    //生成答案数组
     m_tipsArray.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
-
-    //棋盘位置
-    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
-    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
 
     for(int i = 0; i < m_boardRow; i++)
     {
@@ -227,36 +199,27 @@ void LightOutGame::onShowTips()
         {
             m_tipsArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
 
-            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j]) //该方块被翻转过
+            if(m_clickRecord[i][j]) //该方块被翻转过
             {
                 m_tipsArray[i][j] = !m_tipsArray[i][j];
             }
-
-            if(m_tipsArray[i][j])
-            {
-                int posx = x + j * (GRIDSIZE + 1);
-                int posy = y + i * (GRIDSIZE + 1);
-
-                QPushButton * tipBtn = new QPushButton(this);
-
-                QPixmap pix = QPixmap(TIPPATH);
-                tipBtn->setFixedSize(35, 35);
-                tipBtn->setIconSize(pix.size());
-                tipBtn->setIcon(QIcon(pix));
-                tipBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
-
-                //tipBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
-                tipBtn->setEnabled(true);  //设置不能点击
-                tipBtn->move(posx, posy);
-                tipBtn->show();
-                connect(tipBtn, &QPushButton::clicked, tipBtn, [ = ]()
-                {
-                    m_board[i][j]->click();
-                    tipBtn->deleteLater();
-                });
-            }
         }
     }
+}
 
-    m_showTips = true;
+//监听格子被点击
+void LightOutGame::onBoardClicked(int x, int y)
+{
+    //监听格子被点击时翻转
+    if(m_gameMode == playMode || m_gameMode == onlineMode) //翻转自身和周围
+    {
+        flipCells(x, y);    //翻转
+
+        m_clickRecord[x][y] = !m_clickRecord[x][y]; //记录点击位置
+    }
+    else if(m_gameMode == lightBuildMode)   //只翻转自身
+    {
+        m_board[x][y]->changeFlag();
+        m_gameArray[x][y] = !m_gameArray[x][y];
+    }
 }

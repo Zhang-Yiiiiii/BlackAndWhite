@@ -1,6 +1,7 @@
 release/abstractgamescene.o
 release/animator.o
 release/antgame.o
+release/basewindow.o
 release/buildmapdialog.o
 release/data.o
 release/gamescene.o
@@ -18,6 +19,7 @@ release/qrc_res.o
 release/moc_abstractgamescene.o
 release/moc_animator.o
 release/moc_antgame.o
+release/moc_basewindow.o
 release/moc_buildmapdialog.o
 release/moc_gamescene.o
 release/moc_gridbutton.o

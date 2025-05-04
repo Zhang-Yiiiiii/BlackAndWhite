@@ -14,12 +14,8 @@ public:
     void saveGame() override;
 
 private:
-
-    //是否要画提示
-    bool m_showTips = false;
-
-    //提示数组
-    std::vector<std::vector<bool>> m_tipsArray;
+    //点击记录数组
+    std::vector<std::vector<bool>> m_clickRecord;
 
     //初始化游戏信息
     void initGameInfo() override;
@@ -39,13 +35,16 @@ private:
     //保存可解的数据
     void saveSolvableInfo(std::vector<std::vector<bool> > & gameArray, std::vector<std::vector<bool >> & ans);
 
+    //初始化点击数组
+    void initClickRecord();
+
+    //生成提示数组
+    void generateTipArray() override;
+
 public slots:
 
     //重写棋盘被点击的槽函数
     void onBoardClicked(int x, int y) override;
-
-    //提示功能
-    void onShowTips();
 
 signals:
 };

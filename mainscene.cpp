@@ -2,54 +2,52 @@
 #include "ui_mainscene.h"
 
 #include <QGraphicsOpacityEffect>
+#include "lightoutgame.h"
+#include "antgame.h"
+#include "animator.h"
 
 MainScene::MainScene(QWidget *parent)
-    : QMainWindow(parent)
+    : BaseWindow(parent)
     , ui(new Ui::MainScene)
 {
-    ui->setupUi(this);
+    //ui->setupUi(this);
 
-    //设置窗口大小 标题 图标
-    this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
-    this->setWindowTitle(MYTITLE);
-    this->setWindowIcon(QIcon(MYICON));
+    //登录
+    QAction* loginAction = m_startMenu->addAction("登录");
+    connect(loginAction, &QAction::triggered, this, &MainScene::onUserLogin);
 
-    //初始化用户管理员
-    this->m_usermanager = new UserManager;
-
-    //设置菜单栏
-    //显示游戏说明
-    connect(this->ui->actioninstruction, &QAction::triggered, this, [this]()
-    {
-        this->m_gameScene->showRule();
-    });
-
-    //熄灯游戏建图
-    connect(this->ui->lightBuildMapAction, &QAction::triggered, this, [this]()
-    {
-        this->buildLightGame();
-    });
+    m_gameMenu->addSeparator();
+    //自建地图
+    QMenu* antMappingMenu = m_gameMenu->addMenu("兰顿蚂蚁自建地图");
 
     //起点建图
-    connect(this->ui->actionstartingPoint, &QAction::triggered, this, [this]()
+    QAction* startMapiingAction = antMappingMenu->addAction("起点建图");
+    connect(startMapiingAction, &QAction::triggered, this, [this]()
     {
-        this->buildAntGame(startingPointMode); //起点建图
+        this->buildAntGame(startingPointMode);
     });
 
     //终点建图
-    connect(this->ui->actiondestination, &QAction::triggered, this, [this]()
+    QAction* destinationMappingAction = antMappingMenu->addAction("终点建图");
+    connect(destinationMappingAction, &QAction::triggered, this, [this]()
     {
         this->buildAntGame(destinationMode);  //终点建图
     });
 
-    //退出游戏
-    connect(this->ui->actionquit, &QAction::triggered, this, []()
-    {
-        exit(0);
-    });
+    //熄灯游戏建图
+    QAction* lightMappingActoin = m_gameMenu->addAction("熄灯游戏自建地图");
+    connect(lightMappingActoin, &QAction::triggered, this, &MainScene::buildLightGame);
 
-    //登录用户
-    connect(this->ui->actionLogin, &QAction::triggered, this, &MainScene::onUserLogin);
+    //进行联机
+    QAction* onlineAction = m_toolMenu->addAction("联机");
+    connect(onlineAction, &QAction::triggered, this, &MainScene::onOnlineTriggerd);
+
+    //断开联机
+    QAction* disconnectAction = m_toolMenu->addAction("断开联机");
+    connect(disconnectAction, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
+
+    //初始化用户管理员
+    this->m_usermanager = new UserManager;
 
     //初始化选关按钮
     initSelectBtn();
@@ -57,28 +55,8 @@ MainScene::MainScene(QWidget *parent)
     //显示选关六边形
     showSelectBtn();
 
-    //进行联机
-    connect(ui->online, &QAction::triggered, this, &MainScene::onOnlineTriggerd);
-
-    //断开联机
-    connect(ui->disConnect, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
-
     //设置动画
     setAnimations();
-}
-
-//重写绘图事件
-void MainScene::paintEvent(QPaintEvent*)
-{
-    //实例化画家
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
-
-    //加载背景
-    QPixmap pix;
-    //pix = pix.scaled(this->size(),Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    pix.load(BACKGROUDPATH);
-    painter.drawPixmap(0, 0, pix);
 }
 
 //初始化六边形按钮
@@ -225,6 +203,9 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
         // 断开提交按钮
         m_gameScene->submitBtn->setDisabled(true);
         m_gameScene->submitBtn->hide();
+
+        //显示随机生成地图按钮
+        m_gameScene->randomBtn->show();
 
         // 创建保存按钮
         createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);

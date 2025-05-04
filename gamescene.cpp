@@ -104,8 +104,8 @@ void GameScene::showBoard()
         {
             m_board[i][j] = new GridButton(m_gameArray[i][j], this);
 
-            m_board[i][j]->posx = i;
-            m_board[i][j]->posy = j;
+            m_board[i][j]->m_posx = i;
+            m_board[i][j]->m_posy = j;
 
             //监听格子被点击时翻转
             connect(m_board[i][j], &QPushButton::clicked, this, [ = ]()

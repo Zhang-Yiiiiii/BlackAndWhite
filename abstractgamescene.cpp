@@ -1,97 +1,24 @@
 #include "abstractgamescene.h"
-
 #include "config.h"
-#include <iostream>
-#include <sstream>
-#include <fstream>
 
 AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
-    : QMainWindow(parent), m_gameMode(mode), m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
+    : BaseWindow(parent), m_gameMode(mode), m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
 {
-    //设置窗口大小 标题 图标
-    this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
-    this->setWindowTitle(MYTITLE);
-    this->setWindowIcon(QIcon(MYICON));
-    this->m_background.load(BACKGROUDPATH);     //提前加载背景图片
-    this->setAttribute(Qt::WA_DeleteOnClose);   //设置自动释放内存
+    QAction * rankAction = m_gameMenu->addAction("排行榜");
 
-    // 让 Qt 不先清空背景
-    // setAttribute(Qt::WA_OpaquePaintEvent);
-    // setAttribute(Qt::WA_NoSystemBackground);
-    // setAutoFillBackground(true);
-
-    //设置菜单栏
-    m_menubar = menuBar();
-    m_menubar->setParent(this);
-    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(217, 217, 217, 150); color: rgb(66, 66, 66);");
-
-    //设置菜单
-    QMenu * startMenu = m_menubar->addMenu("开始");
-    QMenu * gameMenu = m_menubar->addMenu("游戏");
-    QMenu * toolMenu = m_menubar->addMenu("工具");
-
-    //设置菜单项
-    QAction * quitAction = startMenu->addAction("退出游戏");
-
-    QAction * instructionAction = gameMenu->addAction("说明");
-    QAction * rankAction = gameMenu->addAction("排行榜");
-
-    //退出游戏
-    connect(quitAction, &QAction::triggered, [ = ]()
-    {
-        exit(0);
-    });
-
-    //显示游戏说明
-    connect(instructionAction, &QAction::triggered, this, [ = ]()
-    {
-        this->showRule();
-    });
+    QAction* tipAction = m_toolMenu->addAction("显示提示");     //显示提示
+    QAction* closeTipAction = m_toolMenu->addAction("关闭提示");   //关闭提示
+    connect(tipAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
+    connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
 
     //连接排行榜按钮
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::showRankList);
-}
-
-//显示游戏说明
-void AbstractGameScene::showRule()
-{
-    std::ifstream ifs(RULEPATH);
-
-    // 打开文件
-    if (!ifs.is_open())
-    {
-        QMessageBox::about(this, "通知", QString("无法打开文件").arg(RULEPATH));
-        return;
-    }
-
-    // 使用 std::stringstream 读取整个文件内容
-    std::stringstream buffer;
-    buffer << ifs.rdbuf(); // 将文件内容读取到 stringstream 中
-
-    //关闭文件
-    ifs.close();
-
-    // 将 stringstream 的内容转换为 QString
-    QString fileContent = QString::fromStdString(buffer.str());
-
-    QMessageBox::about(this, "说明", fileContent);
 }
 
 //设置动画类型
 void AbstractGameScene::setAnimationType(Animator::AnimationType type)
 {
     m_animationType = type;
-}
-
-//重写绘图事件
-void AbstractGameScene::paintEvent(QPaintEvent*)
-{
-    //实例化画家
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
-
-    //加载背景
-    painter.drawPixmap(0, 0, m_background);
 }
 
 //设置棋盘尺寸
@@ -141,8 +68,8 @@ void AbstractGameScene::showBoard(bool isVisible)
         {
             m_board[i][j] = new GridButton(m_gameArray[i][j], this);
             m_board[i][j]->setVisible(isVisible);
-            m_board[i][j]->posx = i;
-            m_board[i][j]->posy = j;
+            m_board[i][j]->m_posx = i;
+            m_board[i][j]->m_posy = j;
 
             //监听格子被点击时翻转
             connect(m_board[i][j], &GridButton::beClicked, this, &AbstractGameScene::onBoardClicked);
@@ -194,7 +121,7 @@ void AbstractGameScene::onSubmitBtnClicked()
     {
         if(m_gameMode == playMode)
         {
-            QMessageBox::about(this, "通过", "恭喜你成功通过此关");
+            QMessageBox::about(this, "通过", "恭喜成功通过此关");
             saveTotalTime();
             emit changeBack();  //进行返回
         }
@@ -220,6 +147,24 @@ void AbstractGameScene::onResetBtnClicked()
     if(ret == QMessageBox::Yes)
     {
         this->resetGame(); //进行重置
+    }
+}
+
+//随机生成地图
+void AbstractGameScene::onRandomBtnClicked()
+{
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(std::rand() % 2) //对该格子进行翻转
+            {
+                if(m_board[i][j])
+                {
+                    onBoardClicked(i, j);
+                }
+            }
+        }
     }
 }
 
@@ -260,17 +205,9 @@ void AbstractGameScene::showTimeLabel()
 {
     //显示用时的label
     m_timeLabel = new QLabel(this);
-    m_timeLabel->setFixedWidth(200);
     m_timeLabel->setText("所用时间：00:00:00");
     m_timeLabel->move(150, 400);
-    m_timeLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                               "font-weight: bold; "
-                               "font-size: 20px; color: #333333; "
-                               "background-color: #ffffff; "
-                               "border: 2px solid #ffffff; "
-                               "border-radius: 10px; }");
-
-    m_timeLabel->setAlignment(Qt::AlignCenter);
+    setLabelStyle(m_timeLabel);
 }
 
 //初始化游戏信息
@@ -329,14 +266,30 @@ void AbstractGameScene::setResetBtn()
     connect(resetBtn, &QPushButton::clicked, this, &AbstractGameScene::onResetBtnClicked);
 }
 
+//设置随机按钮
+void AbstractGameScene::setRandomBtn()
+{
+    randomBtn = new QPushButton(this);
+    randomBtn->setText("随机生成");
+    randomBtn->setFont(QFont("华文新魏", 15));
+    randomBtn->setFixedSize(120, 50);
+    randomBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
+
+    randomBtn->hide();  //开始设置不可见
+
+    connect(randomBtn, &QPushButton::clicked, this, &AbstractGameScene::onRandomBtnClicked);
+}
+
 //初始化按钮
 void AbstractGameScene::showPushButton()
 {
     setBackBtn();
     setSubmitBtn();
     setResetBtn();
+    setRandomBtn();
 }
 
+#include <QPointer>
 //设置动画
 void AbstractGameScene::setAnimation(int delay)
 {
@@ -346,16 +299,99 @@ void AbstractGameScene::setAnimation(int delay)
     {
         for(auto btn : btns)
         {
+            QPointer<QPushButton> safeBtn = btn;    //用安全指针判断控件是否存在
             QTimer::singleShot(startTime, [ = ]()
             {
-                auto ani = Animator::createAnimator(btn, m_animationType);
-                btn->setVisible(true);
-                ani ->start();
+                if(safeBtn)
+                {
+                    auto ani = Animator::createAnimator(safeBtn, m_animationType);
+                    safeBtn->setVisible(true);
+                    ani ->start();
+                }
             });
 
             startTime += delay;
         }
     }
+}
+
+//提示功能
+void AbstractGameScene::onShowTips()
+{
+    clearTipsButton();  //清空之前的按钮
+
+    if(m_gameMode != playMode)
+    {
+        QMessageBox::about(this, "提示", "只有单人模式支持提示功能");
+        return;
+    }
+
+    // QMessageBox::about(this, "提示", "提示功能将会增加两分钟的时长");
+    // m_passingTime += 120;
+
+    //生成提示数组
+    generateTipArray();
+
+    //棋盘位置
+    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(m_tipsArray[i][j])
+            {
+                int posx = x + j * (GRIDSIZE + 1);
+                int posy = y + i * (GRIDSIZE + 1);
+
+                QPushButton * tipBtn = new QPushButton(this);
+                m_tipsButtons.push_back(tipBtn);    //放入提示按钮数组
+
+                QPixmap pix = QPixmap(TIPPATH);
+                tipBtn->setFixedSize(35, 35);
+                tipBtn->setIconSize(pix.size());
+                tipBtn->setIcon(QIcon(pix));
+                tipBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
+
+                tipBtn->move(posx, posy);
+                tipBtn->show();
+                connect(tipBtn, &QPushButton::clicked, tipBtn, [ = ]()
+                {
+                    m_board[i][j]->click();
+                    tipBtn->hide();
+                });
+            }
+        }
+    }
+}
+
+//清空提示按钮
+void AbstractGameScene::clearTipsButton()
+{
+    for(auto btn : m_tipsButtons)
+    {
+        if(btn)
+        {
+            btn->deleteLater();    //删除按钮
+            btn = nullptr;
+        }
+    }
+
+    m_tipsButtons.clear();
+}
+
+//设置label统一格式
+void AbstractGameScene::setLabelStyle(QLabel *label)
+{
+    label->setFixedWidth(200);
+    label->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                         "font-weight: bold; "
+                         "font-size: 20px; color: #333333; "
+                         "background-color: #ffffff; "
+                         "border: 2px solid #ffffff; "
+                         "border-radius: 10px; }");
+    label->setAlignment(Qt::AlignCenter);
 }
 
 //更新显示时间

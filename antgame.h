@@ -54,6 +54,8 @@ private:
     bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知起点
     bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知终点
 
+    void generateTipArray() override;   //生成提示数组
+
 public slots:
 
     void updateTime() override; //更新时间
@@ -65,8 +67,6 @@ public slots:
     void onBoardClicked(int x, int y) override; //棋盘被点击
 
     void onShowCurrentSteps();    //显示当前步数
-
-    //void onShowTips();  //提示下一步
 
 signals:
 

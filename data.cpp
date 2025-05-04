@@ -29,10 +29,11 @@ void Data::saveAntData()
 
     for (int i = 1; i <= m_antGameLevel; i++)
     {
-        ofs << i << std::endl;
-        ofs << m_stepArray[i] << std::endl;
-        ofs << m_bugPos[i].x() << " " << m_bugPos[i].y() << " " << m_bugDir[i] << std::endl;
+        ofs << i << std::endl;  //关卡数
+        ofs << m_stepArray[i] << std::endl; //步数
+        ofs << m_bugPos[i].x() << " " << m_bugPos[i].y() << " " << m_bugDir[i] << std::endl;    //bug信息
 
+        //游戏数组
         for (int x = 0; x < BOARDSIDELENGTH; x++)
         {
             for (int y = 0; y < BOARDSIDELENGTH; y++)
@@ -43,6 +44,7 @@ void Data::saveAntData()
             ofs << std::endl;
         }
 
+        //答案数组
         for (int x = 0; x < BOARDSIDELENGTH; x++)
         {
             for (int y = 0; y < BOARDSIDELENGTH; y++)
@@ -65,10 +67,11 @@ void Data::saveLightData()
 
     for (int i = 1; i <= m_lightGameLevel; i++)
     {
-        ofs << i + m_antGameLevel << std::endl;
+        ofs << i + m_antGameLevel << std::endl; //关卡
         int rows = i + 3;
         int cols = i + 3;
 
+        //游戏数组
         for (int x = 0; x < rows; x++)
         {
             for (int y = 0; y < cols; y++)
@@ -79,6 +82,7 @@ void Data::saveLightData()
             ofs << std::endl;
         }
 
+        //答案数组
         for (int x = 0; x < rows; x++)
         {
             for (int y = 0; y < cols; y++)
@@ -103,7 +107,6 @@ Data::~Data()
 
 void Data::getAntGameData()
 {
-
     //获取关卡数 步数 bug信息
     int gameLevel = 0;
     int gameStep = 0;
@@ -154,7 +157,6 @@ void Data::getAntGameData()
 
 void Data::getLightGameData()
 {
-
     //获取关卡数 步数 bug信息
     int gameLevel = 0;
 

@@ -18,15 +18,14 @@
 #include <QPropertyAnimation>
 #include <QPauseAnimation>
 
+#include "basewindow.h"
 #include "config.h"
-#include "antgame.h"
 #include "hexagon.h"
 #include "buildmapdialog.h"
 #include "usermanager.h"
 #include "loginwindow.h"
 #include "onlinewindow.h"
-#include "lightoutgame.h"
-#include "animator.h"
+#include "abstractgamescene.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -36,7 +35,7 @@ namespace Ui
 
 QT_END_NAMESPACE
 
-class MainScene : public QMainWindow
+class MainScene : public BaseWindow
 {
     Q_OBJECT
 
@@ -82,9 +81,6 @@ private:
 
     //比较双方结果
     void compareResults(int ourTime, int rivalTime);
-
-    //重写绘图事件
-    void paintEvent(QPaintEvent* e);
 
     //初始化选关按钮
     void initSelectBtn();

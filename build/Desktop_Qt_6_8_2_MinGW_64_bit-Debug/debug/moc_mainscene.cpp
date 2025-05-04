@@ -93,7 +93,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
 };
 
 Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
-    QMetaObject::SuperData::link<QMainWindow::staticMetaObject>(),
+    QMetaObject::SuperData::link<BaseWindow::staticMetaObject>(),
     qt_meta_stringdata_ZN9MainSceneE.offsetsAndSizes,
     qt_meta_data_ZN9MainSceneE,
     qt_static_metacall,
@@ -151,12 +151,12 @@ void *MainScene::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_ZN9MainSceneE.stringdata0))
         return static_cast<void*>(this);
-    return QMainWindow::qt_metacast(_clname);
+    return BaseWindow::qt_metacast(_clname);
 }
 
 int MainScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QMainWindow::qt_metacall(_c, _id, _a);
+    _id = BaseWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

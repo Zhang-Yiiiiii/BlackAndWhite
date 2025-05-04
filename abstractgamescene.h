@@ -15,6 +15,7 @@
 #include <vector>
 #include <QCloseEvent>
 
+#include "basewindow.h"
 #include "ranklist.h"
 #include "gridbutton.h"
 #include "usermanager.h"
@@ -30,7 +31,7 @@ enum gameMode
     onlineMode,     //联机模式
 };
 
-class AbstractGameScene : public QMainWindow
+class AbstractGameScene : public BaseWindow
 {
     Q_OBJECT
 public:
@@ -41,11 +42,11 @@ public:
     //设置提交按钮
     QPushButton* submitBtn = nullptr;
 
+    //随机按钮
+    QPushButton* randomBtn = nullptr;
+
     //游戏模式
     gameMode m_gameMode = playMode;
-
-    //显示游戏说明
-    void showRule();
 
     //保存地图的函数，用于自建地图
     virtual void saveGame() = 0;
@@ -54,12 +55,6 @@ public:
     void setAnimationType(Animator::AnimationType);
 
 protected:
-
-    //背景图片
-    QPixmap m_background;
-
-    //菜单栏
-    QMenuBar* m_menubar;
 
     //设置返回按钮
     QPushButton* backBtn = nullptr;
@@ -107,14 +102,17 @@ protected:
     //答案数组
     std::vector<std::vector<bool>> m_ansArray;
 
+    //提示数组
+    std::vector<std::vector<bool>> m_tipsArray;
+
+    //提示按钮数组
+    std::vector<QPushButton*> m_tipsButtons;
+
     //动画效果  默认是淡入
     Animator::AnimationType m_animationType = Animator::FadeIn;
 
     //关闭窗口的标志
     bool m_isInternalclose = false;  //如果是点击窗口的关闭按钮则关闭程序
-
-    //重写绘图事件
-    void paintEvent(QPaintEvent * e) override;
 
     //得到棋盘尺寸
     void setboardSize();
@@ -151,11 +149,23 @@ protected:
     virtual void setBackBtn();
     virtual void setResetBtn();
 
+    //设置随机生成地图按钮
+    void setRandomBtn();
+
     //显示提交、返回、重置按钮
     void showPushButton();
 
     //设置动画效果
     void setAnimation(int delay = 4);
+
+    //清空提示按钮
+    void clearTipsButton();
+
+    //生成提示数组
+    virtual void generateTipArray() = 0;
+
+    //设置label样式
+    void setLabelStyle(QLabel* label);
 
 signals:
 
@@ -177,8 +187,15 @@ public slots:
     //重置按钮被点击
     virtual void onResetBtnClicked();
 
+    //随机生成地图按钮被点击
+    void onRandomBtnClicked();
+
     //棋盘被点击
     virtual void onBoardClicked(int x, int y);
+
+    //显示提示功能
+    void onShowTips();
+
 };
 
 #endif // ABSTRACTGAMESCENE_H

@@ -21,15 +21,15 @@ public:
     void changeFlag();
 
     //格子标号
-    int posx = 0;
-    int posy = 0;
+    int m_posx = 0;
+    int m_posy = 0;
 
 private:
     //加载图片
     QPixmap m_pix;
 
     //标志正反
-    bool flag = true;   //true 表示格子为白色 false表示格子为黑色
+    bool m_flag = true;   //true 表示格子为白色 false表示格子为黑色
 
 signals:
     void beClicked(int x, int y);

@@ -3,7 +3,6 @@
 Animator::Animator(QObject *parent)
     : QObject{parent}, m_animation(nullptr), m_opacityEffect(nullptr)
 {
-
 }
 
 Animator* Animator::resetAnimation(AnimationType type)
@@ -39,7 +38,7 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
             m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
             m_animation->setStartValue(1.0);
             m_animation->setEndValue(0);
-            m_animation->setDuration(1000);
+            m_animation->setDuration(500);
             break;
         }
 
@@ -49,7 +48,7 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
             m_animation = new QPropertyAnimation(target, "pos", target);
             m_animation->setStartValue(QPoint(target->x() - rand() % 2000, target->y() - rand() % 7000));
             m_animation->setEndValue(target->pos());
-            m_animation->setDuration(600);
+            m_animation->setDuration(500);
             break;
         }
     }
@@ -64,7 +63,6 @@ Animator* Animator::createAnimator(QWidget * target, AnimationType type)
 {
     Animator* animator = new Animator(target);
     animator->setupAnimation(target, type);
-    //animator->m_animation->setDuration(500);
     animator->m_animation->setEasingCurve(QEasingCurve::OutQuad);
 
     return animator;

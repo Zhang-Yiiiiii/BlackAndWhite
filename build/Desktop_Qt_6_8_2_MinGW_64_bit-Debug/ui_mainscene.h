@@ -85,9 +85,7 @@ public:
         menubar->addAction(menu_3->menuAction());
         menu->addAction(actionquit);
         menu->addAction(actionsave);
-        menu->addAction(actionLogin);
         menu_2->addAction(menu_4->menuAction());
-        menu_2->addAction(actioninstruction);
         menu_2->addAction(lightBuildMapAction);
         menu_4->addAction(actionstartingPoint);
         menu_4->addAction(actiondestination);

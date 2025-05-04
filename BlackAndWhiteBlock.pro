@@ -13,6 +13,7 @@ SOURCES += \
     abstractgamescene.cpp \
     animator.cpp \
     antgame.cpp \
+    basewindow.cpp \
     buildmapdialog.cpp \
     data.cpp \
     gamescene.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     abstractgamescene.h \
     animator.h \
     antgame.h \
+    basewindow.h \
     buildmapdialog.h \
     config.h \
     data.h \
@@ -46,6 +48,7 @@ HEADERS += \
     usermanager.h
 
 FORMS += \
+    basewindow.ui \
     buildmapdialog.ui \
     loginwindow.ui \
     mainscene.ui \

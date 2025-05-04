@@ -9,7 +9,7 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     initGameInfo();    //初始化游戏信息
     initBugInfo();   //初始化bug信息
 
-    setAnimationType(Animator::FadeIn); //设置动画为淡入
+    setAnimationType(rand() % 2 ? Animator::FadeIn : Animator::SlideFromTop); //设置动画
     showBoard(false);    //显示棋盘
     setAnimation(); //设置动画
 
@@ -26,23 +26,26 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     //工具菜单
     QMenu* toolBar = qobject_cast<QMenu*>(m_menubar->children().at(3));
 
+    toolBar->addSeparator();
     QAction* currentStepsAction = toolBar->addAction("显示当前步数");     //显示当前步数
     connect(currentStepsAction, &QAction::triggered, this, &AntGame::onShowCurrentSteps);
-
-    //提示功能
-    // QAction* tipAction = toolBar->addAction("提示下一步");
-    // connect(tipAction, &QAction::triggered, this, &AntGame::onShowTips);
-
 }
 
 AntGame::~AntGame()
 {
     //删除数据对象
-    delete m_data;
-    m_data = nullptr;
+    if(m_data)
+    {
+        delete m_data;
+        m_data = nullptr;
+    }
 
-    delete m_elapsedTimer;
-    m_elapsedTimer = nullptr;
+    //删除计时器
+    if(m_elapsedTimer)
+    {
+        delete m_elapsedTimer;
+        m_elapsedTimer = nullptr;
+    }
 
     m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
 
@@ -84,6 +87,7 @@ void AntGame::updateCurrentSteps(unsigned int steps)
     }
 }
 
+//初始化游戏信息
 void AntGame::initGameInfo()
 {
     //初始化游戏信息对象
@@ -106,37 +110,23 @@ void AntGame::initGameInfo()
     m_gameStep = m_data->m_stepArray[m_gameLevel];
 }
 
+//显示时间
 void AntGame::showTimeLabel()
 {
     //显示用时的label
     m_timeLabel = new QLabel(this);
-    m_timeLabel->setFixedWidth(200);
+    setLabelStyle(m_timeLabel);
     m_timeLabel->setText("所用时间：00:00:00");
     m_timeLabel->move(150, 400);
-    m_timeLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                               "font-weight: bold; "
-                               "font-size: 20px; color: #333333; "
-                               "background-color: #ffffff; "
-                               "border: 2px solid #ffffff; "
-                               "border-radius: 10px; }");
-
-    m_timeLabel->setAlignment(Qt::AlignCenter);
 
     //罚时label
     m_timePenaltyLabel = new QLabel(this);
-    m_timePenaltyLabel->setFixedWidth(200);
+    setLabelStyle(m_timePenaltyLabel);
     m_timePenaltyLabel->setText("所罚时间：00:00:00");
     m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
-    m_timePenaltyLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                                      "font-weight: bold; "
-                                      "font-size: 20px; color: #333333; "
-                                      "background-color: #ffffff; "
-                                      "border: 2px solid #ffffff; "
-                                      "border-radius: 10px; }");
-
-    m_timePenaltyLabel->setAlignment(Qt::AlignCenter);
 }
 
+//起点建图
 bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
     bool tempArray[20][20];
@@ -216,6 +206,7 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
     return true;
 }
 
+//终点建图
 bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
     bool tempArray[20][20];
@@ -303,36 +294,33 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
     return true;
 }
 
+//生成提示数组
+void AntGame::generateTipArray()
+{
+    m_tipsArray.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            //和答案不对的地方需要按下
+            m_tipsArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j] != m_gameArray[i][j];
+        }
+    }
+}
+
 //显示当前步数
 void AntGame::onShowCurrentSteps()
 {
     m_currentStepsLabel = new QLabel(this);
-    m_currentStepsLabel->setFixedWidth(200);
-    m_currentStepsLabel->setText(QString::asprintf("当前步数：%01d", m_currentSteps));
-    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
-    m_currentStepsLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                                       "font-weight: bold; "
-                                       "font-size: 20px; color: #333333; "
-                                       "background-color: #ffffff; "
-                                       "border: 2px solid #ffffff; "
-                                       "border-radius: 10px; }");
+    setLabelStyle(m_currentStepsLabel);
 
-    m_currentStepsLabel->setAlignment(Qt::AlignCenter);
+    m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
+    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
     m_currentStepsLabel->show();
 }
 
-//提示功能
-// void AntGame::onShowTips()
-// {
-// QMessageBox::about(this,"提示","提示功能需要先重置棋盘");
-// resetGame();
-
-// int x = m_bugPos.x();   //所在行数
-// int y = m_bugPos.y();   //所在列数
-// int dir = m_bugDir;     //方向
-
-// }
-
+//获取总时间
 int AntGame::getTotalTime()
 {
     //计算总时间
@@ -342,6 +330,7 @@ int AntGame::getTotalTime()
     return totalTime;
 }
 
+//初始化bug
 void AntGame::initBugInfo()
 {
     //初始化虫子所在位置、方向 750 400 游戏步数
@@ -351,12 +340,14 @@ void AntGame::initBugInfo()
     m_gameStep = m_data->m_stepArray[m_gameLevel];
 }
 
+//显示bug
 void AntGame::showBug()
 {
     QPushButton * bugBtn = new QPushButton(this);
 
+    //移动bug
     //虫子所在坐标轴与窗口长宽不对应
-    bugBtn->move(BOARDPOSX + m_bugPos.y() * (GRIDSIZE + 1), BOARDPOSY + m_bugPos.x() * (GRIDSIZE + 1)); //移动bug
+    bugBtn->move(BOARDPOSX + m_bugPos.y() * (GRIDSIZE + 1), BOARDPOSY + m_bugPos.x() * (GRIDSIZE + 1));
 
     //加载图片
     QString pixStr = QString(BUGPATH).arg(m_bugDir);
@@ -376,18 +367,13 @@ void AntGame::showStepLabel()
 {
     //步数说明
     QLabel * stepLabel = new QLabel(this);
+    setLabelStyle(stepLabel);
+
     stepLabel->setText("本关步数: " + QString::number(this->m_gameStep));
-    stepLabel->setFixedWidth(200);
-    stepLabel->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                             "font-weight: bold; "
-                             "font-size: 20px; color: #333333; "
-                             "background-color: #ffffff; "
-                             "border: 2px solid #ffffff; "
-                             "border-radius: 10px; }");
     stepLabel->move(150, 360);
-    stepLabel->setAlignment(Qt::AlignCenter);
 }
 
+//判断是否胜利
 bool AntGame::isWin()
 {
     for(int i = 0; i < m_boardRow; i++)
@@ -404,6 +390,7 @@ bool AntGame::isWin()
     return true;
 }
 
+//更新时间
 void AntGame::updateTime()
 {
     int secs = m_elapsedTimer->elapsed() / 1000;
@@ -421,6 +408,7 @@ void AntGame::updateTime()
     m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
 }
 
+//提交
 void AntGame::onSubmitBtnClicked()
 {
     //判断是否胜利
@@ -448,6 +436,7 @@ void AntGame::onSubmitBtnClicked()
     }
 }
 
+//重置棋盘
 void AntGame::onResetBtnClicked()
 {
     int ret = QMessageBox::question(this, "问题", "是否确定重置？重置罚时30秒");
@@ -460,6 +449,7 @@ void AntGame::onResetBtnClicked()
     }
 }
 
+//棋盘被点击
 void AntGame::onBoardClicked(int x, int y)
 {
     updateCurrentSteps(++m_currentSteps);
