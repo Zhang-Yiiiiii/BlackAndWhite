@@ -2,48 +2,39 @@
 
 #include "config.h"
 #include <fstream>
-#include <string>
 #include <algorithm>
 
 UserManager::UserManager()
 {
-    std::ifstream ifs(USERDATAPATH, std::ios::in);
+    std::ifstream ifs(USERDATAPATH, std::ios::in | std::ios::binary);
 
-    //文件不存在
-    if(!ifs.is_open())
+    if (!ifs.is_open())
     {
-        qDebug() << QString("文件不存在").arg(USERDATAPATH);
-
-        this->m_userNum = 0;
-        this->m_userArray = nullptr;
-        this->m_fileIsEmpty = true;
-
-        ifs.close();
+        qDebug() << "文件不存在:" << USERDATAPATH;
+        m_userNum = 0;
+        m_userArray = nullptr;
+        m_fileIsEmpty = true;
         return;
     }
 
-    //文件存在但为空
-    char ch;
-    ifs >> ch;
+    // 判断文件是否为空
+    ifs.seekg(0, std::ios::end);
+    std::streampos fileSize = ifs.tellg();
 
-    if(ifs.eof())
+    if (fileSize == 0)
     {
-        qDebug() << QString("文件为空").arg(USERDATAPATH);
-
-        this->m_userNum = 0;
-        this->m_userArray = nullptr;
-        this->m_fileIsEmpty = true;
-
-        ifs.close();
+        qDebug() << "文件为空:" << USERDATAPATH;
+        m_userNum = 0;
+        m_userArray = nullptr;
+        m_fileIsEmpty = true;
         return;
     }
 
+    ifs.seekg(0, std::ios::beg); // 重置到文件开头
     ifs.close();
 
-    //文件存在，记录数据
-    this->m_userNum = getUserNum();
-    this->m_userArray = new User * [this->m_userNum];
-    this->initUser();
+    initUser();               // 调用新的封装方法读取数据
+    m_fileIsEmpty = false;
 }
 
 //验证用户信息
@@ -68,6 +59,7 @@ int UserManager::verifyUserInfo(QString name, QString password)
     return 1;  //未找到用户
 }
 
+//判断用户名格式
 bool UserManager::isUserNameRight(QString name)
 {
     const unsigned int size = name.size();
@@ -78,10 +70,10 @@ bool UserManager::isUserNameRight(QString name)
         return true;
     }
 
-    qDebug() << size;
     return false;
 }
 
+//判断密码格式
 bool UserManager::isPassWordRight(QString pwd)
 {
     const unsigned int size = pwd.size();
@@ -92,7 +84,6 @@ bool UserManager::isPassWordRight(QString pwd)
         return true;
     }
 
-    qDebug() << size;
     return false;
 }
 
@@ -152,19 +143,41 @@ bool UserManager::addUser(QString userName, QString pwd)
 //保存信息到文件
 void UserManager::save() const
 {
-    std::ofstream ofs(USERDATAPATH, std::ios::out);
+    std::ofstream ofs(USERDATAPATH, std::ios::out | std::ios::binary);
 
-    for(int i = 0; i < this->m_userNum; i++)
+    if (!ofs.is_open())
     {
+        return;
+    }
 
-        ofs << this->m_userArray[i]->getUserName().toStdString() << " "
-            << this->m_userArray[i]->getUserPassword().toStdString() << std::endl;
+    //用户人数
+    ofs.write(reinterpret_cast<const char*>(&m_userNum), sizeof(int));
 
-        QMap<int, int>::iterator it;
+    for (int i = 0; i < m_userNum; ++i)
+    {
+        // 保存用户名
+        QByteArray nameData = m_userArray[i]->getUserName().toUtf8();
+        int nameLen = nameData.size();
+        ofs.write(reinterpret_cast<char*>(&nameLen), sizeof(int));
+        ofs.write(nameData.data(), nameLen);
 
-        for (it = this->m_userArray[i]->m_gameRecord.begin(); it != this->m_userArray[i]->m_gameRecord.end(); it++)
+        // 保存密码
+        QByteArray pwdData = m_userArray[i]->getUserPassword().toUtf8();
+        int pwdLen = pwdData.size();
+        ofs.write(reinterpret_cast<char*>(&pwdLen), sizeof(int));
+        ofs.write(pwdData.data(), pwdLen);
+
+        // 保存游戏记录条数
+        int recordCount = m_userArray[i]->m_gameRecord.size();
+        ofs.write(reinterpret_cast<char*>(&recordCount), sizeof(int));
+
+        // 保存游戏记录键值对
+        for (auto it = m_userArray[i]->m_gameRecord.begin(); it != m_userArray[i]->m_gameRecord.end(); ++it)
         {
-            ofs << it.key() << " " << it.value() << std::endl;
+            int key = it.key();
+            int val = it.value();
+            ofs.write(reinterpret_cast<char*>(&key), sizeof(int));
+            ofs.write(reinterpret_cast<char*>(&val), sizeof(int));
         }
     }
 
@@ -174,67 +187,58 @@ void UserManager::save() const
 //获取用户人数
 int UserManager::getUserNum() const
 {
-    int cnt = 0;
-
-    std::ifstream ifs(USERDATAPATH, std::ios::in);
-
-    std::string name;
-    std::string pwd;
-
-    while(ifs >> name && ifs >> pwd)
-    {
-        //读取用户记录
-        for(int i = 0; i < SELECTBTNNUMBER; i++)
-        {
-            int level;
-            int record;
-
-            ifs >> level;
-            ifs >> record;
-        }
-
-        cnt++;
-    }
-
-    ifs.close();
-
-    return cnt;
+    return m_userNum;
 }
 
+//初始化用户
 void UserManager::initUser()
 {
-    std::ifstream ifs(USERDATAPATH, std::ios::in);
+    std::ifstream ifs(USERDATAPATH, std::ios::in | std::ios::binary);
 
-    std::string name;
-    std::string pwd;
+    //读取用户人数
+    ifs.read(reinterpret_cast<char*>(&m_userNum), sizeof(int));
+    m_userArray = new User*[m_userNum];
 
-    int index = 0;  //用于添加用户
-
-    //读取用户名和密码
-    while(ifs >> name && ifs >> pwd)
+    for (int i = 0; i < m_userNum; ++i)
     {
-        User * user = new User;
-        user->setUserName(QString::fromStdString(name));
-        user->setUserPassword(QString::fromStdString(pwd));
+        // 读取用户名
+        int nameLen;
+        ifs.read(reinterpret_cast<char*>(&nameLen), sizeof(int));
+        char* nameBuf = new char[nameLen + 1];
+        ifs.read(nameBuf, nameLen);
+        nameBuf[nameLen] = '\0';
 
-        int level;
-        int record;
+        // 读取密码
+        int pwdLen;
+        ifs.read(reinterpret_cast<char*>(&pwdLen), sizeof(int));
+        char* pwdBuf = new char[pwdLen + 1];
+        ifs.read(pwdBuf, pwdLen);
+        pwdBuf[pwdLen] = '\0';
 
-        //读取用户记录
-        for(int i = 0; i < SELECTBTNNUMBER; i++)
+        // 创建用户对象并设置信息
+        User* user = new User;
+        user->setUserName(QString::fromUtf8(nameBuf));
+        user->setUserPassword(QString::fromUtf8(pwdBuf));
+        delete[] nameBuf;
+        delete[] pwdBuf;
+
+        // 读取记录数
+        int recordCount;
+        ifs.read(reinterpret_cast<char*>(&recordCount), sizeof(int));
+
+        for (int j = 0; j < recordCount; ++j)
         {
-            ifs >> level;
-            ifs >> record;
-
-            user->m_gameRecord[level] = record;
+            int key, val;
+            ifs.read(reinterpret_cast<char*>(&key), sizeof(int));
+            ifs.read(reinterpret_cast<char*>(&val), sizeof(int));
+            user->m_gameRecord[key] = val;
         }
 
-        this->m_userArray[index++] = user;
+        m_userArray[i] = user;
     }
-
-    ifs.close();
 }
 
+//释放内存
 void UserManager::releaseUserArray()
 {
     if(m_userArray)
@@ -253,6 +257,7 @@ void UserManager::releaseUserArray()
     }
 }
 
+//对用户排序
 void UserManager::userSort(int level)
 {
     QString name;
@@ -286,6 +291,7 @@ void UserManager::userSort(int level)
     });
 }
 
+//查找用户
 User* UserManager::findUser(QString userName) const
 {
     User * user = nullptr;
@@ -301,6 +307,7 @@ User* UserManager::findUser(QString userName) const
     return user;
 }
 
+//更新时间
 void UserManager::updateTotalTime(QString username, int totalTime, int level)
 {
     User * user = findUser(username);

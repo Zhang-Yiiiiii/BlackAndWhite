@@ -1,12 +1,16 @@
 #ifndef BASEWINDOW_H
 #define BASEWINDOW_H
 
+/*
+ * class: BaseWindow （基窗口类）
+ *
+ * 用处: 用于建立窗口框架、统一风格
+ */
+
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QPixmap>
 #include <QPainter>
-
-#include "config.h"
 
 namespace Ui
 {
@@ -19,13 +23,13 @@ class BaseWindow : public QMainWindow
 
 public:
     explicit BaseWindow(QWidget *parent = nullptr);
-    ~BaseWindow();
+    virtual ~BaseWindow();
 
-    void paintEvent(QPaintEvent* event) override;
+    virtual void paintEvent(QPaintEvent*) override;
 
 protected:
     QPixmap m_background;
-    QMenuBar* m_menubar;
+    QMenuBar* m_menubar;    //菜单栏
 
     QMenu* m_startMenu;   //开始菜单
     QMenu* m_gameMenu;    //游戏菜单

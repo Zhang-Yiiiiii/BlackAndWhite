@@ -1,6 +1,12 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
+/*
+ * class: Animator （动画类）
+ *
+ * 用处: 用于为组件提供动画、演示动画
+ */
+
 #include <QObject>
 #include <QWidget>
 #include <QGraphicsEffect>

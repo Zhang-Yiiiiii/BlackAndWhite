@@ -600,4 +600,5 @@ MainScene::~MainScene()
         m_loginWindow->deleteLater();
         m_loginWindow = nullptr;
     }
+
 }

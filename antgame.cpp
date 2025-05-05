@@ -33,22 +33,6 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
 
 AntGame::~AntGame()
 {
-    //删除数据对象
-    if(m_data)
-    {
-        delete m_data;
-        m_data = nullptr;
-    }
-
-    //删除计时器
-    if(m_elapsedTimer)
-    {
-        delete m_elapsedTimer;
-        m_elapsedTimer = nullptr;
-    }
-
-    m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
-
 }
 
 //保存自建地图
@@ -321,7 +305,7 @@ void AntGame::onShowCurrentSteps()
 }
 
 //获取总时间
-int AntGame::getTotalTime()
+int AntGame::getTotalTime() const
 {
     //计算总时间
     int totalTime = m_passingTime;
@@ -374,7 +358,7 @@ void AntGame::showStepLabel()
 }
 
 //判断是否胜利
-bool AntGame::isWin()
+bool AntGame::isWin() const
 {
     for(int i = 0; i < m_boardRow; i++)
     {
@@ -393,7 +377,7 @@ bool AntGame::isWin()
 //更新时间
 void AntGame::updateTime()
 {
-    int secs = m_elapsedTimer->elapsed() / 1000;
+    int secs = m_elapsedTimer.elapsed() / 1000;
     m_passingTime = secs;
 
     int mins = secs / 60;

@@ -1,5 +1,6 @@
 #include "basewindow.h"
 #include "ui_basewindow.h"
+#include "config.h"
 
 #include <fstream>
 #include <sstream>
@@ -46,7 +47,7 @@ BaseWindow::~BaseWindow()
     delete ui;
 }
 
-void BaseWindow::paintEvent(QPaintEvent *event)
+void BaseWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿

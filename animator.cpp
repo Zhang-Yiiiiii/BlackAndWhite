@@ -10,6 +10,7 @@ Animator* Animator::resetAnimation(AnimationType type)
     return this;
 }
 
+//建立动画
 void Animator::setupAnimation(QWidget* target, AnimationType type)
 {
     switch (type)
@@ -59,6 +60,7 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
     });
 }
 
+//创建动画
 Animator* Animator::createAnimator(QWidget * target, AnimationType type)
 {
     Animator* animator = new Animator(target);
@@ -68,6 +70,7 @@ Animator* Animator::createAnimator(QWidget * target, AnimationType type)
     return animator;
 }
 
+//动画完成时的回调
 Animator* Animator::onFinished(std::function<void ()> callback)
 {
     connect(m_animation, &QPropertyAnimation::finished, this, callback);
@@ -75,6 +78,7 @@ Animator* Animator::onFinished(std::function<void ()> callback)
     return this; // 链式调用
 }
 
+//启动动画
 Animator* Animator::start()
 {
     //动画未被初始化 或者 动画正在运行

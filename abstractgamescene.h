@@ -1,6 +1,12 @@
 #ifndef ABSTRACTGAMESCENE_H
 #define ABSTRACTGAMESCENE_H
 
+/*
+ * class: AbstractGameScene （抽象游戏类）
+ *
+ * 用处: 用于展示游戏、记录通关时间、展示排行榜、对用户进行游戏上的交互
+ */
+
 #include <QMainWindow>
 #include <QApplication>
 #include <QString>
@@ -49,7 +55,7 @@ public:
     gameMode m_gameMode = playMode;
 
     //保存地图的函数，用于自建地图
-    virtual void saveGame() = 0;
+    virtual void saveGame() {};
 
     //设置动画类型
     void setAnimationType(Animator::AnimationType);
@@ -81,7 +87,7 @@ protected:
     int m_passingTime = 0;
 
     //定时器
-    QElapsedTimer* m_elapsedTimer = nullptr;
+    QElapsedTimer m_elapsedTimer;
 
     //控制显示时间定时器
     QTimer* m_showTimer = nullptr;
@@ -130,10 +136,10 @@ protected:
     int saveTotalTime();
 
     //获取用户当前总时间
-    virtual int getTotalTime() = 0;
+    virtual int getTotalTime() const = 0;
 
     //检验是否胜利
-    virtual bool isWin() = 0;
+    virtual bool isWin() const = 0;
 
     //显示棋盘
     virtual void showBoard(bool isVisible = true);

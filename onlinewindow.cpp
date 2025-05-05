@@ -43,19 +43,19 @@ OnlineWindow::~OnlineWindow()
 {
     delete ui;
 
-    if(m_server)
-    {
-        m_server->close();
-        m_server->deleteLater();
-        m_server = nullptr;
-    }
+    // if(m_server)
+    // {
+    // m_server->close();
+    // m_server->deleteLater();
+    // m_server = nullptr;
+    // }
 
-    if(m_clientConnection)
-    {
-        m_clientConnection->close();
-        m_clientConnection->deleteLater();
-        m_clientConnection = nullptr;
-    }
+    // if(m_clientConnection)
+    // {
+    // m_clientConnection->close();
+    // m_clientConnection->deleteLater();
+    // m_clientConnection = nullptr;
+    // }
 }
 
 OnlineWindow* OnlineWindow::write(const char* data)

@@ -13,6 +13,32 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
     //连接排行榜按钮
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::showRankList);
+
+    //显示关卡数
+    QString level = QString("%1").arg(m_gameLevel, 2, 10, QChar('0'));
+
+    QString digit1 = QString(level[0]);
+    QString digit2 = QString(level[1]);
+
+    QString pixStr1 = QString(NUMBERPATH).arg(digit1);
+    QString pixStr2 = QString(NUMBERPATH).arg(digit2);
+
+    QPixmap pix1(pixStr1);
+    QPixmap pix2(pixStr2);
+
+    QLabel *label1 = new QLabel(this);
+    QLabel *label2 = new QLabel(this);
+
+    label1->setFixedSize(50, 50);
+    label2->setFixedSize(50, 50);
+
+    label1->setPixmap(pix1);
+    label2->setPixmap(pix2);
+
+    label1->move(1200, 300);
+    label2->move(1250, 300);
+    label1->show();
+    label2->show();
 }
 
 //设置动画类型
@@ -178,8 +204,7 @@ void AbstractGameScene::onBoardClicked(int x, int y)
 void AbstractGameScene::initTimer()
 {
     //初始化定时器
-    m_elapsedTimer = new QElapsedTimer;
-    m_elapsedTimer->start();
+    m_elapsedTimer.start();
 
     m_showTimer = new QTimer(this);
     m_showTimer->start(100);
@@ -398,7 +423,7 @@ void AbstractGameScene::setLabelStyle(QLabel *label)
 void AbstractGameScene::updateTime()
 {
     //获取秒数
-    int secs = m_elapsedTimer->elapsed() / 1000;
+    int secs = m_elapsedTimer.elapsed() / 1000;
     m_passingTime = secs;
 
     //转换成时分
@@ -412,11 +437,11 @@ void AbstractGameScene::updateTime()
 AbstractGameScene::~AbstractGameScene()
 {
     //删除数据对象
-    delete m_data;
-    m_data = nullptr;
-
-    delete m_elapsedTimer;
-    m_elapsedTimer = nullptr;
+    if(m_data)
+    {
+        delete m_data;
+        m_data = nullptr;
+    }
 
     m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
 }

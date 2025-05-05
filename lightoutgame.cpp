@@ -33,30 +33,14 @@ void LightOutGame::saveGame()
     emit changeBack();
 }
 
-void LightOutGame::initGameInfo()
-{
-    //初始化游戏信息对象
-    m_data = new Data;
-
-    //初始化信息
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
-        }
-    }
-}
-
 //计算总时间
-int LightOutGame::getTotalTime()
+int LightOutGame::getTotalTime() const
 {
-    int totalTime = m_passingTime;
-    return totalTime;
+    return m_passingTime;
 }
 
 //判断是否胜利
-bool LightOutGame::isWin()
+bool LightOutGame::isWin() const
 {
     for (int i = 0; i < m_boardRow; i++)
     {
@@ -169,7 +153,7 @@ bool LightOutGame::isSolvable()
 }
 
 //保存数据
-void LightOutGame::saveSolvableInfo(std::vector<std::vector<bool> >& gameArray, std::vector<std::vector<bool> >& ans)
+void LightOutGame::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
 {
     //将结果传给data
     for(int i = 0; i < m_boardRow; i++)

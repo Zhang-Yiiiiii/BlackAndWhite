@@ -1,4 +1,5 @@
 #include "hexagon.h"
+#include "config.h"
 
 Hexagon::Hexagon(int id, QPushButton * parent):
     QPushButton(parent), m_id(id + 1)

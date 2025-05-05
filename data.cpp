@@ -10,92 +10,24 @@ Data::Data()
 
 //从文件中读取信息
 //信息配置：
+//兰顿蚂蚁：
 // 关卡数
 // 游戏步数
 // 虫子的x 虫子的y 虫子的方向
 // 20*20 的gameArray
 // 20*20 的ansArray
+//
+//熄灯游戏
+// 关卡数
+// gameArray
+// ansArray
+//
 
+//获取信息
 void Data::getData()
 {
     getAntGameData();
     getLightGameData();
-}
-
-void Data::saveAntData()
-{
-    //输出 并且 清空文件所有内容的方式打开文件
-    std::ofstream ofs(ANTDATAPATH, std::ios::out | std::ios::trunc);
-
-    for (int i = 1; i <= m_antGameLevel; i++)
-    {
-        ofs << i << std::endl;  //关卡数
-        ofs << m_stepArray[i] << std::endl; //步数
-        ofs << m_bugPos[i].x() << " " << m_bugPos[i].y() << " " << m_bugDir[i] << std::endl;    //bug信息
-
-        //游戏数组
-        for (int x = 0; x < BOARDSIDELENGTH; x++)
-        {
-            for (int y = 0; y < BOARDSIDELENGTH; y++)
-            {
-                ofs << m_gameArray[i][x][y] << " ";
-            }
-
-            ofs << std::endl;
-        }
-
-        //答案数组
-        for (int x = 0; x < BOARDSIDELENGTH; x++)
-        {
-            for (int y = 0; y < BOARDSIDELENGTH; y++)
-            {
-                ofs << m_ansArray[i][x][y] << " ";
-            }
-
-            ofs << std::endl;
-        }
-    }
-
-    ofs.flush();
-    ofs.close();
-}
-
-void Data::saveLightData()
-{
-    //输出 并且 清空文件所有内容的方式打开文件
-    std::ofstream ofs(LIGHTDATAPATH, std::ios::out | std::ios::trunc);
-
-    for (int i = 1; i <= m_lightGameLevel; i++)
-    {
-        ofs << i + m_antGameLevel << std::endl; //关卡
-        int rows = i + 3;
-        int cols = i + 3;
-
-        //游戏数组
-        for (int x = 0; x < rows; x++)
-        {
-            for (int y = 0; y < cols; y++)
-            {
-                ofs << m_gameArray[i + m_antGameLevel][x][y] << " ";
-            }
-
-            ofs << std::endl;
-        }
-
-        //答案数组
-        for (int x = 0; x < rows; x++)
-        {
-            for (int y = 0; y < cols; y++)
-            {
-                ofs << m_ansArray[i + m_antGameLevel][x][y] << " ";
-            }
-
-            ofs << std::endl;
-        }
-    }
-
-    ofs.flush();
-    ofs.close();
 }
 
 //析构函数
@@ -105,51 +37,162 @@ Data::~Data()
     saveLightData();
 }
 
+void Data::saveLightData()
+{
+    std::ofstream ofs(LIGHTDATAPATH, std::ios::out | std::ios::binary | std::ios::trunc);
+
+    if (!ofs.is_open())
+    {
+        return;
+    }
+
+    for (int i = 1; i <= m_lightGameLevel; i++)
+    {
+        int gameLevel = i + m_antGameLevel;
+        ofs.write(reinterpret_cast<char*>(&gameLevel), sizeof(int)); // 写入关卡号
+
+        int rows = i + 3;
+        int cols = i + 3;
+
+        // 写入游戏数组
+        for (int x = 0; x < rows; x++)
+        {
+            for (int y = 0; y < cols; y++)
+            {
+                bool val = m_gameArray[gameLevel][x][y];
+                ofs.write(reinterpret_cast<char*>(&val), sizeof(bool));
+            }
+        }
+
+        // 写入答案数组
+        for (int x = 0; x < rows; x++)
+        {
+            for (int y = 0; y < cols; y++)
+            {
+                bool val = m_ansArray[gameLevel][x][y];
+                ofs.write(reinterpret_cast<char*>(&val), sizeof(bool));
+            }
+        }
+    }
+
+    ofs.close();
+}
+
+void Data::saveAntData()
+{
+    std::ofstream ofs(ANTDATAPATH, std::ios::out | std::ios::binary | std::ios::trunc);
+
+    if (!ofs.is_open())
+    {
+        return;
+    }
+
+    for (int i = 1; i <= m_antGameLevel; i++)
+    {
+        ofs.write(reinterpret_cast<char*>(&i), sizeof(i));  //关卡数
+        ofs.write(reinterpret_cast<char*>(&m_stepArray[i]), sizeof(int));  //步数
+
+        int x = m_bugPos[i].x();
+        int y = m_bugPos[i].y();
+        int dir = m_bugDir[i];
+
+        ofs.write(reinterpret_cast<char*>(&x), sizeof(int));
+        ofs.write(reinterpret_cast<char*>(&y), sizeof(int));
+        ofs.write(reinterpret_cast<char*>(&dir), sizeof(int));
+
+        // 写入游戏数组
+        for (int row = 0; row < BOARDSIDELENGTH; row++)
+        {
+            for (int col = 0; col < BOARDSIDELENGTH; col++)
+            {
+                bool val = m_gameArray[i][row][col];
+                ofs.write(reinterpret_cast<char*>(&val), sizeof(bool));
+            }
+        }
+
+        // 写入答案数组
+        for (int row = 0; row < BOARDSIDELENGTH; row++)
+        {
+            for (int col = 0; col < BOARDSIDELENGTH; col++)
+            {
+                bool val = m_ansArray[i][row][col];
+                ofs.write(reinterpret_cast<char*>(&val), sizeof(bool));
+            }
+        }
+    }
+
+    ofs.close();
+}
+
 void Data::getAntGameData()
 {
-    //获取关卡数 步数 bug信息
-    int gameLevel = 0;
-    int gameStep = 0;
-    int x, y, dir;
+    std::ifstream ifs(ANTDATAPATH, std::ios::in | std::ios::binary);
 
-    std::ifstream ifs(ANTDATAPATH, std::ios::in);
-
-    while (ifs >> gameLevel >> gameStep >> x >> y >> dir && m_antGameLevel < ANTGAMENUMBER)
+    if (!ifs.is_open())
     {
-        int temp;
+        return;
+    }
 
-        // 初始化 v1 和 v2
-        QVector<QVector<bool>> v1(BOARDSIDELENGTH, QVector<bool>(BOARDSIDELENGTH));
-        QVector<QVector<bool>> v2(BOARDSIDELENGTH, QVector<bool>(BOARDSIDELENGTH));
+    while (m_antGameLevel < ANTGAMENUMBER)
+    {
+        int gameLevel = 0, gameStep = 0, x = 0, y = 0, dir = 0;
 
-        // 读取 gameArray
-        for (int i = 0; i < BOARDSIDELENGTH; i++)
+        if (!ifs.read(reinterpret_cast<char*>(&gameLevel), sizeof(int)))
         {
-            for (int j = 0; j < BOARDSIDELENGTH; j++)
+            break;
+        }
+
+        if (!ifs.read(reinterpret_cast<char*>(&gameStep), sizeof(int)))
+        {
+            break;
+        }
+
+        if (!ifs.read(reinterpret_cast<char*>(&x), sizeof(int)))
+        {
+            break;
+        }
+
+        if (!ifs.read(reinterpret_cast<char*>(&y), sizeof(int)))
+        {
+            break;
+        }
+
+        if (!ifs.read(reinterpret_cast<char*>(&dir), sizeof(int)))
+        {
+            break;
+        }
+
+        QVector<QVector<bool>> v1(BOARDSIDELENGTH, QVector<bool>(BOARDSIDELENGTH)); //游戏数组
+        QVector<QVector<bool>> v2(BOARDSIDELENGTH, QVector<bool>(BOARDSIDELENGTH)); //答案数组
+
+        // 读取游戏数组
+        for (int row = 0; row < BOARDSIDELENGTH; row++)
+        {
+            for (int col = 0; col < BOARDSIDELENGTH; col++)
             {
-                ifs >> temp;
-                v1[i][j] = temp;
+                bool val;
+                ifs.read(reinterpret_cast<char*>(&val), sizeof(bool));
+                v1[row][col] = val;
             }
         }
 
-        // 读取 ansArray
-        for (int i = 0; i < BOARDSIDELENGTH; i++)
+        // 读取答案数组
+        for (int row = 0; row < BOARDSIDELENGTH; row++)
         {
-            for (int j = 0; j < BOARDSIDELENGTH; j++)
+            for (int col = 0; col < BOARDSIDELENGTH; col++)
             {
-                ifs >> temp;
-                v2[i][j] = temp;
+                bool val;
+                ifs.read(reinterpret_cast<char*>(&val), sizeof(bool));
+                v2[row][col] = val;
             }
         }
-        //将数据放入map容器
-        m_stepArray[gameLevel] = gameStep;    //游戏步数
-        m_bugPos.insert(gameLevel, QPoint(x, y)); //bug位置
-        m_bugDir.insert(gameLevel, dir);  //bug方向
 
-        m_gameArray.insert(gameLevel, v1); //游戏数组
-        m_ansArray.insert(gameLevel, v2); //答案数组
-
-        this->m_antGameLevel++;
+        m_stepArray[gameLevel] = gameStep;
+        m_bugPos.insert(gameLevel, QPoint(x, y));
+        m_bugDir.insert(gameLevel, dir);
+        m_gameArray.insert(gameLevel, v1);
+        m_ansArray.insert(gameLevel, v2);
+        m_antGameLevel++;
     }
 
     ifs.close();
@@ -157,48 +200,63 @@ void Data::getAntGameData()
 
 void Data::getLightGameData()
 {
-    //获取关卡数 步数 bug信息
-    int gameLevel = 0;
+    std::ifstream ifs(LIGHTDATAPATH, std::ios::in | std::ios::binary);
 
-    std::ifstream ifs(LIGHTDATAPATH, std::ios::in);
-
-    while (ifs >> gameLevel && m_lightGameLevel < LIGHTGAMEBUMBER)
+    if (!ifs.is_open())
     {
-        int temp;
+        return;
+    }
 
-        //棋盘的行列数
+    while (m_lightGameLevel < LIGHTGAMEBUMBER)
+    {
+        int gameLevel = 0;
+
+        if (!ifs.read(reinterpret_cast<char*>(&gameLevel), sizeof(int)))
+        {
+            break;
+        }
+
         int rows = gameLevel - ANTGAMENUMBER + 3;
         int cols = gameLevel - ANTGAMENUMBER + 3;
 
-        // 初始化 v1 和 v2
-        QVector<QVector<bool >> v1(rows, QVector<bool>(cols));
-        QVector<QVector<bool >> v2(rows, QVector<bool>(cols));
+        QVector<QVector<bool >> v1(rows, QVector<bool>(cols));  //游戏数组
+        QVector<QVector<bool >> v2(rows, QVector<bool>(cols));  //答案数组
 
-        // 读取 gameArray
-        for (int i = 0; i < rows; i++)
+        // 读取游戏数组
+        for (int x = 0; x < rows; x++)
         {
-            for (int j = 0; j < cols; j++)
+            for (int y = 0; y < cols; y++)
             {
-                ifs >> temp;
-                v1[i][j] = temp;
+                bool val;
+
+                if (!ifs.read(reinterpret_cast<char*>(&val), sizeof(bool)))
+                {
+                    return;
+                }
+
+                v1[x][y] = val;
             }
         }
 
-        // 读取 ansArray
-        for (int i = 0; i < rows; i++)
+        // 读取答案数组
+        for (int x = 0; x < rows; x++)
         {
-            for (int j = 0; j < cols; j++)
+            for (int y = 0; y < cols; y++)
             {
-                ifs >> temp;
-                v2[i][j] = temp;
+                bool val;
+
+                if (!ifs.read(reinterpret_cast<char*>(&val), sizeof(bool)))
+                {
+                    return;
+                }
+
+                v2[x][y] = val;
             }
         }
 
-        //将数据放入map容器
-        m_gameArray.insert(gameLevel, v1); //游戏数组
-        m_ansArray.insert(gameLevel, v2); //答案数组
-
-        this->m_lightGameLevel++;
+        m_gameArray.insert(gameLevel, v1);
+        m_ansArray.insert(gameLevel, v2);
+        m_lightGameLevel++;
     }
 
     ifs.close();

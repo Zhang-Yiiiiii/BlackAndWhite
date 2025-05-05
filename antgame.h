@@ -40,7 +40,7 @@ private:
 
     void showTimeLabel() override;  //显示时间label
 
-    int getTotalTime() override;    //获取总时间
+    int getTotalTime() const override;    //获取总时间
 
     void initBugInfo();             //初始化虫子信息
 
@@ -48,7 +48,7 @@ private:
 
     void showStepLabel();           //显示步数label
 
-    bool isWin() override;          //检验是否胜利
+    bool isWin() const override;          //检验是否胜利
 
     //判断是否有解
     bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知起点

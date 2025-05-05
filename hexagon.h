@@ -7,7 +7,6 @@
  * 用处: 作为主界面的选关按钮、传递被点击时的关卡数
  */
 
-#include "config.h"
 #include <QWidget>
 #include <QMainWindow>
 #include <QIcon>
