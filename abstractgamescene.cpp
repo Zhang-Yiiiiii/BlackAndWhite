@@ -47,6 +47,19 @@ void AbstractGameScene::setAnimationType(Animator::AnimationType type)
     m_animationType = type;
 }
 
+//重写关闭事件
+void AbstractGameScene::closeEvent(QCloseEvent *event)
+{
+    if(m_isInternalclose)
+    {
+        event->accept();
+    }
+    else
+    {
+        QCoreApplication::quit();
+    }
+}
+
 //设置棋盘尺寸
 void AbstractGameScene::setboardSize()
 {
@@ -166,6 +179,7 @@ void AbstractGameScene::onSubmitBtnClicked()
     }
 }
 
+//重置按钮被点击
 void AbstractGameScene::onResetBtnClicked()
 {
     int ret = QMessageBox::question(this, "问题", "是否确定重置？");
@@ -274,7 +288,7 @@ void AbstractGameScene::setBackBtn()
 
     connect(backBtn, &QPushButton::clicked, this, [ = ]()
     {
-        m_isInternalclose = true;   //确定是内部返回的 而不是关闭窗口
+        // m_isInternalclose = true;   //确定是内部返回的 而不是关闭窗口
         emit changeBack();
     });
 }

@@ -43,26 +43,28 @@ OnlineWindow::~OnlineWindow()
 {
     delete ui;
 
-    // if(m_server)
-    // {
-    // m_server->close();
-    // m_server->deleteLater();
-    // m_server = nullptr;
-    // }
+    if(m_server)
+    {
+        m_server->close();
+        m_server->deleteLater();
+        m_server = nullptr;
+    }
 
-    // if(m_clientConnection)
-    // {
-    // m_clientConnection->close();
-    // m_clientConnection->deleteLater();
-    // m_clientConnection = nullptr;
-    // }
-}
-
-OnlineWindow* OnlineWindow::write(const char* data)
-{
     if(m_clientConnection)
     {
+        m_clientConnection->close();
+        m_clientConnection->deleteLater();
+        m_clientConnection = nullptr;
+    }
+}
+
+//写数据
+OnlineWindow* OnlineWindow::write(const char* data)
+{
+    if(m_clientConnection && m_clientConnection->isOpen())
+    {
         m_clientConnection->write(data);
+        flush();
     }
 
     return this;
@@ -152,6 +154,7 @@ void OnlineWindow::onJoinBtnClicked()
     //删除服务器
     if(m_server)
     {
+        qDebug() << "test";
         m_server->close();
         delete m_server;
         m_server = nullptr;
@@ -179,6 +182,7 @@ void OnlineWindow::onJoinBtnClicked()
     });
 }
 
+//处理获得的信息
 void OnlineWindow::handleInfo()
 {
     QString data = m_clientConnection->readAll();   //读取信息

@@ -54,11 +54,17 @@ public:
     //游戏模式
     gameMode m_gameMode = playMode;
 
+    //关闭窗口的标志
+    bool m_isInternalclose = true;  //如果是点击窗口的关闭按钮则关闭程序
+
     //保存地图的函数，用于自建地图
     virtual void saveGame() {};
 
     //设置动画类型
     void setAnimationType(Animator::AnimationType);
+
+    //重写关闭事件
+    void closeEvent(QCloseEvent* event) override;
 
 protected:
 
@@ -116,9 +122,6 @@ protected:
 
     //动画效果  默认是淡入
     Animator::AnimationType m_animationType = Animator::FadeIn;
-
-    //关闭窗口的标志
-    bool m_isInternalclose = false;  //如果是点击窗口的关闭按钮则关闭程序
 
     //得到棋盘尺寸
     void setboardSize();

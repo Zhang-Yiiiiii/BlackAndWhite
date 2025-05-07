@@ -23,7 +23,7 @@ class BaseWindow : public QMainWindow
 
 public:
     explicit BaseWindow(QWidget *parent = nullptr);
-    virtual ~BaseWindow();
+    ~BaseWindow();
 
     virtual void paintEvent(QPaintEvent*) override;
 

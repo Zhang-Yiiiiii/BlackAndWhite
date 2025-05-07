@@ -27,7 +27,7 @@
 #define BUGPATH ":/icon/debug%1.png"                    //虫子路径
 #define BOARDPOSX BACKGROUDWIDTH/2 - GRIDSIZE * 10      //棋盘左上角的X
 #define BOARDPOSY 50                                    //棋盘左上角的Y
-#define NUMBERPATH ":/numberIcon/number-%1.png"                    //关卡数字的图片路径
+#define NUMBERPATH ":/numberIcon/number-%1.png"         //关卡数字的图片路径
 
 /************游戏数据配置数据******************/
 #define ANTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/AntData.txt" //ant游戏数据

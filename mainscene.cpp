@@ -17,6 +17,7 @@ MainScene::MainScene(QWidget *parent)
     connect(loginAction, &QAction::triggered, this, &MainScene::onUserLogin);
 
     m_gameMenu->addSeparator();
+
     //自建地图
     QMenu* antMappingMenu = m_gameMenu->addMenu("兰顿蚂蚁自建地图");
 
@@ -157,6 +158,13 @@ void MainScene::buildAntGame(gameMode buildWay)
 void MainScene::buildLightGame()
 {
     int level = QInputDialog::getInt(this, "建立熄灯游戏", "请输入关卡数38-47");
+
+    if(level > 47 || level < 38)    //判断关卡是否输入正确
+    {
+        QToolTip::showText(this->rect().center(), "关卡数不正确", this);
+        return;
+    }
+
     enterGameScene(level, lightBuildMode);
 }
 
@@ -179,11 +187,11 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
 {
     if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
     {
-        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
+        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
     }
     else if(gameLevel <= SELECTBTNNUMBER)   //熄灯游戏模式
     {
-        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
+        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
     }
 
     //延迟进入
@@ -241,6 +249,8 @@ void MainScene::compareResults(int ourTime, int rivalTime)
 // 处理返回信号
 void MainScene::onGameSceneChangeBack()
 {
+    m_gameScene->m_isInternalclose = true;  //确定是内部进行返回的
+
     this->setGeometry(m_gameScene->geometry());
     m_gameScene->close();
     this->show();
@@ -351,6 +361,7 @@ void MainScene::showLoginWindow()
     });
 }
 
+//设置联机模式
 void MainScene::setOnlineMode()
 {
     // 断开已有的连接  不断开连接的话会有bug 程序会崩溃
@@ -412,44 +423,14 @@ void MainScene::setOnlineMode()
     });
 }
 
+//设置动画
 void MainScene::setAnimations()
 {
-    // 创建动画组
-    //QSequentialAnimationGroup *animationGroup = new QSequentialAnimationGroup(this);
-
     for(auto btn : m_selectBtns)
     {
-        // //设置按钮不可见
-        // QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(btn);
-        // effect->setOpacity(0);
-        // btn->setGraphicsEffect(effect);
-        // setAnimation(btn, animationGroup);
-
         Animator * ani = Animator::createAnimator(btn, Animator::SlideFromTop);
         ani->start();
-
     }
-
-    //animationGroup->start();
-}
-
-//设置按钮显示动画
-void MainScene::setAnimation(QWidget *widget, QSequentialAnimationGroup *animationGroup)
-{
-    QGraphicsOpacityEffect* effect = qobject_cast<QGraphicsOpacityEffect*>(widget->graphicsEffect());
-    QPropertyAnimation *fadeIn = new QPropertyAnimation(effect, "opacity");
-
-    fadeIn->setDuration(50); // 动画时长500ms
-    fadeIn->setStartValue(0.0);
-    fadeIn->setEndValue(1.0);
-    fadeIn->setEasingCurve(QEasingCurve::InQuad); // 平滑曲线
-
-    connect(fadeIn, &QPropertyAnimation::finished, widget, [widget]()  //让动画结束后回到原位置
-    {
-        widget->move(widget->pos()); // 强制刷新位置
-    });
-
-    animationGroup->addAnimation(fadeIn);
 }
 
 //用户登录

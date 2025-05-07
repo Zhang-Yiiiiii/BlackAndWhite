@@ -49,15 +49,10 @@ void Animator::setupAnimation(QWidget* target, AnimationType type)
             m_animation = new QPropertyAnimation(target, "pos", target);
             m_animation->setStartValue(QPoint(target->x() - rand() % 2000, target->y() - rand() % 7000));
             m_animation->setEndValue(target->pos());
-            m_animation->setDuration(500);
+            m_animation->setDuration(600);
             break;
         }
     }
-
-    connect(m_animation, &QPropertyAnimation::finished, [&]()   //让动画结束后回到原位置
-    {
-        //target->move(target->pos()); // 强制刷新位置
-    });
 }
 
 //创建动画

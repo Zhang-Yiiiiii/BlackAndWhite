@@ -96,6 +96,9 @@ void LightOutGame::flipCells(const int x, const int y)
 bool LightOutGame::isSolvable()
 {
     int solution = 0;   //第一行的按法
+    int minSteps = INT_MAX;    //每种可行解的按下次数
+    int minSolution = 0;
+    std::vector<std::vector<bool >> finalAns(m_boardRow, std::vector<bool>(m_boardCol, 0)); //最终的答案数组
 
     //复制原数组
     std::vector<std::vector<bool>> gameArray = m_gameArray;
@@ -103,6 +106,7 @@ bool LightOutGame::isSolvable()
     //用二进制枚举第一行的解法
     for(; solution < (1 << m_boardCol); solution++)
     {
+        int cnt = 0;
         //答案数组
         std::vector<std::vector<bool >> ans(m_boardRow, std::vector<bool>(m_boardCol, 0));
 
@@ -110,6 +114,7 @@ bool LightOutGame::isSolvable()
         {
             if((solution >> i) & 1) //说明第m_boardCol - i - 1个需要按下
             {
+                cnt++;
                 flipCells(0, m_boardCol - i - 1);
                 ans[0][m_boardCol - i - 1] = 1;
             }
@@ -122,6 +127,7 @@ bool LightOutGame::isSolvable()
             {
                 if(!m_gameArray[i][j]) //说明其为黑色
                 {
+                    cnt++;
                     flipCells(i + 1, j);
                     ans[i + 1][j] = 1;
                 }
@@ -140,13 +146,47 @@ bool LightOutGame::isSolvable()
             }
         }
 
-        if(flag)
+        if(flag)    //有解
         {
-            //保存数据
-            saveSolvableInfo(gameArray, ans);
-            return true;    //最后一行全为白 有解
+            //记录最小解
+            if(cnt < minSteps)
+            {
+                minSteps = cnt;
+                minSolution = solution;
+            }
         }
         m_gameArray.assign(gameArray.begin(), gameArray.end());
+    }
+
+    //得到最终解
+    if(minSteps != INT_MAX)
+    {
+        qDebug() << minSteps;
+
+        for(int i = 0; i < m_boardCol; i++)
+        {
+            if((minSolution >> i) & 1) //说明第m_boardCol - i - 1个需要按下
+            {
+                flipCells(0, m_boardCol - i - 1);
+                finalAns[0][m_boardCol - i - 1] = 1;
+            }
+        }
+
+        //依此按第一行下面的开关
+        for(int i = 0; i < m_boardRow - 1; i++)
+        {
+            for(int j = 0; j < m_boardCol; j++)
+            {
+                if(!m_gameArray[i][j]) //说明其为黑色
+                {
+                    flipCells(i + 1, j);
+                    finalAns[i + 1][j] = 1;
+                }
+            }
+        }
+
+        saveSolvableInfo(gameArray, finalAns);  //保存数据
+        return true;
     }
 
     return false;    //没有找到解
