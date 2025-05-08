@@ -12,8 +12,32 @@ MainScene::MainScene(QWidget *parent)
 {
     //ui->setupUi(this);
 
+    QPoint pos(350, 100);
+
+    QLabel* temp1 = new QLabel(this);
+    QLabel* temp2 = new QLabel(this);
+
+    QFont font("华文新魏", 40);
+    font.setBold(true);
+    temp1->setFont(font);
+    temp1->setText("不要黑块");
+    temp1->setStyleSheet("color : black; ");
+    temp1->setFixedSize(230, 45);
+    temp1->setAlignment(Qt::AlignCenter);
+    temp1->move(pos);
+
+    pos.setX(1000);
+    font.setBold(true);
+    temp2->setFont(font);
+    temp2->setText("兰顿蚂蚁");
+    temp2->setStyleSheet("color : black; ");
+    temp2->setFixedSize(230, 45);
+    temp2->setAlignment(Qt::AlignCenter);
+    temp2->move(pos);
+
     //登录
     QAction* loginAction = m_startMenu->addAction("登录");
+    loginAction->setIcon(QIcon(LOGINICONPATH));
     connect(loginAction, &QAction::triggered, this, &MainScene::onUserLogin);
 
     m_gameMenu->addSeparator();
@@ -41,10 +65,12 @@ MainScene::MainScene(QWidget *parent)
 
     //进行联机
     QAction* onlineAction = m_toolMenu->addAction("联机");
+    onlineAction->setIcon(QIcon(CONNECTICONPAHT));
     connect(onlineAction, &QAction::triggered, this, &MainScene::onOnlineTriggerd);
 
     //断开联机
     QAction* disconnectAction = m_toolMenu->addAction("断开联机");
+    disconnectAction->setIcon(QIcon(DISCONNECTICONPATH));
     connect(disconnectAction, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
 
     //初始化用户管理员
@@ -581,5 +607,11 @@ MainScene::~MainScene()
         m_loginWindow->deleteLater();
         m_loginWindow = nullptr;
     }
+
+}
+
+void MainScene::paintEvent(QPaintEvent * event)
+{
+    BaseWindow::paintEvent(event);
 
 }

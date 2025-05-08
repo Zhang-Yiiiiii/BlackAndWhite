@@ -6,7 +6,14 @@
 #define BACKGROUDHEIGHT 800                             //背景高
 #define BACKGROUDPATH ":/image/mainScene.jpg"           //背景图片
 #define MYTITLE "非黑即白"                               //窗口标题
+
 #define MYICON ":/icon/debug1.png"                      //窗口图标
+#define QUITICONPATH ":/icon/quit.png"                  //退出图标路径
+#define LOGINICONPATH ":/icon/login.png"                //登录图标路径
+#define INTRODUCTIONICONPATH ":/icon/introduction.png"  //说明图标路径
+#define CONNECTICONPAHT ":/icon/link.png"                //联机图标路径
+#define DISCONNECTICONPATH ":/icon/disconnect.png"      //断开联机图标
+
 #define SELECTBTNNUMBER 47                              //选关按钮数量
 #define ANTGAMENUMBER 37                                //兰顿蚂蚁的关卡数
 #define LIGHTGAMEBUMBER 10                              //熄灯游戏的关卡数
@@ -28,6 +35,10 @@
 #define BOARDPOSX BACKGROUDWIDTH/2 - GRIDSIZE * 10      //棋盘左上角的X
 #define BOARDPOSY 50                                    //棋盘左上角的Y
 #define NUMBERPATH ":/numberIcon/number-%1.png"         //关卡数字的图片路径
+
+#define SHOWTIPICONPATH ":/icon/showTip.png"            //显示提示图标路径
+#define CLOSETIPICONPATH ":/icon/closeTip.png"          //关闭提示图标路径
+#define RANKLISHICONPAHT ":/icon/rank.png"              //排行榜图标路径
 
 /************游戏数据配置数据******************/
 #define ANTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/AntData.txt" //ant游戏数据

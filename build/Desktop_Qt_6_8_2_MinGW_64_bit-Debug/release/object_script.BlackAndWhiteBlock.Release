@@ -11,6 +11,7 @@ release/lightoutgame.o
 release/loginwindow.o
 release/main.o
 release/mainscene.o
+release/mypushbutton.o
 release/onlinewindow.o
 release/ranklist.o
 release/user.o

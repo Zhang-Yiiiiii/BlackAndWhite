@@ -11,6 +11,7 @@ debug/lightoutgame.o
 debug/loginwindow.o
 debug/main.o
 debug/mainscene.o
+debug/mypushbutton.o
 debug/onlinewindow.o
 debug/ranklist.o
 debug/user.o

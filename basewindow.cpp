@@ -32,10 +32,12 @@ BaseWindow::BaseWindow(QWidget *parent) :
     //设置菜单项
     //游戏说明
     m_instructionAction = m_gameMenu->addAction("说明");
+    m_instructionAction->setIcon(QIcon(INTRODUCTIONICONPATH));
     connect(m_instructionAction, &QAction::triggered, this, &BaseWindow::onShowRule);
 
     //退出游戏
     m_quitAction = m_startMenu->addAction("退出游戏");
+    m_quitAction->setIcon(QIcon(QUITICONPATH));
     connect(m_quitAction, &QAction::triggered, [ = ]()
     {
         exit(0);

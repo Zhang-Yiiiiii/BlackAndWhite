@@ -45,6 +45,9 @@ public:
     MainScene(QWidget *parent = nullptr);
     ~MainScene();
 
+    //绘图事件
+    void paintEvent(QPaintEvent*) override;
+
 private:
     //当前用户名和密码
     QString m_userName = "";

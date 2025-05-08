@@ -34,5 +34,11 @@
         <file>image/loginWhitePic.png</file>
         <file>icon/timeIcon.png</file>
         <file>icon/click.png</file>
+        <file>icon/login.png</file>
+        <file>icon/introduction.png</file>
+        <file>icon/disconnect.png</file>
+        <file>icon/closeTip.png</file>
+        <file>icon/showTip.png</file>
+        <file>icon/rank.png</file>
     </qresource>
 </RCC>

@@ -19,9 +19,10 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
 
     showPushButton();   //显示提交、返回、重置按钮
 
-    initClickRecord();  //初始化点击数组
+    initClickRecord();  //初始化点击记录数组
 }
 
+//保存游戏
 void LightOutGame::saveGame()
 {
     while(!isSolvable())  //不可解
@@ -98,17 +99,17 @@ bool LightOutGame::isSolvable()
     int solution = 0;   //第一行的按法
     int minSteps = INT_MAX;    //每种可行解的按下次数
     int minSolution = 0;
+
     std::vector<std::vector<bool >> finalAns(m_boardRow, std::vector<bool>(m_boardCol, 0)); //最终的答案数组
 
-    //复制原数组
-    std::vector<std::vector<bool>> gameArray = m_gameArray;
+    std::vector<std::vector<bool>> gameArray = m_gameArray; //复制原数组
 
     //用二进制枚举第一行的解法
     for(; solution < (1 << m_boardCol); solution++)
     {
         int cnt = 0;
-        //答案数组
-        std::vector<std::vector<bool >> ans(m_boardRow, std::vector<bool>(m_boardCol, 0));
+
+        std::vector<std::vector<bool >> ans(m_boardRow, std::vector<bool>(m_boardCol, 0));  //答案数组
 
         for(int i = 0; i < m_boardCol; i++)
         {

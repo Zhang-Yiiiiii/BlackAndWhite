@@ -27,6 +27,7 @@
 #include "usermanager.h"
 #include "data.h"
 #include "animator.h"
+#include "mypushbutton.h"
 
 enum gameMode
 {

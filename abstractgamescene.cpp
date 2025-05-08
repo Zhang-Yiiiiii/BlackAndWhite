@@ -1,44 +1,22 @@
 #include "abstractgamescene.h"
 #include "config.h"
 
+#include <QPointer>
+
 AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
     : BaseWindow(parent), m_gameMode(mode), m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
 {
-    QAction * rankAction = m_gameMenu->addAction("排行榜");
-
-    QAction* tipAction = m_toolMenu->addAction("显示提示");     //显示提示
-    QAction* closeTipAction = m_toolMenu->addAction("关闭提示");   //关闭提示
-    connect(tipAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
-    connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
-
-    //连接排行榜按钮
+    QAction * rankAction = m_gameMenu->addAction("排行榜");    //排行榜
+    rankAction->setIcon(QIcon(RANKLISHICONPAHT));
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::showRankList);
 
-    //显示关卡数
-    QString level = QString("%1").arg(m_gameLevel, 2, 10, QChar('0'));
+    QAction* tipAction = m_toolMenu->addAction("显示提示");     //显示提示
+    tipAction->setIcon(QIcon(SHOWTIPICONPATH));
+    connect(tipAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
 
-    QString digit1 = QString(level[0]);
-    QString digit2 = QString(level[1]);
-
-    QString pixStr1 = QString(NUMBERPATH).arg(digit1);
-    QString pixStr2 = QString(NUMBERPATH).arg(digit2);
-
-    QPixmap pix1(pixStr1);
-    QPixmap pix2(pixStr2);
-
-    QLabel *label1 = new QLabel(this);
-    QLabel *label2 = new QLabel(this);
-
-    label1->setFixedSize(50, 50);
-    label2->setFixedSize(50, 50);
-
-    label1->setPixmap(pix1);
-    label2->setPixmap(pix2);
-
-    label1->move(1200, 300);
-    label2->move(1250, 300);
-    label1->show();
-    label2->show();
+    QAction* closeTipAction = m_toolMenu->addAction("关闭提示");   //关闭提示
+    closeTipAction->setIcon(QIcon(CLOSETIPICONPATH));
+    connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
 }
 
 //设置动画类型
@@ -268,10 +246,7 @@ void AbstractGameScene::initGameInfo()
 //设置提交按钮
 void AbstractGameScene::setSubmitBtn()
 {
-    submitBtn = new QPushButton(this);
-    submitBtn->setText("提 交");
-    submitBtn->setFont(QFont("华文新魏", 15));
-    submitBtn->setFixedSize(120, 50);
+    submitBtn = MyPushButton::createButton(MyPushButton::commonButton, "提 交", this);
     submitBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
 
     connect(submitBtn, &QPushButton::clicked, this, &AbstractGameScene::onSubmitBtnClicked);
@@ -280,10 +255,7 @@ void AbstractGameScene::setSubmitBtn()
 //设置返回按钮
 void AbstractGameScene::setBackBtn()
 {
-    backBtn = new QPushButton(this);
-    backBtn->setText("返 回");
-    backBtn->setFont(QFont("华文新魏", 15));
-    backBtn->setFixedSize(120, 50);
+    backBtn = MyPushButton::createButton(MyPushButton::commonButton, "返 回", this);
     backBtn->move(BACKGROUDWIDTH - backBtn->width(), BACKGROUDHEIGHT - backBtn->height());
 
     connect(backBtn, &QPushButton::clicked, this, [ = ]()
@@ -296,10 +268,7 @@ void AbstractGameScene::setBackBtn()
 //设置重置按钮
 void AbstractGameScene::setResetBtn()
 {
-    resetBtn = new QPushButton(this);
-    resetBtn->setText("重 置");
-    resetBtn->setFont(QFont("华文新魏", 15));
-    resetBtn->setFixedSize(120, 50);
+    resetBtn = MyPushButton::createButton(MyPushButton::commonButton, "重 置", this);
     resetBtn->move(BACKGROUDWIDTH - resetBtn->width(), BACKGROUDHEIGHT - 3 * resetBtn->height());
 
     connect(resetBtn, &QPushButton::clicked, this, &AbstractGameScene::onResetBtnClicked);
@@ -308,10 +277,7 @@ void AbstractGameScene::setResetBtn()
 //设置随机按钮
 void AbstractGameScene::setRandomBtn()
 {
-    randomBtn = new QPushButton(this);
-    randomBtn->setText("随机生成");
-    randomBtn->setFont(QFont("华文新魏", 15));
-    randomBtn->setFixedSize(120, 50);
+    randomBtn = MyPushButton::createButton(MyPushButton::commonButton, "随机生成", this);
     randomBtn->move(BACKGROUDWIDTH - submitBtn->width(), BACKGROUDHEIGHT - 2 * submitBtn->height());
 
     randomBtn->hide();  //开始设置不可见
@@ -328,7 +294,6 @@ void AbstractGameScene::showPushButton()
     setRandomBtn();
 }
 
-#include <QPointer>
 //设置动画
 void AbstractGameScene::setAnimation(int delay)
 {
@@ -384,14 +349,8 @@ void AbstractGameScene::onShowTips()
                 int posx = x + j * (GRIDSIZE + 1);
                 int posy = y + i * (GRIDSIZE + 1);
 
-                QPushButton * tipBtn = new QPushButton(this);
+                QPushButton * tipBtn = MyPushButton::createButton(MyPushButton::tipButton, "", this);
                 m_tipsButtons.push_back(tipBtn);    //放入提示按钮数组
-
-                QPixmap pix = QPixmap(TIPPATH);
-                tipBtn->setFixedSize(35, 35);
-                tipBtn->setIconSize(pix.size());
-                tipBtn->setIcon(QIcon(pix));
-                tipBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
 
                 tipBtn->move(posx, posy);
                 tipBtn->show();
