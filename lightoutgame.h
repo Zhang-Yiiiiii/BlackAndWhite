@@ -2,7 +2,10 @@
 #define LIGHTOUTGAME_H
 
 #include <QMainWindow>
+#include <bitset>
 #include "abstractgamescene.h"
+
+using row = std::bitset<257>;
 
 class LightOutGame : public AbstractGameScene
 {
@@ -38,6 +41,12 @@ private:
 
     //生成提示数组
     void generateTipArray() override;
+
+    //线性方程组求解
+    bool linearAlgebra_solve(const std::vector<std::vector<bool >>& b, std::vector<int>& x);
+
+    //部分枚举法求解
+    bool partialEnumeration(const std::vector<std::vector<bool >> & b, std::vector<int>& x);
 
 public slots:
 

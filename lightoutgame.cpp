@@ -1,4 +1,5 @@
 #include "lightoutgame.h"
+#include <bitset>
 
 LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
     : AbstractGameScene{gameLevel, userName, usermanager, parent, mode}
@@ -93,23 +94,198 @@ void LightOutGame::flipCells(const int x, const int y)
     }
 }
 
-//判断是否有解
+//部分枚举法 判断是否有解
 bool LightOutGame::isSolvable()
 {
+    const int N = m_boardRow * m_boardRow; //总数
+
+    std::vector<int> ans(N);
+    std::vector<std::vector<bool >> gameArray = m_gameArray;
+
+    bool flag = false;
+
+    if(m_gameLevel < 42)    //42关之前使用枚举求解 这样有最小步数
+    {
+        flag = partialEnumeration(gameArray, ans);
+    }
+
+    else    //其他的使用线代求解 时间复杂度低
+    {
+        flag = linearAlgebra_solve(m_gameArray, ans);
+    }
+
+    //判断
+    if(!flag)
+    {
+        return flag;
+    }
+
+    //计算答案
+    std::vector<std::vector<bool>> finalAns(m_boardRow, std::vector<bool>(m_boardCol, 0));
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(ans[i * m_boardRow + j])
+            {
+                finalAns[i][j] = 1;
+            }
+        }
+    }
+
+    saveSolvableInfo(gameArray, finalAns);  //保存数据
+
+    return true;
+}
+
+//解线性方程来求解 Ax = b
+// b: 原矩阵  x: 所求答案  n: 阶数
+bool LightOutGame::linearAlgebra_solve(const std::vector<std::vector<bool >> & b, std::vector<int>& x)
+{
+    int n = b.size();
+    int N = n * n;  //总个数
+    std::vector<row> A; //影响矩阵
+    A.assign(N, row(0));
+
+    //计算位置
+    auto index = [](int n, int r, int c)
+    {
+        return n * r + c;
+    };
+
+    // 遍历每个格子，构建点击该格子时影响哪些格子
+    for (int r = 0; r < n; ++r)
+    {
+        for (int c = 0; c < n; ++c)
+        {
+            int pos = index(n, r, c);
+            A[pos][pos] = 1; // 自己
+
+            if (r > 0)
+            {
+                A[pos][index(n, r - 1, c)] = 1;    // 上
+            }
+
+            if (r < n - 1)
+            {
+                A[pos][index(n, r + 1, c)] = 1;    // 下
+            }
+
+            if (c > 0)
+            {
+                A[pos][index(n, r, c - 1)] = 1;    // 左
+            }
+
+            if (c < n - 1)
+            {
+                A[pos][index(n, r, c + 1)] = 1;    // 右
+            }
+
+            A[pos][N] = b[r][c]; // 增广列
+        }
+    }
+
+    int row = 0;
+
+    for (int col = 0; col < N; ++col)
+    {
+        // 找主元
+        int pivot = -1;
+
+        for (int i = row; i < N; ++i)
+        {
+            if (A[i][col])
+            {
+                pivot = i;
+                break;
+            }
+        }
+
+        if (pivot == -1)
+        {
+            continue;
+        }
+
+        swap(A[pivot], A[row]);
+
+        // 消除其他行的当前列
+        for (int i = 0; i < N; ++i)
+        {
+            if (i != row && A[i][col])
+            {
+                A[i] ^= A[row]; //只有 0 和 1 直接使用异或
+            }
+        }
+
+        ++row;
+    }
+
+    // 判断是否有解
+    for (int i = row; i < N; ++i)
+    {
+        if (A[i][N])
+        {
+            return false;    // 无解：0 = 1
+        }
+    }
+
+    // 回代：取自由变量为 0
+    x.assign(N, 0);
+
+    for (int i = N - 1; i >= 0; --i)
+    {
+        int pos = -1;
+
+        for (int j = 0; j < N; ++j)
+        {
+            if (A[i][j])
+            {
+                pos = j;
+                break;
+            }
+        }
+
+        if (pos == -1)
+        {
+            continue;    // 全 0 行
+        }
+
+        x[pos] = A[i][N];
+
+        for (int j = pos + 1; j < N; ++j)
+        {
+            if (A[i][j])
+            {
+                x[pos] ^= x[j];
+            }
+        }
+    }
+
+    return true;
+}
+
+//部分枚举法求解
+bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& b, std::vector<int>& x)
+{
+    int n = m_boardCol;
+
     int solution = 0;   //第一行的按法
     int minSteps = INT_MAX;    //每种可行解的按下次数
     int minSolution = 0;
 
     std::vector<std::vector<bool >> finalAns(m_boardRow, std::vector<bool>(m_boardCol, 0)); //最终的答案数组
 
-    std::vector<std::vector<bool>> gameArray = m_gameArray; //复制原数组
+    //计算位置
+    auto index = [](int n, int r, int c)
+    {
+        return n * r + c;
+    };
 
     //用二进制枚举第一行的解法
     for(; solution < (1 << m_boardCol); solution++)
     {
         int cnt = 0;
-
-        std::vector<std::vector<bool >> ans(m_boardRow, std::vector<bool>(m_boardCol, 0));  //答案数组
 
         for(int i = 0; i < m_boardCol; i++)
         {
@@ -117,7 +293,6 @@ bool LightOutGame::isSolvable()
             {
                 cnt++;
                 flipCells(0, m_boardCol - i - 1);
-                ans[0][m_boardCol - i - 1] = 1;
             }
         }
 
@@ -130,7 +305,6 @@ bool LightOutGame::isSolvable()
                 {
                     cnt++;
                     flipCells(i + 1, j);
-                    ans[i + 1][j] = 1;
                 }
             }
         }
@@ -156,20 +330,21 @@ bool LightOutGame::isSolvable()
                 minSolution = solution;
             }
         }
-        m_gameArray.assign(gameArray.begin(), gameArray.end());
+
+        m_gameArray.assign(b.begin(), b.end());
     }
 
     //得到最终解
     if(minSteps != INT_MAX)
     {
-        qDebug() << minSteps;
+        qDebug() << "minSteps" << minSteps;
 
-        for(int i = 0; i < m_boardCol; i++)
+        for(int j = 0; j < m_boardCol; j++)
         {
-            if((minSolution >> i) & 1) //说明第m_boardCol - i - 1个需要按下
+            if((minSolution >> j) & 1) //说明第m_boardCol - j - 1个需要按下
             {
-                flipCells(0, m_boardCol - i - 1);
-                finalAns[0][m_boardCol - i - 1] = 1;
+                flipCells(0, m_boardCol - j - 1);
+                x[index(n, 0, m_boardCol - j - 1)] = 1;
             }
         }
 
@@ -181,15 +356,13 @@ bool LightOutGame::isSolvable()
                 if(!m_gameArray[i][j]) //说明其为黑色
                 {
                     flipCells(i + 1, j);
-                    finalAns[i + 1][j] = 1;
+                    x[index(n, i + 1, j)] = 1;
                 }
             }
         }
 
-        saveSolvableInfo(gameArray, finalAns);  //保存数据
         return true;
     }
-
     return false;    //没有找到解
 }
 
@@ -239,7 +412,6 @@ void LightOutGame::onBoardClicked(int x, int y)
     if(m_gameMode == playMode || m_gameMode == onlineMode) //翻转自身和周围
     {
         flipCells(x, y);    //翻转
-
         m_clickRecord[x][y] = !m_clickRecord[x][y]; //记录点击位置
     }
     else if(m_gameMode == lightBuildMode)   //只翻转自身

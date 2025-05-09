@@ -171,11 +171,15 @@ void AbstractGameScene::onResetBtnClicked()
 //随机生成地图
 void AbstractGameScene::onRandomBtnClicked()
 {
+    //记录当前模式
+    gameMode mode = m_gameMode;
+    m_gameMode = playMode;  //实现熄灯游戏的周围翻转
+
     for(int i = 0; i < m_boardRow; i++)
     {
         for(int j = 0; j < m_boardCol; j++)
         {
-            if(std::rand() % 2) //对该格子进行翻转
+            if(std::rand() % 2) //对该格子随机进行翻转
             {
                 if(m_board[i][j])
                 {
@@ -184,6 +188,9 @@ void AbstractGameScene::onRandomBtnClicked()
             }
         }
     }
+
+    //还原模式
+    m_gameMode = mode;
 }
 
 void AbstractGameScene::onBoardClicked(int x, int y)
