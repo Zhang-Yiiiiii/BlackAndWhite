@@ -1,6 +1,12 @@
 #ifndef DATA_H
 #define DATA_H
 
+/*
+ * class: Data （抽象游戏类）
+ *
+ * 用处: 获取游戏的数据信息、保存信息
+ */
+
 #include <QDebug>
 #include <QMap>
 #include <QVector>
@@ -40,6 +46,11 @@ public:
     };
 
 private:
+
+    //记录关卡总数
+    int m_antGameLevel = 0;
+    int m_lightGameLevel = 0;
+
     //读取AntGame的数据
     void getAntGameData();
 
@@ -48,10 +59,6 @@ private:
 
     //从文件中读入数据
     void getData();
-
-    //记录关卡总数
-    int m_antGameLevel = 0;
-    int m_lightGameLevel = 0;
 
     //保存antData
     void saveAntData();

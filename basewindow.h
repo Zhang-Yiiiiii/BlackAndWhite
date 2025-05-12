@@ -35,13 +35,18 @@ protected:
     QMenu* m_gameMenu;    //游戏菜单
     QMenu* m_toolMenu;    //工具菜单
 
-    QAction* m_instructionAction;     //说明菜单项
+    QMenu* m_rule;     //说明菜单项
+    QAction* m_antRule;  //兰顿蚂蚁说明
+    QAction* m_lightOutRule;    //熄灯游戏说明
     QAction* m_quitAction;            //退出游戏菜单项
 
 protected slots:
 
-    //显示游戏说明
-    void onShowRule();
+    //显示兰顿蚂蚁说明
+    void onShowAntRule();
+
+    //显示熄灯游戏说明
+    void onShowLightOutRule();
 
 private:
     Ui::BaseWindow* ui;

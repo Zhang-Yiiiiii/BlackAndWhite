@@ -1,10 +1,6 @@
 #include "gridbutton.h"
 #include "config.h"
 
-#include <QAnimationGroup>
-#include <QParallelAnimationGroup>
-#include <QPropertyAnimation>
-
 GridButton::GridButton(bool flag, QWidget *parent)
     : QPushButton{parent}, m_flag(flag)
 {
@@ -45,4 +41,17 @@ void GridButton::changeFlag()
         m_pix.load(GRIDPATH1);
         this->setIcon(m_pix);
     }
+}
+
+GridButton* GridButton::setPos(int posx, int posy)
+{
+    if( posx < 0 || posy < 0)
+    {
+        return this;
+    }
+
+    m_posx = posx;
+    m_posy = posy;
+
+    return this;
 }

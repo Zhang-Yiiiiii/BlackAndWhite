@@ -26,15 +26,6 @@ public:
     //排行榜数组
     QVector<std::pair<QString, int>> m_rankList;
 
-    //添加用户的函数
-    bool addUser(QString userName, QString pwd);
-
-    //对用户的通关时间进行排序
-    void userSort(int level);
-
-    //更新用户时间
-    void updateTotalTime(QString username, int totalTime, int level);
-
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
     int verifyUserInfo(QString name, QString password);
 
@@ -44,30 +35,39 @@ public:
     //判断密码是否符合标准
     bool isPassWordRight(QString pwd);
 
+    //添加用户的函数
+    bool addUser(QString userName, QString pwd);
+
+    //对用户的通关时间进行排序
+    UserManager* userSort(int level);
+
+    //更新用户时间
+    UserManager* updateUserTime(QString username, int totalTime, int level);
+
 private:
     //记录用户人数
-    int m_userNum;
+    int m_userNum = 0;
 
     //用户数组指针
-    User** m_userArray;
+    User** m_userArray = nullptr;
 
     //判断文件是否为空
-    bool m_fileIsEmpty;
+    bool m_fileIsEmpty = true;
+
+    //初始化用户
+    UserManager* initUser();
+
+    //统计文件中用户的数量
+    int getUserNum() const;
 
     //查找用户
     User* findUser(QString userName) const;
 
     //保存到文件
-    void save() const;
-
-    //统计文件中用户的数量
-    int getUserNum() const;
-
-    //初始化用户
-    void initUser();
+    UserManager* save();
 
     //释放用户数组
-    void releaseUserArray();
+    UserManager* releaseUserArray();
 };
 
 #endif // USERMANAGER_H

@@ -4,7 +4,6 @@ release/antgame.o
 release/basewindow.o
 release/buildmapdialog.o
 release/data.o
-release/gamescene.o
 release/gridbutton.o
 release/hexagon.o
 release/lightoutgame.o
@@ -22,7 +21,6 @@ release/moc_animator.o
 release/moc_antgame.o
 release/moc_basewindow.o
 release/moc_buildmapdialog.o
-release/moc_gamescene.o
 release/moc_gridbutton.o
 release/moc_hexagon.o
 release/moc_lightoutgame.o

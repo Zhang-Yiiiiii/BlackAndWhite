@@ -33,8 +33,15 @@ UserManager::UserManager()
     ifs.seekg(0, std::ios::beg); // 重置到文件开头
     ifs.close();
 
-    initUser();               // 调用新的封装方法读取数据
+    initUser();               // 初始化用户
     m_fileIsEmpty = false;
+}
+
+UserManager::~UserManager()
+{
+    this->save();
+
+    releaseUserArray();
 }
 
 //验证用户信息
@@ -65,7 +72,10 @@ bool UserManager::isUserNameRight(QString name)
     const unsigned int size = name.size();
 
     //用户名长度 1-10
-    if(size > 0 && size <= 10)
+    const int minLen = 0;
+    const int maxLen = 10;
+
+    if(size > minLen && size <= maxLen)
     {
         return true;
     }
@@ -79,7 +89,10 @@ bool UserManager::isPassWordRight(QString pwd)
     const unsigned int size = pwd.size();
 
     //密码长度 6-12
-    if(size >= 6 && size <= 12)
+    const int minLen = 6;
+    const int maxLen = 12;
+
+    if(size >= minLen && size <= maxLen)
     {
         return true;
     }
@@ -95,93 +108,109 @@ bool UserManager::addUser(QString userName, QString pwd)
         return false;   //用户已存在
     }
 
-    //新用户
-    User * newUser = new User;
-
     //判断添加是否合理
     if(!this->isUserNameRight(userName))
     {
-        delete newUser;
-        newUser = nullptr;
         return false;
     }
 
     if(!this->isPassWordRight(pwd))
     {
-        delete newUser;
-        newUser = nullptr;
         return false;
     }
 
-    //用户人数加1
-    this->m_userNum++;
+    //新用户
+    User * newUser = new User;
 
     //开辟新空间
-    User** newSpace = new User* [this->m_userNum];
+    User** newSpace = new User* [m_userNum + 1];
 
     //拷贝旧数据
-    for(int i = 0; i < this->m_userNum - 1; i++)
+    for(int i = 0; i < m_userNum; i++)
     {
-        newSpace[i] = this->m_userArray[i];
+        newSpace[i] = m_userArray[i];
     }
 
-    newSpace[this->m_userNum - 1] = newUser;
+    newSpace[m_userNum] = newUser;
 
     //释放原有空间
     releaseUserArray();
 
+    //用户人数加1
+    m_userNum++;    //在释放空间之后增加，不然释放会越界
+
     //更改新空间指向
-    this->m_userArray = newSpace;
+    m_userArray = newSpace;
 
     //保存到文件
     this->save();
-    this->m_fileIsEmpty = false;
+    m_fileIsEmpty = false;
 
     return true;
 }
 
-//保存信息到文件
-void UserManager::save() const
+//对用户排序
+UserManager* UserManager::userSort(int level)
 {
-    std::ofstream ofs(USERDATAPATH, std::ios::out | std::ios::binary);
+    QString name;
+    int record;
 
-    if (!ofs.is_open())
+    m_rankList.clear();
+
+    //将指定关卡的数据放入容器
+    for(int i = 0; i < m_userNum; i++)
     {
-        return;
-    }
+        name = m_userArray[i]->getUserName();
+        record = m_userArray[i]->m_gameRecord[level];
 
-    //用户人数
-    ofs.write(reinterpret_cast<const char*>(&m_userNum), sizeof(int));
-
-    for (int i = 0; i < m_userNum; ++i)
-    {
-        // 保存用户名
-        QByteArray nameData = m_userArray[i]->getUserName().toUtf8();
-        int nameLen = nameData.size();
-        ofs.write(reinterpret_cast<char*>(&nameLen), sizeof(int));
-        ofs.write(nameData.data(), nameLen);
-
-        // 保存密码
-        QByteArray pwdData = m_userArray[i]->getUserPassword().toUtf8();
-        int pwdLen = pwdData.size();
-        ofs.write(reinterpret_cast<char*>(&pwdLen), sizeof(int));
-        ofs.write(pwdData.data(), pwdLen);
-
-        // 保存游戏记录条数
-        int recordCount = m_userArray[i]->m_gameRecord.size();
-        ofs.write(reinterpret_cast<char*>(&recordCount), sizeof(int));
-
-        // 保存游戏记录键值对
-        for (auto it = m_userArray[i]->m_gameRecord.begin(); it != m_userArray[i]->m_gameRecord.end(); ++it)
+        if(record == -1)
         {
-            int key = it.key();
-            int val = it.value();
-            ofs.write(reinterpret_cast<char*>(&key), sizeof(int));
-            ofs.write(reinterpret_cast<char*>(&val), sizeof(int));
+            continue;    //用户没有通关
         }
+
+        this->m_rankList.push_back(std::pair<QString, int>(name, record));
     }
 
-    ofs.close();
+    //对容器进行排序
+    std::sort(m_rankList.begin(), m_rankList.end(), [](const std::pair<QString, int>& a, const std::pair<QString, int>& b)
+    {
+        if (a.second == b.second)
+        {
+            return a.first < b.first; // 如果 record 相同，按名字排序
+        }
+
+        return a.second < b.second; // 按 int 排序
+    });
+
+    return this;
+}
+
+//更新时间
+UserManager* UserManager::updateUserTime(QString username, int totalTime, int level)
+{
+    User * user = findUser(username);
+
+    //没有登录 或者没有找到用户
+    if(user == nullptr)
+    {
+        return this;
+    }
+
+    int minTotalTime = 0;
+
+    if(user->m_gameRecord[level] == -1)  //用户是第一次通关
+    {
+        minTotalTime = totalTime;
+    }
+    else
+    {
+        minTotalTime = std::min(user->m_gameRecord[level], totalTime);
+    }
+
+    user->m_gameRecord[level] = minTotalTime;
+    this->save();
+
+    return this;
 }
 
 //获取用户人数
@@ -191,7 +220,7 @@ int UserManager::getUserNum() const
 }
 
 //初始化用户
-void UserManager::initUser()
+UserManager* UserManager::initUser()
 {
     std::ifstream ifs(USERDATAPATH, std::ios::in | std::ios::binary);
 
@@ -236,10 +265,58 @@ void UserManager::initUser()
 
         m_userArray[i] = user;
     }
+
+    return this;
+}
+
+//保存信息到文件
+UserManager* UserManager::save()
+{
+    std::ofstream ofs(USERDATAPATH, std::ios::out | std::ios::binary);
+
+    if (!ofs.is_open())
+    {
+        return this;
+    }
+
+    //用户人数
+    ofs.write(reinterpret_cast<const char*>(&m_userNum), sizeof(int));
+
+    for (int i = 0; i < m_userNum; ++i)
+    {
+        // 保存用户名
+        QByteArray nameData = m_userArray[i]->getUserName().toUtf8();
+        int nameLen = nameData.size();
+        ofs.write(reinterpret_cast<char*>(&nameLen), sizeof(int));
+        ofs.write(nameData.data(), nameLen);
+
+        // 保存密码
+        QByteArray pwdData = m_userArray[i]->getUserPassword().toUtf8();
+        int pwdLen = pwdData.size();
+        ofs.write(reinterpret_cast<char*>(&pwdLen), sizeof(int));
+        ofs.write(pwdData.data(), pwdLen);
+
+        // 保存游戏记录条数
+        int recordCount = m_userArray[i]->m_gameRecord.size();
+        ofs.write(reinterpret_cast<char*>(&recordCount), sizeof(int));
+
+        // 保存游戏记录键值对
+        for (auto it = m_userArray[i]->m_gameRecord.begin(); it != m_userArray[i]->m_gameRecord.end(); ++it)
+        {
+            int key = it.key();
+            int val = it.value();
+            ofs.write(reinterpret_cast<char*>(&key), sizeof(int));
+            ofs.write(reinterpret_cast<char*>(&val), sizeof(int));
+        }
+    }
+
+    ofs.close();
+
+    return this;
 }
 
 //释放内存
-void UserManager::releaseUserArray()
+UserManager* UserManager::releaseUserArray()
 {
     if(m_userArray)
     {
@@ -255,40 +332,8 @@ void UserManager::releaseUserArray()
         delete[] m_userArray;
         m_userArray = nullptr;
     }
-}
 
-//对用户排序
-void UserManager::userSort(int level)
-{
-    QString name;
-    int record;
-
-    m_rankList.clear();
-
-    //将指定关卡的数据放入容器
-    for(int i = 0; i < m_userNum; i++)
-    {
-        name = this->m_userArray[i]->getUserName();
-        record = this->m_userArray[i]->m_gameRecord[level];
-
-        if(record == -1)
-        {
-            continue;    //用户没有通关
-        }
-
-        this->m_rankList.push_back(std::pair<QString, int>(name, record));
-    }
-
-    //对容器进行排序
-    std::sort(m_rankList.begin(), m_rankList.end(), [](const std::pair<QString, int>& a, const std::pair<QString, int>& b)
-    {
-        if (a.second == b.second)
-        {
-            return a.first < b.first; // 如果 record 相同，按名字排序
-        }
-
-        return a.second < b.second; // 按 int 排序
-    });
+    return this;
 }
 
 //查找用户
@@ -305,37 +350,4 @@ User* UserManager::findUser(QString userName) const
     }
 
     return user;
-}
-
-//更新时间
-void UserManager::updateTotalTime(QString username, int totalTime, int level)
-{
-    User * user = findUser(username);
-
-    //没有登录 或者没有找到用户
-    if(user == nullptr)
-    {
-        return;
-    }
-
-    int minTotalTime = 0;
-
-    if(user->m_gameRecord[level] == -1)  //用户是第一次通关
-    {
-        minTotalTime = totalTime;
-    }
-    else
-    {
-        minTotalTime = std::min(user->m_gameRecord[level], totalTime);
-    }
-
-    user->m_gameRecord[level] = minTotalTime;
-    this->save();
-}
-
-UserManager::~UserManager()
-{
-    this->save();
-
-    releaseUserArray();
 }

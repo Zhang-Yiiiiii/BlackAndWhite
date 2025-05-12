@@ -20,11 +20,15 @@ public:
     //改变正反
     void changeFlag();
 
+    //设置格子标号
+    GridButton* setPos(int posx, int posy);
+
+private:
+
     //格子标号
     int m_posx = 0;
     int m_posy = 0;
 
-private:
     //加载图片
     QPixmap m_pix;
 

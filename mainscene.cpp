@@ -7,10 +7,11 @@
 #include "animator.h"
 
 MainScene::MainScene(QWidget *parent)
-    : BaseWindow(parent)
+    : BaseWindow(parent), m_gameScene(nullptr)
     , ui(new Ui::MainScene)
 {
     //ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose);
 
     QPoint pos(350, 100);
 
@@ -84,6 +85,24 @@ MainScene::MainScene(QWidget *parent)
 
     //设置动画
     setAnimations();
+}
+
+MainScene::~MainScene()
+{
+    delete ui;
+
+    if(m_usermanager)
+    {
+        delete m_usermanager;
+        m_usermanager = nullptr;
+    }
+
+    if(m_loginWindow)
+    {
+        m_loginWindow->deleteLater();
+        m_loginWindow = nullptr;
+    }
+
 }
 
 //初始化六边形按钮
@@ -213,17 +232,15 @@ void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, i
 {
     if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
     {
-        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
+        //不指定父窗口 不然图标不显示
+        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
     else if(gameLevel <= SELECTBTNNUMBER)   //熄灯游戏模式
     {
-        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, this, enterWay);
+        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
 
-    //延迟进入
-    this->hide();
-    m_gameScene->setGeometry(this->geometry());
-    m_gameScene->show();
+    Animator::transition(this, m_gameScene, 300); //使用动画进入
 
     // 监听返回信号
     connect(m_gameScene, &AbstractGameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
@@ -277,15 +294,15 @@ void MainScene::onGameSceneChangeBack()
 {
     m_gameScene->m_isInternalclose = true;  //确定是内部进行返回的
 
-    this->setGeometry(m_gameScene->geometry());
-    m_gameScene->close();
-    this->show();
+    Animator::transition(m_gameScene, this, 500);
 
-    if(m_gameScene)
+    // 在淡入完成后再销毁游戏场景
+    connect(m_gameScene, &AbstractGameScene::sceneShow, this, [this]()
     {
+        // 在主界面彻底显示后，再删掉旧的场景
         delete m_gameScene;
         m_gameScene = nullptr;
-    }
+    });
 }
 
 //处理用户登录
@@ -381,9 +398,6 @@ void MainScene::showLoginWindow()
     connect(m_loginWindow, &LoginWindow::userClose, this, [ = ]() mutable
     {
         this->show();   //显示游戏界面
-
-        delete m_loginWindow;
-        m_loginWindow = nullptr;
     });
 }
 
@@ -569,7 +583,7 @@ void MainScene::onOnlineTriggerd()
     connect(m_onlineWindow, &OnlineWindow::disConnect, this, [ = ]()
     {
         m_isOnlineMode = false;
-        //m_onlineWindow->disconnectOnline();
+        m_onlineWindow->disconnectOnline();
         QMessageBox::about(this, "联机提醒", "对手断开联机模式");
     });
 
@@ -590,28 +604,4 @@ void MainScene::onDisconnectTriggerd()
     }
 
     QMessageBox::about(this, "联机提示", "已经断开联机");
-}
-
-MainScene::~MainScene()
-{
-    delete ui;
-
-    if(m_usermanager)
-    {
-        delete m_usermanager;
-        m_usermanager = nullptr;
-    }
-
-    if(m_loginWindow)
-    {
-        m_loginWindow->deleteLater();
-        m_loginWindow = nullptr;
-    }
-
-}
-
-void MainScene::paintEvent(QPaintEvent * event)
-{
-    BaseWindow::paintEvent(event);
-
 }

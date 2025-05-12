@@ -58,9 +58,6 @@ public:
     //关闭窗口的标志
     bool m_isInternalclose = true;  //如果是点击窗口的关闭按钮则关闭程序
 
-    //保存地图的函数，用于自建地图
-    virtual void saveGame() {};
-
     //设置动画类型
     void setAnimationType(Animator::AnimationType);
 
@@ -177,11 +174,17 @@ protected:
     //设置label样式
     void setLabelStyle(QLabel* label);
 
+    //重写showEvent
+    void showEvent(QShowEvent* event) override;
+
 signals:
 
     //返回信号
     void changeBack();
     void gameOver(int totalTime);
+
+    //显示信号
+    void sceneShow();
 
 public slots:
 

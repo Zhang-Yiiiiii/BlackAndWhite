@@ -10,7 +10,6 @@
 
 #include <QString>
 #include <QMap>
-#include "config.h"
 
 class User
 {
@@ -22,8 +21,8 @@ public:
     QString getUserPassword();
 
     //设置用户名和密码
-    bool setUserName(QString);
-    bool setUserPassword(QString);
+    User* setUserName(QString);
+    User* setUserPassword(QString);
 
     //游戏记录
     QMap<int, int> m_gameRecord;    //关卡-最短通关时间

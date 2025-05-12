@@ -1,5 +1,4 @@
 #include "hexagon.h"
-#include "config.h"
 
 Hexagon::Hexagon(int id, QPushButton * parent):
     QPushButton(parent), m_id(id + 1)
@@ -20,9 +19,10 @@ Hexagon::Hexagon(int id, QPushButton * parent):
     });
 }
 
-void Hexagon::setId(int id)
+Hexagon* Hexagon::setId(int id)
 {
     m_id = id;
+    return this;
 }
 
 int Hexagon::getId() const
@@ -38,7 +38,7 @@ int Hexagon::getSideLength() const
 //重写绘图事件
 void Hexagon::paintEvent(QPaintEvent *event)
 {
-    // Q_UNUSED(event)
+    Q_UNUSED(event)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -77,8 +77,7 @@ void Hexagon::paintEvent(QPaintEvent *event)
 
     // 绘制按钮文本
     QFont font;
-    painter.setPen(Qt::white);
-    font.setPointSize(20);
+    font.setPointSize(24);
     font.setBold(true);
     painter.drawText(rect, Qt::AlignCenter, text());
 

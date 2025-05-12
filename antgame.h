@@ -11,9 +11,7 @@ public:
     explicit AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent = nullptr, gameMode mode = playMode);
     ~AntGame();
 
-    //保存地图的函数，用于自建地图
-    void saveGame() override {};
-
+    //保存游戏数据
     void saveGame(gameMode buildWay, int step, int x, int y, int direction);
 
 private:
@@ -26,7 +24,7 @@ private:
     QPoint m_bugPos;
     int m_bugDir;
 
-    QLabel* m_timePenaltyLabel;     //罚时label
+    QLabel* m_timePenaltyLabel = nullptr;     //罚时label
 
     QLabel* m_currentStepsLabel = nullptr;    //当前步数label
 

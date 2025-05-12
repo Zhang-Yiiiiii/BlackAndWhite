@@ -26,11 +26,17 @@ class Hexagon : public QPushButton
 public:
     Hexagon(int id, QPushButton * parent = nullptr);
 
-    void setId(int id);
+    //设置序号
+    Hexagon* setId(int id);
 
+    //获取序号
     int getId() const;
 
+    //获取边长
     int getSideLength() const;
+
+    //重写绘图函数
+    void paintEvent(QPaintEvent *event) override;
 
 private:
 
@@ -39,9 +45,6 @@ private:
 
     //边长
     const int m_sideLength = 48;
-
-    //重写绘图函数
-    void paintEvent(QPaintEvent *event) override;
 
 signals:
 

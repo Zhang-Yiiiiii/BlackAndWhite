@@ -85,8 +85,7 @@ void AbstractGameScene::showBoard(bool isVisible)
         {
             m_board[i][j] = new GridButton(m_gameArray[i][j], this);
             m_board[i][j]->setVisible(isVisible);
-            m_board[i][j]->m_posx = i;
-            m_board[i][j]->m_posy = j;
+            m_board[i][j]->setPos(i, j);
 
             //监听格子被点击时翻转
             connect(m_board[i][j], &GridButton::beClicked, this, &AbstractGameScene::onBoardClicked);
@@ -219,7 +218,7 @@ int AbstractGameScene::saveTotalTime()
     int totalTime = getTotalTime();
 
     //更新时间
-    m_usermanager->updateTotalTime(this->m_userName, totalTime, this->m_gameLevel);
+    m_usermanager->updateUserTime(this->m_userName, totalTime, this->m_gameLevel);
 
     return totalTime;
 }
@@ -304,14 +303,17 @@ void AbstractGameScene::showPushButton()
 //设置动画
 void AbstractGameScene::setAnimation(int delay)
 {
-    int startTime = 0;
+    int startTime = 400;
 
-    for(auto btns : m_board)
+    const int maxConcurrentAnimations = 20; // 限制每批的动画数
+    int batchCount = 0;
+
+    for(auto& btns : m_board)
     {
-        for(auto btn : btns)
+        for(auto& btn : btns)
         {
             QPointer<QPushButton> safeBtn = btn;    //用安全指针判断控件是否存在
-            QTimer::singleShot(startTime, [ = ]()
+            QTimer::singleShot(startTime, [ safeBtn, this]()
             {
                 if(safeBtn)
                 {
@@ -322,8 +324,16 @@ void AbstractGameScene::setAnimation(int delay)
             });
 
             startTime += delay;
+
+            batchCount++;
+
+            if (batchCount % maxConcurrentAnimations == 0)
+            {
+                startTime += 50;  // 下一批再推迟
+            }
         }
     }
+
 }
 
 //提示功能
@@ -399,6 +409,13 @@ void AbstractGameScene::setLabelStyle(QLabel *label)
     label->setAlignment(Qt::AlignCenter);
 }
 
+//重写显示事件
+void AbstractGameScene::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    emit sceneShow();
+}
+
 //更新显示时间
 void AbstractGameScene::updateTime()
 {
@@ -423,5 +440,26 @@ AbstractGameScene::~AbstractGameScene()
         m_data = nullptr;
     }
 
-    m_usermanager = nullptr;  //不要释放 因为是主页面传入的参数
+    for(auto btn : m_tipsButtons)
+    {
+        btn = nullptr;
+    }
+
+    for(size_t i = 0; i < m_board.size(); i++)
+    {
+        for(size_t j = 0; j < m_board[i].size(); j++)
+        {
+            m_board[i][j] = nullptr;
+        }
+    }
+
+    submitBtn = nullptr;
+    randomBtn = nullptr;
+    backBtn = nullptr;
+    resetBtn = nullptr;
+    m_timeLabel = nullptr;
+    m_showTimer = nullptr;
+    m_rankWindow = nullptr;
+    m_usermanager = nullptr;    //主界面传入的不用释放
+
 }

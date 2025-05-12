@@ -1,88 +1,126 @@
 #include "animator.h"
 
-Animator::Animator(QObject *parent)
-    : QObject{parent}, m_animation(nullptr), m_opacityEffect(nullptr)
+Animator::Animator(QObject* parent)
+    : QObject(parent)
 {
 }
 
-Animator* Animator::resetAnimation(AnimationType type)
+Animator::~Animator()
 {
-    return this;
-}
-
-//建立动画
-void Animator::setupAnimation(QWidget* target, AnimationType type)
-{
-    switch (type)
+    if (m_animation && m_animation->state() == QAbstractAnimation::Running)
     {
-        //渐进
-        case FadeIn:
-        {
-            //设置透明效果
-            m_opacityEffect = new QGraphicsOpacityEffect(target);
-            target->setGraphicsEffect(m_opacityEffect);
-
-            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
-            m_animation->setStartValue(0.0);
-            m_animation->setEndValue(1.0);
-            m_animation->setDuration(500);
-            break;
-        }
-
-        //渐出
-        case FadeOut:
-        {
-            //设置透明效果
-            m_opacityEffect = new QGraphicsOpacityEffect(target);
-            target->setGraphicsEffect(m_opacityEffect);
-
-            m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
-            m_animation->setStartValue(1.0);
-            m_animation->setEndValue(0);
-            m_animation->setDuration(500);
-            break;
-        }
-
-        //滑动进入
-        case SlideFromTop:
-        {
-            m_animation = new QPropertyAnimation(target, "pos", target);
-            m_animation->setStartValue(QPoint(target->x() - rand() % 2000, target->y() - rand() % 7000));
-            m_animation->setEndValue(target->pos());
-            m_animation->setDuration(600);
-            break;
-        }
+        m_animation->stop();
     }
+
+    // Qt 会自动删除子对象
 }
 
-//创建动画
-Animator* Animator::createAnimator(QWidget * target, AnimationType type)
+Animator* Animator::createAnimator(QWidget* target, AnimationType type, int duration)
 {
     Animator* animator = new Animator(target);
-    animator->setupAnimation(target, type);
-    animator->m_animation->setEasingCurve(QEasingCurve::OutQuad);
-
+    animator->setupAnimation(target, type, duration);
     return animator;
 }
 
-//动画完成时的回调
-Animator* Animator::onFinished(std::function<void ()> callback)
+void Animator::transition(QWidget* from, QWidget* to, int duration)
 {
-    connect(m_animation, &QPropertyAnimation::finished, this, callback);
+    // 先淡出
+    Animator* fadeOut = Animator::createAnimator(from, FadeOut, duration);
+    fadeOut->onFinished([from, to, duration]()
+    {
+        from->hide();
+        // 再淡入
+        Animator* fadeIn = Animator::createAnimator(to, FadeIn, duration);
+        fadeIn->onFinished([to]()
+        {
+            // 清理特效
+            //to->setGraphicsEffect(nullptr);
+            to->raise();           // 保证窗口显示在最前
+            to->activateWindow();  // 激活窗口防止主窗口缺失
+        });
 
-    return this; // 链式调用
+        to->setWindowOpacity(0);
+        to->show();
+        fadeIn->start();
+    });
+
+    fadeOut->start();
 }
 
-//启动动画
+Animator* Animator::onFinished(std::function<void()> callback)
+{
+    if (m_animation)
+    {
+        connect(m_animation, &QPropertyAnimation::finished, this, std::move(callback));
+    }
+
+    return this;
+}
+
 Animator* Animator::start()
 {
-    //动画未被初始化 或者 动画正在运行
     if (!m_animation || m_animation->state() == QAbstractAnimation::Running)
     {
-        qWarning() << "Animation is not initialized!";
+        qWarning("Animation not initialized or already running");
         return this;
     }
 
-    m_animation->start(); // 启动Qt原生动画
-    return this; // 支持链式调用
+    m_animation->start();
+    return this;
+}
+
+void Animator::setupAnimation(QWidget* target, AnimationType type, int duration)
+{
+
+    bool isTopLevel = target->isWindow();
+
+    switch (type)
+    {
+        case FadeIn:
+        case FadeOut:
+            if (isTopLevel)
+            {
+                m_animation = new QPropertyAnimation(target, "windowOpacity", target);
+
+                if (type == FadeIn)
+                {
+                    target->setWindowOpacity(0.0);
+                }
+                else
+                {
+                    target->setWindowOpacity(1.0);
+                }
+            }
+            else
+            {
+                m_opacityEffect = new QGraphicsOpacityEffect(target);
+                target->setGraphicsEffect(m_opacityEffect);
+                m_animation = new QPropertyAnimation(m_opacityEffect, "opacity", target);
+            }
+
+            if (type == FadeIn)
+            {
+                m_animation->setStartValue(0.0);
+                m_animation->setEndValue(1.0);
+            }
+            else
+            {
+                m_animation->setStartValue(1.0);
+                m_animation->setEndValue(0.0);
+            }
+
+            break;
+
+        case SlideFromTop:
+        {
+            m_animation = new QPropertyAnimation(target, "pos", target);
+            m_animation->setStartValue(QPoint(target->x() - rand() % 500 - 200, target->y() - rand() % 700 - 200));
+            m_animation->setEndValue(target->pos());
+        }
+
+        break;
+    }
+
+    m_animation->setDuration(duration);
+    m_animation->setEasingCurve(QEasingCurve::OutQuad);
 }

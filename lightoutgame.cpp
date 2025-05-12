@@ -4,18 +4,24 @@
 LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
     : AbstractGameScene{gameLevel, userName, usermanager, parent, mode}
 {
+    this->setAttribute(Qt::WA_DeleteOnClose);
+
     setboardSize(); //获取棋盘大小
 
     initVector();   //初始化棋盘vector
+
     initGameInfo();    //初始化游戏信息
 
     setAnimationType(Animator::SlideFromTop);   //设置动画效果是滑动
+
     showBoard(false);    //显示棋盘
+
     setAnimation(); //设置动画
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
 
     initTimer();    //初始化定时器
+
     showTimeLabel();    //显示时间
 
     showPushButton();   //显示提交、返回、重置按钮
@@ -104,14 +110,15 @@ bool LightOutGame::isSolvable()
 
     bool flag = false;
 
-    if(m_gameLevel < 42)    //42关之前使用枚举求解 这样有最小步数
+    const int maxSolveGameLevel = 42;
+    if(m_gameLevel < maxSolveGameLevel)    //42关之前使用枚举求解 这样有最小步数
     {
         flag = partialEnumeration(gameArray, ans);
     }
 
     else    //其他的使用线代求解 时间复杂度低
     {
-        flag = linearAlgebra_solve(m_gameArray, ans);
+        flag = linearAlgebra_solve(gameArray, ans);
     }
 
     //判断
@@ -182,7 +189,7 @@ bool LightOutGame::linearAlgebra_solve(const std::vector<std::vector<bool >> & b
                 A[pos][index(n, r, c + 1)] = 1;    // 右
             }
 
-            A[pos][N] = b[r][c]; // 增广列
+            A[pos][N] = b[r][c] ^ 1; // 增广列   对b异或实现目标是开灯1
         }
     }
 

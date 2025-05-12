@@ -11,13 +11,14 @@
 #define QUITICONPATH ":/icon/quit.png"                  //退出图标路径
 #define LOGINICONPATH ":/icon/login.png"                //登录图标路径
 #define INTRODUCTIONICONPATH ":/icon/introduction.png"  //说明图标路径
-#define CONNECTICONPAHT ":/icon/link.png"                //联机图标路径
+#define CONNECTICONPAHT ":/icon/link.png"               //联机图标路径
 #define DISCONNECTICONPATH ":/icon/disconnect.png"      //断开联机图标
 
 #define SELECTBTNNUMBER 47                              //选关按钮数量
 #define ANTGAMENUMBER 37                                //兰顿蚂蚁的关卡数
 #define LIGHTGAMEBUMBER 10                              //熄灯游戏的关卡数
-#define RULEPATH "D:/QtProjects/BlackAndWhiteBlock/rule.txt" //说明文件的路径
+#define LIGHTOUTRULE "D:/QtProjects/BlackAndWhiteBlock/LightOutRule.txt" //熄灯游戏 说明文件
+#define ANTGAMERULE "D:/QtProjects/BlackAndWhiteBlock/AntGameRule.txt"  //兰顿蚂蚁 说明文件
 
 /************六边形按钮配置数据******************/
 #define HEXAGONPATH ":/icon/hexagon.png"                //六边形图片

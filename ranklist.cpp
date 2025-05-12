@@ -12,7 +12,7 @@ RankList::RankList(QVector<std::pair<QString, int>> &v, QWidget *parent)
     connect(closeButton, &QPushButton::clicked, this, &QWidget::close);
 
     // 创建一个水平布局用于标题栏
-    QHBoxLayout *titleLayout = new QHBoxLayout;
+    QHBoxLayout *titleLayout = new QHBoxLayout();
     titleLayout->addStretch();
     titleLayout->addWidget(closeButton);
     titleLayout->setContentsMargins(0, 0, 0, 0); // 设置标题栏布局的边距为0

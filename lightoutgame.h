@@ -15,7 +15,7 @@ public:
     ~LightOutGame() {};
 
     //保存地图的函数，用于自建地图
-    void saveGame() override;
+    void saveGame() ;
 
 private:
     //点击记录数组
