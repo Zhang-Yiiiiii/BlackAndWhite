@@ -1,14 +1,16 @@
 #include "abstractgamescene.h"
 #include "config.h"
+#include "mypushbutton.h"
 
 #include <QPointer>
 
-AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
+//----------------------------------构造和析构--------------------------------------------
+AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, BuildWay mode)
     : BaseWindow(parent), m_gameMode(mode), m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
 {
     QAction * rankAction = m_gameMenu->addAction("排行榜");    //排行榜
     rankAction->setIcon(QIcon(RANKLISHICONPAHT));
-    connect(rankAction, &QAction::triggered, this, &AbstractGameScene::showRankList);
+    connect(rankAction, &QAction::triggered, this, &AbstractGameScene::onRankActionClicked);
 
     QAction* tipAction = m_toolMenu->addAction("显示提示");     //显示提示
     tipAction->setIcon(QIcon(SHOWTIPICONPATH));
@@ -19,24 +21,111 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
 }
 
+AbstractGameScene::~AbstractGameScene()
+{
+    //删除数据对象
+    if(m_data)
+    {
+        delete m_data;
+        m_data = nullptr;
+    }
+
+    for(auto &btn : m_tipsButtons)
+    {
+        btn = nullptr;
+    }
+
+    for(size_t i = 0; i < m_board.size(); i++)
+    {
+        for(size_t j = 0; j < m_board[i].size(); j++)
+        {
+            m_board[i][j] = nullptr;
+        }
+    }
+
+    submitBtn = nullptr;
+    randomBtn = nullptr;
+    backBtn = nullptr;
+    resetBtn = nullptr;
+    m_timeLabel = nullptr;
+    m_showTimer = nullptr;
+    m_rankWindow = nullptr;
+    m_usermanager = nullptr;    //主界面传入的不用释放
+
+}
+
+//----------------------------------公有方法--------------------------------------------
+
+//隐藏提交按钮
+AbstractGameScene* AbstractGameScene::hideSubmitBtn()
+{
+    if(submitBtn)
+    {
+        submitBtn->hide();
+    }
+
+    return this;
+}
+
+//显示随机按钮
+AbstractGameScene* AbstractGameScene::showRandomBtn()
+{
+    if(randomBtn)
+    {
+        randomBtn->show();
+    }
+
+    return this;
+}
+
+//设置内部关闭标志
+AbstractGameScene* AbstractGameScene::setInternalClose(bool flag)
+{
+    m_isInternalclose = flag;
+    return this;
+}
+
 //设置动画类型
 void AbstractGameScene::setAnimationType(Animator::AnimationType type)
 {
     m_animationType = type;
 }
 
-//重写关闭事件
-void AbstractGameScene::closeEvent(QCloseEvent *event)
+//保存可解数据
+void AbstractGameScene::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
 {
-    if(m_isInternalclose)
+    //传入数据有误
+    if((int)gameArray.size() != m_boardRow || (int)gameArray[0].size() != m_boardCol)
     {
-        event->accept();
+        return;
     }
-    else
+
+    if((int)ans.size() != m_boardRow || (int)ans[0].size() != m_boardCol)
     {
-        QCoreApplication::quit();
+        return;
     }
+
+    m_data->saveData(m_gameLevel, gameArray, ans);
 }
+
+void AbstractGameScene::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans, int steps, int dir, QPoint pos)
+{
+    //传入数据有误
+    if((int)gameArray.size() != m_boardRow || (int)gameArray[0].size() != m_boardCol)
+    {
+        return;
+    }
+
+    if((int)ans.size() != m_boardRow || (int)ans[0].size() != m_boardCol)
+    {
+        return;
+    }
+
+    //将答案保存
+    m_data->saveData(m_gameLevel, gameArray, ans, steps, dir, pos);
+}
+
+//----------------------------------保护方法--------------------------------------------
 
 //设置棋盘尺寸
 void AbstractGameScene::setboardSize()
@@ -72,6 +161,29 @@ void AbstractGameScene::initVector()
     }
 }
 
+//初始化游戏信息
+void AbstractGameScene::initGameInfo()
+{
+    //初始化游戏信息对象
+    if(!m_data)
+    {
+        m_data = new Data;
+    }
+
+    setboardSize(); //获取棋盘大小
+
+    initVector();   //初始化棋盘vector
+
+    //初始化信息
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+        }
+    }
+}
+
 //显示棋盘的函数
 void AbstractGameScene::showBoard(bool isVisible)
 {
@@ -99,103 +211,14 @@ void AbstractGameScene::showBoard(bool isVisible)
     }
 }
 
-//重置棋盘
-void AbstractGameScene::resetGame()
+//初始化时间label
+void AbstractGameScene::showTimeLabel()
 {
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j])  //有些格子被点击了
-            {
-                m_board[i][j]->changeFlag();
-                m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
-            }
-        }
-    }
-}
-
-//显示排行榜
-void AbstractGameScene::showRankList()
-{
-    const QPoint pos(20, 70);   //排行榜显示的位置
-
-    if(!m_rankWindow)
-    {
-        m_rankWindow = new RankList(m_usermanager->m_rankList, this);
-    }
-
-    m_rankWindow->move(pos);
-    m_rankWindow->show();
-}
-
-//提交按钮被点击的槽函数
-void AbstractGameScene::onSubmitBtnClicked()
-{
-    //判断是否胜利
-    if(isWin())
-    {
-        if(m_gameMode == playMode)
-        {
-            QMessageBox::about(this, "通过", "恭喜成功通过此关");
-            saveTotalTime();
-            emit changeBack();  //进行返回
-        }
-        else if (m_gameMode == onlineMode)
-        {
-            const int totalTime = getTotalTime();
-            saveTotalTime();
-            m_showTimer->stop();
-            emit gameOver(totalTime);
-        }
-    }
-    else
-    {
-        QMessageBox::about(this, "失败", "答案错误");
-        this->resetGame(); //重置棋盘
-    }
-}
-
-//重置按钮被点击
-void AbstractGameScene::onResetBtnClicked()
-{
-    int ret = QMessageBox::question(this, "问题", "是否确定重置？");
-
-    if(ret == QMessageBox::Yes)
-    {
-        this->resetGame(); //进行重置
-    }
-}
-
-//随机生成地图
-void AbstractGameScene::onRandomBtnClicked()
-{
-    //记录当前模式
-    gameMode mode = m_gameMode;
-    m_gameMode = playMode;  //实现熄灯游戏的周围翻转
-
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            if(std::rand() % 2) //对该格子随机进行翻转
-            {
-                if(m_board[i][j])
-                {
-                    onBoardClicked(i, j);
-                }
-            }
-        }
-    }
-
-    //还原模式
-    m_gameMode = mode;
-}
-
-void AbstractGameScene::onBoardClicked(int x, int y)
-{
-    m_board[x][y]->changeFlag();
-    m_gameArray[x][y] = !m_gameArray[x][y];
+    //显示用时的label
+    m_timeLabel = new QLabel(this);
+    m_timeLabel->setText("所用时间：00:00:00");
+    m_timeLabel->move(150, 400);
+    setLabelStyle(m_timeLabel);
 }
 
 //初始化定时器
@@ -208,7 +231,7 @@ void AbstractGameScene::initTimer()
     m_showTimer->start(100);
 
     //监听showTimer对用户通关时间进行更新
-    connect(m_showTimer, &QTimer::timeout, this, &AbstractGameScene::updateTime);
+    connect(m_showTimer, &QTimer::timeout, this, &AbstractGameScene::onUpdateTime);
 }
 
 //保存总用时
@@ -218,35 +241,9 @@ int AbstractGameScene::saveTotalTime()
     int totalTime = getTotalTime();
 
     //更新时间
-    m_usermanager->updateUserTime(this->m_userName, totalTime, this->m_gameLevel);
+    m_usermanager->updateUserTime(m_userName, totalTime, m_gameLevel);
 
     return totalTime;
-}
-
-//初始化时间label
-void AbstractGameScene::showTimeLabel()
-{
-    //显示用时的label
-    m_timeLabel = new QLabel(this);
-    m_timeLabel->setText("所用时间：00:00:00");
-    m_timeLabel->move(150, 400);
-    setLabelStyle(m_timeLabel);
-}
-
-//初始化游戏信息
-void AbstractGameScene::initGameInfo()
-{
-    //初始化游戏信息对象
-    m_data = new Data;
-
-    //初始化信息
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
-        }
-    }
 }
 
 //设置提交按钮
@@ -291,6 +288,22 @@ void AbstractGameScene::setRandomBtn()
     connect(randomBtn, &QPushButton::clicked, this, &AbstractGameScene::onRandomBtnClicked);
 }
 
+//重置棋盘
+void AbstractGameScene::resetGame()
+{
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j])  //有些格子被点击了
+            {
+                m_board[i][j]->changeFlag();
+                m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+            }
+        }
+    }
+}
+
 //初始化按钮
 void AbstractGameScene::showPushButton()
 {
@@ -305,35 +318,158 @@ void AbstractGameScene::setAnimation(int delay)
 {
     int startTime = 400;
 
-    const int maxConcurrentAnimations = 20; // 限制每批的动画数
-    int batchCount = 0;
-
     for(auto& btns : m_board)
     {
         for(auto& btn : btns)
         {
             QPointer<QPushButton> safeBtn = btn;    //用安全指针判断控件是否存在
-            QTimer::singleShot(startTime, [ safeBtn, this]()
+
+            if(safeBtn)
             {
-                if(safeBtn)
+                auto ani = Animator::createAnimator(safeBtn, m_animationType, 700);
+                QTimer::singleShot(startTime, ani, [ani]()
                 {
-                    auto ani = Animator::createAnimator(safeBtn, m_animationType);
-                    safeBtn->setVisible(true);
                     ani ->start();
-                }
-            });
+                });
+            }
 
             startTime += delay;
+        }
+    }
+}
 
-            batchCount++;
+//清空提示按钮
+void AbstractGameScene::clearTipsButton()
+{
+    for(auto btn : m_tipsButtons)
+    {
+        if(btn)
+        {
+            btn->deleteLater();    //删除按钮
+            btn = nullptr;
+        }
+    }
 
-            if (batchCount % maxConcurrentAnimations == 0)
+    m_tipsButtons.clear();
+}
+
+//设置label统一格式
+void AbstractGameScene::setLabelStyle(QLabel *label)
+{
+    label->setFixedWidth(200);
+    label->setStyleSheet("QLabel { font-family: '华文新魏'; "
+                         "font-weight: bold; "
+                         "font-size: 20px; color: #333333; "
+                         "background-color: #ffffff; "
+                         "border: 2px solid #ffffff; "
+                         "border-radius: 10px; }");
+    label->setAlignment(Qt::AlignCenter);
+}
+
+//重写显示事件
+void AbstractGameScene::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    emit sceneShow();
+}
+
+//重写关闭事件
+void AbstractGameScene::closeEvent(QCloseEvent *event)
+{
+    if(m_isInternalclose)
+    {
+        event->accept();
+    }
+
+    else
+    {
+        QCoreApplication::quit();
+    }
+}
+
+//棋盘被点击
+void AbstractGameScene::onBoardClicked(int x, int y)
+{
+    m_board[x][y]->changeFlag();
+    m_gameArray[x][y] = !m_gameArray[x][y];
+}
+
+//提交按钮被点击的槽函数
+void AbstractGameScene::onSubmitBtnClicked()
+{
+    //判断是否胜利
+    if(isWin())
+    {
+        if(m_gameMode == playMode)
+        {
+            QMessageBox::about(this, "通过", "恭喜成功通过此关");
+            saveTotalTime();
+            emit changeBack();  //进行返回
+        }
+        else if (m_gameMode == onlineMode)
+        {
+            const int totalTime = getTotalTime();
+            saveTotalTime();
+            m_showTimer->stop();
+            emit gameOver(totalTime);
+        }
+    }
+    else
+    {
+        QMessageBox::about(this, "失败", "答案错误");
+        this->resetGame(); //重置棋盘
+    }
+}
+
+//重置按钮被点击
+void AbstractGameScene::onResetBtnClicked()
+{
+    int ret = QMessageBox::question(this, "问题", "是否确定重置？");
+
+    if(ret == QMessageBox::Yes)
+    {
+        this->resetGame(); //进行重置
+    }
+}
+
+//随机生成地图
+void AbstractGameScene::onRandomBtnClicked()
+{
+    //记录当前模式
+    BuildWay mode = m_gameMode;
+    m_gameMode = playMode;  //实现熄灯游戏的周围翻转
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(std::rand() % 2) //对该格子随机进行翻转
             {
-                startTime += 50;  // 下一批再推迟
+                if(m_board[i][j])
+                {
+                    onBoardClicked(i, j);
+                }
             }
         }
     }
 
+    //还原模式
+    m_gameMode = mode;
+}
+
+//更新显示时间
+void AbstractGameScene::onUpdateTime()
+{
+    //获取秒数
+    int secs = m_elapsedTimer.elapsed() / 1000;
+    m_passingTime = secs;
+
+    //转换成时分
+    int mins = secs / 60;
+    int hours = mins / 60;
+    secs %= 60;
+    mins %= 60;
+    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
 }
 
 //提示功能
@@ -381,85 +517,16 @@ void AbstractGameScene::onShowTips()
     }
 }
 
-//清空提示按钮
-void AbstractGameScene::clearTipsButton()
+//显示排行榜
+void AbstractGameScene::onRankActionClicked()
 {
-    for(auto btn : m_tipsButtons)
+    const QPoint pos(20, 70);   //排行榜显示的位置
+
+    if(!m_rankWindow)
     {
-        if(btn)
-        {
-            btn->deleteLater();    //删除按钮
-            btn = nullptr;
-        }
+        m_rankWindow = new RankList(m_usermanager->m_rankList, this);
     }
 
-    m_tipsButtons.clear();
-}
-
-//设置label统一格式
-void AbstractGameScene::setLabelStyle(QLabel *label)
-{
-    label->setFixedWidth(200);
-    label->setStyleSheet("QLabel { font-family: '华文新魏'; "
-                         "font-weight: bold; "
-                         "font-size: 20px; color: #333333; "
-                         "background-color: #ffffff; "
-                         "border: 2px solid #ffffff; "
-                         "border-radius: 10px; }");
-    label->setAlignment(Qt::AlignCenter);
-}
-
-//重写显示事件
-void AbstractGameScene::showEvent(QShowEvent *event)
-{
-    QMainWindow::showEvent(event);
-    emit sceneShow();
-}
-
-//更新显示时间
-void AbstractGameScene::updateTime()
-{
-    //获取秒数
-    int secs = m_elapsedTimer.elapsed() / 1000;
-    m_passingTime = secs;
-
-    //转换成时分
-    int mins = secs / 60;
-    int hours = mins / 60;
-    secs %= 60;
-    mins %= 60;
-    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
-}
-
-AbstractGameScene::~AbstractGameScene()
-{
-    //删除数据对象
-    if(m_data)
-    {
-        delete m_data;
-        m_data = nullptr;
-    }
-
-    for(auto btn : m_tipsButtons)
-    {
-        btn = nullptr;
-    }
-
-    for(size_t i = 0; i < m_board.size(); i++)
-    {
-        for(size_t j = 0; j < m_board[i].size(); j++)
-        {
-            m_board[i][j] = nullptr;
-        }
-    }
-
-    submitBtn = nullptr;
-    randomBtn = nullptr;
-    backBtn = nullptr;
-    resetBtn = nullptr;
-    m_timeLabel = nullptr;
-    m_showTimer = nullptr;
-    m_rankWindow = nullptr;
-    m_usermanager = nullptr;    //主界面传入的不用释放
-
+    m_rankWindow->move(pos);
+    m_rankWindow->show();
 }

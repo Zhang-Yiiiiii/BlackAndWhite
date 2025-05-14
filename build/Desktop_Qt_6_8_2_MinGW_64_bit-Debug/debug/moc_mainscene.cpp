@@ -39,16 +39,21 @@ struct qt_meta_tag_ZN9MainSceneE_t {};
 #ifdef QT_MOC_HAS_STRINGDATA
 static constexpr auto qt_meta_stringdata_ZN9MainSceneE = QtMocHelpers::stringData(
     "MainScene",
-    "onUserLogin",
-    "",
     "onHexagonClicked",
+    "",
     "gameLevel",
-    "onMapingInfoReceived",
-    "gameMode",
-    "buildWay",
     "onGameSceneChangeBack",
+    "onLoginClicked",
     "onUserConfirmLogin",
     "onUserConfirmRegister",
+    "onMapingInfoReceived",
+    "BuildWay",
+    "buildWay",
+    "onSaveButtonClicked",
+    "gameStep",
+    "bugX",
+    "bugY",
+    "bugDirection",
     "onOnlineTriggerd",
     "onDisconnectTriggerd"
 );
@@ -62,7 +67,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -70,22 +75,24 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   62,    2, 0x08,    1 /* Private */,
-       3,    1,   63,    2, 0x08,    2 /* Private */,
-       5,    1,   66,    2, 0x08,    4 /* Private */,
-       8,    0,   69,    2, 0x08,    6 /* Private */,
-       9,    0,   70,    2, 0x08,    7 /* Private */,
-      10,    0,   71,    2, 0x08,    8 /* Private */,
-      11,    0,   72,    2, 0x08,    9 /* Private */,
-      12,    0,   73,    2, 0x08,   10 /* Private */,
+       1,    1,   68,    2, 0x08,    1 /* Private */,
+       4,    0,   71,    2, 0x08,    3 /* Private */,
+       5,    0,   72,    2, 0x08,    4 /* Private */,
+       6,    0,   73,    2, 0x08,    5 /* Private */,
+       7,    0,   74,    2, 0x08,    6 /* Private */,
+       8,    1,   75,    2, 0x08,    7 /* Private */,
+      11,    5,   78,    2, 0x08,    9 /* Private */,
+      16,    0,   89,    2, 0x08,   15 /* Private */,
+      17,    0,   90,    2, 0x08,   16 /* Private */,
 
  // slots: parameters
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    4,
-    QMetaType::Void, 0x80000000 | 6,    7,
+    QMetaType::Void, QMetaType::Int,    3,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 9,   10,
+    QMetaType::Void, 0x80000000 | 9, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   10,   12,   13,   14,   15,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -101,20 +108,27 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_tag_ZN9MainSceneE_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<MainScene, std::true_type>,
-        // method 'onUserLogin'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onHexagonClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
-        // method 'onMapingInfoReceived'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<gameMode, std::false_type>,
         // method 'onGameSceneChangeBack'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onLoginClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onUserConfirmLogin'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onUserConfirmRegister'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'onMapingInfoReceived'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<BuildWay, std::false_type>,
+        // method 'onSaveButtonClicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<BuildWay, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'onOnlineTriggerd'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onDisconnectTriggerd'
@@ -128,14 +142,15 @@ void MainScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     auto *_t = static_cast<MainScene *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->onUserLogin(); break;
-        case 1: _t->onHexagonClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 2: _t->onMapingInfoReceived((*reinterpret_cast< std::add_pointer_t<gameMode>>(_a[1]))); break;
-        case 3: _t->onGameSceneChangeBack(); break;
-        case 4: _t->onUserConfirmLogin(); break;
-        case 5: _t->onUserConfirmRegister(); break;
-        case 6: _t->onOnlineTriggerd(); break;
-        case 7: _t->onDisconnectTriggerd(); break;
+        case 0: _t->onHexagonClicked((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 1: _t->onGameSceneChangeBack(); break;
+        case 2: _t->onLoginClicked(); break;
+        case 3: _t->onUserConfirmLogin(); break;
+        case 4: _t->onUserConfirmRegister(); break;
+        case 5: _t->onMapingInfoReceived((*reinterpret_cast< std::add_pointer_t<BuildWay>>(_a[1]))); break;
+        case 6: _t->onSaveButtonClicked((*reinterpret_cast< std::add_pointer_t<BuildWay>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[5]))); break;
+        case 7: _t->onOnlineTriggerd(); break;
+        case 8: _t->onDisconnectTriggerd(); break;
         default: ;
         }
     }
@@ -160,14 +175,14 @@ int MainScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 9;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 9)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }

@@ -1,5 +1,7 @@
 #include "hexagon.h"
 
+//----------------------------------构造析构--------------------------------------------
+
 Hexagon::Hexagon(int id, QPushButton * parent):
     QPushButton(parent), m_id(id + 1)
 {
@@ -18,6 +20,8 @@ Hexagon::Hexagon(int id, QPushButton * parent):
         emit beClicked(this->m_id);
     });
 }
+
+//----------------------------------公有方法--------------------------------------------
 
 Hexagon* Hexagon::setId(int id)
 {
@@ -76,9 +80,9 @@ void Hexagon::paintEvent(QPaintEvent *event)
     painter.drawPath(hexagonPath);
 
     // 绘制按钮文本
-    QFont font;
-    font.setPointSize(24);
+    QFont font("华文新魏", 15);
     font.setBold(true);
+    painter.setFont(font);
     painter.drawText(rect, Qt::AlignCenter, text());
 
     // 将 QPainterPath 转换为 QRegion

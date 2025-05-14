@@ -4,6 +4,8 @@
 #include <fstream>
 #include <algorithm>
 
+//----------------------------------构造析构--------------------------------------------
+
 UserManager::UserManager()
 {
     std::ifstream ifs(USERDATAPATH, std::ios::in | std::ios::binary);
@@ -43,6 +45,8 @@ UserManager::~UserManager()
 
     releaseUserArray();
 }
+
+//----------------------------------公共方法--------------------------------------------
 
 //验证用户信息
 int UserManager::verifyUserInfo(QString name, QString password)
@@ -213,11 +217,7 @@ UserManager* UserManager::updateUserTime(QString username, int totalTime, int le
     return this;
 }
 
-//获取用户人数
-int UserManager::getUserNum() const
-{
-    return m_userNum;
-}
+//----------------------------------私有方法--------------------------------------------
 
 //初始化用户
 UserManager* UserManager::initUser()
@@ -267,6 +267,28 @@ UserManager* UserManager::initUser()
     }
 
     return this;
+}
+
+//获取用户人数
+int UserManager::getUserNum() const
+{
+    return m_userNum;
+}
+
+//查找用户
+User* UserManager::findUser(QString userName) const
+{
+    User * user = nullptr;
+
+    for(int i = 0; i < m_userNum; i++)
+    {
+        if(m_userArray[i]->getUserName() == userName)
+        {
+            user = m_userArray[i];
+        }
+    }
+
+    return user;
 }
 
 //保存信息到文件
@@ -334,20 +356,4 @@ UserManager* UserManager::releaseUserArray()
     }
 
     return this;
-}
-
-//查找用户
-User* UserManager::findUser(QString userName) const
-{
-    User * user = nullptr;
-
-    for(int i = 0; i < m_userNum; i++)
-    {
-        if(m_userArray[i]->getUserName() == userName)
-        {
-            user = m_userArray[i];
-        }
-    }
-
-    return user;
 }

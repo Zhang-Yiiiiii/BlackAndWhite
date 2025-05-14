@@ -1,6 +1,8 @@
 #include "mypushbutton.h"
 #include "config.h"
 
+//----------------------------------静态方法--------------------------------------------
+
 //创建按钮
 MyPushButton* MyPushButton::createButton(Type type, QString text, QWidget* parent)
 {

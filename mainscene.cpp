@@ -1,16 +1,14 @@
 #include "mainscene.h"
-#include "ui_mainscene.h"
 
 #include <QGraphicsOpacityEffect>
 #include "lightoutgame.h"
 #include "antgame.h"
 #include "animator.h"
 
+//----------------------------------构造和析构--------------------------------------------
 MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
-    , ui(new Ui::MainScene)
 {
-    //ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
 
     QPoint pos(350, 100);
@@ -39,9 +37,9 @@ MainScene::MainScene(QWidget *parent)
     //登录
     QAction* loginAction = m_startMenu->addAction("登录");
     loginAction->setIcon(QIcon(LOGINICONPATH));
-    connect(loginAction, &QAction::triggered, this, &MainScene::onUserLogin);
+    connect(loginAction, &QAction::triggered, this, &MainScene::onLoginClicked);
 
-    m_gameMenu->addSeparator();
+    m_gameMenu->addSeparator(); //分割线
 
     //自建地图
     QMenu* antMappingMenu = m_gameMenu->addMenu("兰顿蚂蚁自建地图");
@@ -89,8 +87,6 @@ MainScene::MainScene(QWidget *parent)
 
 MainScene::~MainScene()
 {
-    delete ui;
-
     if(m_usermanager)
     {
         delete m_usermanager;
@@ -100,10 +96,11 @@ MainScene::~MainScene()
     if(m_loginWindow)
     {
         m_loginWindow->deleteLater();
-        m_loginWindow = nullptr;
     }
 
 }
+
+//----------------------------------私有方法--------------------------------------------
 
 //初始化六边形按钮
 void MainScene::initSelectBtn()
@@ -130,6 +127,7 @@ void MainScene::showSelectBtn()
     const int length = m_selectBtns[0]->getSideLength();
     int x = 950;
     int y = 200;
+
     int k = 1;  //每行个数
     int cnt = 4;  //计算每行六边形数量
 
@@ -192,8 +190,77 @@ void MainScene::showSelectBtn()
     }
 }
 
+//设置动画
+void MainScene::setAnimations()
+{
+    for(auto btn : m_selectBtns)
+    {
+        Animator * ani = Animator::createAnimator(btn, Animator::SlideFromTop);
+        ani->start();
+    }
+}
+
+//进入游戏场景
+void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, int bugX, int bugY, int bugDirection)
+{
+    if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
+    {
+        //不指定父窗口 不然图标不显示
+
+        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
+
+    }
+    else if(gameLevel <= SELECTBTNNUMBER)   //熄灯游戏模式
+    {
+        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
+    }
+
+    Animator::transition(this, m_gameScene, 300); //使用动画进入
+
+    // 监听返回信号
+    connect(m_gameScene, &AbstractGameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
+
+    if (enterWay == playMode) // 游戏模式
+    {
+        return;
+    }
+    else if (enterWay == startingPointMode || enterWay == destinationMode || enterWay == lightBuildMode)  // 自建图模式
+    {
+        // 隐藏提交按钮
+        m_gameScene->hideSubmitBtn();
+
+        //显示随机生成地图按钮
+        m_gameScene->showRandomBtn();
+
+        // 创建保存按钮
+        createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
+    }
+    else if(enterWay == onlineMode)    // 联机模式
+    {
+        setOnlineMode();
+    }
+}
+
+//显示登录对话框
+void MainScene::showLoginWindow()
+{
+    if(!m_loginWindow)
+    {
+        m_loginWindow = new LoginWindow();  //不指定父窗口，否则主窗口隐藏时 登录界面也会隐藏
+    }
+
+    m_loginWindow->setWindowIcon(QIcon(MYICON));
+    m_loginWindow->move((this->width() - m_loginWindow->width()) / 2, (this->height() - m_loginWindow->height()) / 2);
+
+    this->hide();
+    m_loginWindow->show();
+
+    //关闭对话框时重新显示主页面
+    connect(m_loginWindow, &LoginWindow::userClose, this, &MainScene::show, Qt::UniqueConnection);
+}
+
 //自建ant地图
-void MainScene::buildAntGame(gameMode buildWay)
+void MainScene::buildAntGame(BuildWay buildWay)
 {
     // 显示对话框
     showBuildDialog(buildWay);
@@ -214,133 +281,25 @@ void MainScene::buildLightGame()
 }
 
 //显示建图对话框
-void MainScene::showBuildDialog(gameMode buildWay)
+void MainScene::showBuildDialog(BuildWay buildWay)
 {
     //显示对话框
-    m_mydialog = new BuildMapDialog(this);
-    m_mydialog->show();
+    if(!m_mappingDialog)
+    {
+        m_mappingDialog = new BuildMapDialog(this);
+    }
+
+    m_mappingDialog->show();
 
     //从对话框获取信息
-    connect(m_mydialog, &BuildMapDialog::getedInfo, this, [ = ]()
+    connect(m_mappingDialog, &BuildMapDialog::getedInfo, this, [this, buildWay]()
     {
         onMapingInfoReceived(buildWay);
     });
 }
 
-//进入游戏场景
-void MainScene::enterGameScene(int gameLevel, gameMode enterWay, int gameStep, int bugX, int bugY, int bugDirection)
-{
-    if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
-    {
-        //不指定父窗口 不然图标不显示
-        m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
-    }
-    else if(gameLevel <= SELECTBTNNUMBER)   //熄灯游戏模式
-    {
-        m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
-    }
-
-    Animator::transition(this, m_gameScene, 300); //使用动画进入
-
-    // 监听返回信号
-    connect(m_gameScene, &AbstractGameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
-
-    if (enterWay == playMode) // 游戏模式
-    {
-        return;
-    }
-    else if (enterWay == startingPointMode || enterWay == destinationMode || enterWay == lightBuildMode)  // 自建图模式
-    {
-        // 断开提交按钮
-        m_gameScene->submitBtn->setDisabled(true);
-        m_gameScene->submitBtn->hide();
-
-        //显示随机生成地图按钮
-        m_gameScene->randomBtn->show();
-
-        // 创建保存按钮
-        createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
-    }
-    else if(enterWay == onlineMode)    // 联机模式
-    {
-        setOnlineMode();
-    }
-}
-
-// 比较结果
-void MainScene::compareResults(int ourTime, int rivalTime)
-{
-    if (ourTime < rivalTime)
-    {
-        // 我方胜利
-        QMessageBox::about(m_gameScene, "提醒", "我方胜利");
-    }
-    else if (ourTime > rivalTime)
-    {
-        // 对方胜利
-        QMessageBox::about(m_gameScene, "提醒", "对方胜利");
-    }
-    else
-    {
-        // 平局
-        QMessageBox::about(m_gameScene, "提醒", "平局");
-    }
-
-    emit m_gameScene->changeBack();
-}
-
-// 处理返回信号
-void MainScene::onGameSceneChangeBack()
-{
-    m_gameScene->m_isInternalclose = true;  //确定是内部进行返回的
-
-    Animator::transition(m_gameScene, this, 500);
-
-    // 在淡入完成后再销毁游戏场景
-    connect(m_gameScene, &AbstractGameScene::sceneShow, this, [this]()
-    {
-        // 在主界面彻底显示后，再删掉旧的场景
-        delete m_gameScene;
-        m_gameScene = nullptr;
-    });
-}
-
-//处理用户登录
-void MainScene::onUserConfirmLogin()
-{
-    int ret = this->m_usermanager->verifyUserInfo(m_loginWindow->getUserName(), m_loginWindow->getUserPassword());
-
-    //提示信息所在位置
-    QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
-
-    if(ret == 3) //登录成功
-    {
-        //显示提示信息
-        QToolTip::showText(pos, "登录成功", this, this->rect(), 5000);
-
-        //记录用户信息
-        this->m_userName = m_loginWindow->getUserName();
-        this->m_password = m_loginWindow->getUserPassword();
-
-        this->show();
-        m_loginWindow->close();
-        delete m_loginWindow;
-        m_loginWindow = nullptr;
-    }
-    else if(ret == 2) //密码错误
-    {
-        //显示提示信息
-        QToolTip::showText(pos, "密码错误", this, this->rect(), 5000);
-    }
-    else //用户不存在
-    {
-        //显示提示信息
-        QToolTip::showText(pos, "用户不存在", this, this->rect(), 5000);
-    }
-}
-
 // 创建保存地图按钮
-void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, gameMode buildWay)
+void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, BuildWay buildWay)
 {
     QPushButton *saveBtn = new QPushButton(m_gameScene);
     saveBtn->setText("保 存");
@@ -351,53 +310,7 @@ void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirect
 
     connect(saveBtn, &QPushButton::clicked, this, [this, gameStep, bugX, bugY, bugDirection, buildWay]()
     {
-        handleSaveButtonClicked(buildWay, gameStep, bugX, bugY, bugDirection);
-    });
-}
-
-// 处理保存地图按钮点击事件
-void MainScene::handleSaveButtonClicked(gameMode buildWay, int gameStep, int bugX, int bugY, int bugDirection)
-{
-    int ret = QMessageBox::question(this, "问题", "确定保存游戏？");
-
-    if (ret == QMessageBox::Yes)
-    {
-        //兰顿蚂蚁模式
-        if(buildWay == startingPointMode || buildWay == destinationMode)
-        {
-            if(AntGame * antPtr = dynamic_cast<AntGame*>(m_gameScene))
-            {
-                antPtr->saveGame(buildWay, gameStep, bugX, bugY, bugDirection);
-            }
-        }
-        else if(buildWay == lightBuildMode)
-        {
-            if(LightOutGame* lightPtr = dynamic_cast<LightOutGame*>(m_gameScene))
-            {
-                lightPtr->saveGame();
-            }
-        }
-    }
-}
-
-//显示登录对话框
-void MainScene::showLoginWindow()
-{
-    if(!m_loginWindow)
-    {
-        m_loginWindow = new LoginWindow();
-    }
-
-    m_loginWindow->setWindowIcon(QIcon(MYICON));
-    m_loginWindow->move((this->width() - m_loginWindow->width()) / 2, (this->height() - m_loginWindow->height()) / 2);
-
-    this->hide();
-    m_loginWindow->show();
-
-    //关闭对话框时重新显示主页面
-    connect(m_loginWindow, &LoginWindow::userClose, this, [ = ]() mutable
-    {
-        this->show();   //显示游戏界面
+        onSaveButtonClicked(buildWay, gameStep, bugX, bugY, bugDirection);
     });
 }
 
@@ -463,39 +376,34 @@ void MainScene::setOnlineMode()
     });
 }
 
-//设置动画
-void MainScene::setAnimations()
+// 比较结果
+void MainScene::compareResults(int ourTime, int rivalTime)
 {
-    for(auto btn : m_selectBtns)
+    if (ourTime < rivalTime)
     {
-        Animator * ani = Animator::createAnimator(btn, Animator::SlideFromTop);
-        ani->start();
+        // 我方胜利
+        QMessageBox::about(m_gameScene, "提醒", "我方胜利");
     }
+    else if (ourTime > rivalTime)
+    {
+        // 对方胜利
+        QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+    }
+    else
+    {
+        // 平局
+        QMessageBox::about(m_gameScene, "提醒", "平局");
+    }
+
+    emit m_gameScene->changeBack();
 }
 
-//用户登录
-void MainScene::onUserLogin()
-{
-    //显示登录对话框
-    showLoginWindow();
-
-    //获取登录信息
-    connect(m_loginWindow, &LoginWindow::userConfirmed, this, [this]()
-    {
-        onUserConfirmLogin();
-    });
-
-    //用户注册
-    connect(m_loginWindow, &LoginWindow::userRegistered, this, [this]()
-    {
-        onUserConfirmRegister();
-    });
-}
+//----------------------------------私有槽--------------------------------------------
 
 //选关按钮被点击
 void MainScene::onHexagonClicked(int gameLevel)
 {
-    gameMode mode = playMode;
+    BuildWay mode = playMode;
 
     if(m_isOnlineMode)
     {
@@ -508,18 +416,66 @@ void MainScene::onHexagonClicked(int gameLevel)
     enterGameScene(gameLevel, mode);
 }
 
-//从建图对话框中获取信息
-void MainScene::onMapingInfoReceived(gameMode buildWay)
+// 处理返回信号
+void MainScene::onGameSceneChangeBack()
 {
-    int gameLevel, gameStep, bugX, bugY, bugDirection;
-    gameLevel = m_mydialog->getNum1();
-    gameStep = m_mydialog->getNum2();
-    bugX = m_mydialog->getNum3();
-    bugY = m_mydialog->getNum4();
-    bugDirection = m_mydialog->getNum5();
+    m_gameScene->setInternalClose(true);  //确定是内部进行返回的
 
-    //进入游戏场景
-    enterGameScene(gameLevel, buildWay, gameStep, bugX, bugY, bugDirection);
+    Animator::transition(m_gameScene, this, 300);
+
+    // 在淡入完成后再销毁游戏场景
+    connect(m_gameScene, &AbstractGameScene::sceneShow, this, [this]()
+    {
+        // 在主界面彻底显示后，再删掉旧的场景
+        m_gameScene->deleteLater();
+    });
+}
+
+//用户登录
+void MainScene::onLoginClicked()
+{
+    //显示登录对话框
+    showLoginWindow();
+
+    //获取登录信息
+    connect(m_loginWindow, &LoginWindow::userConfirmed, this, &MainScene::onUserConfirmLogin, Qt::UniqueConnection);
+
+    //用户注册
+    connect(m_loginWindow, &LoginWindow::userRegistered, this, &MainScene::onUserConfirmRegister, Qt::UniqueConnection);
+}
+
+//处理用户登录
+void MainScene::onUserConfirmLogin()
+{
+    int ret = m_usermanager->verifyUserInfo(m_loginWindow->getUserName(), m_loginWindow->getUserPassword());
+
+    //提示信息所在位置
+    const QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
+
+    if(ret == 3) //登录成功
+    {
+        //显示提示信息
+        QToolTip::showText(pos, "登录成功", this, this->rect(), 5000);
+
+        //记录用户信息
+        m_userName = m_loginWindow->getUserName();
+        m_password = m_loginWindow->getUserPassword();
+
+        this->show();
+        m_loginWindow->close();
+        delete m_loginWindow;
+        m_loginWindow = nullptr;
+    }
+    else if(ret == 2) //密码错误
+    {
+        //显示提示信息
+        QToolTip::showText(pos, "密码错误", this, this->rect(), 5000);
+    }
+    else //用户不存在
+    {
+        //显示提示信息
+        QToolTip::showText(pos, "用户不存在", this, this->rect(), 5000);
+    }
 }
 
 //用户确定注册
@@ -558,18 +514,61 @@ void MainScene::onUserConfirmRegister()
 
         this->show();
         m_loginWindow->close();
-        delete m_loginWindow;
-        m_loginWindow = nullptr;
+
+        m_loginWindow->deleteLater();
 
         //添加用户信息
         this->m_usermanager->addUser(this->m_userName, this->m_password);
     }
 }
 
+//从建图对话框中获取信息
+void MainScene::onMapingInfoReceived(BuildWay buildWay)
+{
+    int gameLevel, gameStep, bugX, bugY, bugDirection;
+    gameLevel = m_mappingDialog->getNum1();
+    gameStep = m_mappingDialog->getNum2();
+    bugX = m_mappingDialog->getNum3();
+    bugY = m_mappingDialog->getNum4();
+    bugDirection = m_mappingDialog->getNum5();
+
+    //进入游戏场景
+    enterGameScene(gameLevel, buildWay, gameStep, bugX, bugY, bugDirection);
+}
+
+// 处理保存地图按钮点击事件
+void MainScene::onSaveButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection)
+{
+    int ret = QMessageBox::question(this, "问题", "确定保存游戏？");
+
+    if (ret == QMessageBox::Yes)
+    {
+        //兰顿蚂蚁模式
+        if(buildWay == startingPointMode || buildWay == destinationMode)
+        {
+            if(AntGame * antPtr = dynamic_cast<AntGame*>(m_gameScene))
+            {
+                antPtr->saveGame(buildWay, gameStep, bugX, bugY, bugDirection);
+            }
+        }
+        else if(buildWay == lightBuildMode)
+        {
+            if(LightOutGame* lightPtr = dynamic_cast<LightOutGame*>(m_gameScene))
+            {
+                lightPtr->saveGame();
+            }
+        }
+    }
+}
+
 //用户点击联机模式
 void MainScene::onOnlineTriggerd()
 {
-    this->m_onlineWindow = new OnlineWindow(this);
+    if(!m_onlineWindow)
+    {
+        m_onlineWindow = new OnlineWindow(this);
+    }
+
     m_onlineWindow->show();
 
     //监听是否连接成功

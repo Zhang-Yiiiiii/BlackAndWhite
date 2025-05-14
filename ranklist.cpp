@@ -1,6 +1,8 @@
 #include "ranklist.h"
 #include "ui_ranklist.h"
 
+//----------------------------------构造析构--------------------------------------------
+
 RankList::RankList(QVector<std::pair<QString, int>> &v, QWidget *parent)
     : QFrame(parent), m_vRankList(v)
     , ui(new Ui::RankList)
@@ -34,10 +36,10 @@ RankList::RankList(QVector<std::pair<QString, int>> &v, QWidget *parent)
     int ranking = 0;
     int row = 0;
     int last = -2;   //记录上一名的成绩
-    for (const auto &i : m_vRankList)
+    for (auto &item : std::as_const(m_vRankList))
     {
-        QString name = i.first;
-        int time = i.second;
+        QString name = item.first;
+        int time = item.second;
 
         if (time == -1) continue; // 用户没有通关游戏
 

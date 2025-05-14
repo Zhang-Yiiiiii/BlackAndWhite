@@ -1,12 +1,12 @@
 #ifndef RANKLIST_H
 #define RANKLIST_H
 
-/*
+/*****************************************************************
  * class: RankList （排行榜）
  *
  * 用处: 显示排行榜
  *
- */
+ *****************************************************************/
 
 #include <QFrame>
 #include <QListView>
@@ -29,11 +29,14 @@ class RankList : public QFrame
     Q_OBJECT
 
 public:
-    //构造和析构
+    //------------------------构造析构----------------------------------
+
     explicit RankList(QVector<std::pair<QString, int>> &, QWidget *parent = nullptr);
     ~RankList();
 
 private:
+    //------------------------私有方法----------------------------------
+
     //榜单排行
     QVector<std::pair<QString, int>> m_vRankList;
 

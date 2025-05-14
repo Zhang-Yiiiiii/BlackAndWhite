@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+//----------------------------------构造析构--------------------------------------------
+
 Data::Data()
 {
     getData();
@@ -13,6 +15,57 @@ Data::~Data()
     saveAntData();
     saveLightData();
 }
+
+//----------------------------------公有方法--------------------------------------------
+
+//保存数据
+void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
+{
+    if(gameArray.empty())
+    {
+        return;
+    }
+
+    int rows = gameArray.size();
+    int cols = gameArray[0].size();
+
+    //将结果传给data
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < cols; j++)
+        {
+            m_gameArray[gameLevel][i][j] = gameArray[i][j];
+            m_ansArray[gameLevel][i][j] = ans[i][j];
+        }
+    }
+}
+
+void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans, int step, int dir, QPoint pos)
+{
+    if(gameArray.empty())
+    {
+        return;
+    }
+
+    int rows = gameArray.size();
+    int cols = gameArray[0].size();
+
+    //将结果传给data
+    for(int i = 0; i < rows; i++)
+    {
+        for(int j = 0; j < cols; j++)
+        {
+            m_gameArray[gameLevel][i][j] = gameArray[i][j];
+            m_ansArray[gameLevel][i][j] = ans[i][j];
+        }
+    }
+
+    m_bugDir[gameLevel] = dir;
+    m_bugPos[gameLevel] = pos;
+    m_stepArray[gameLevel] = step;
+}
+
+//----------------------------------私有方法--------------------------------------------
 
 //从文件中读取信息
 //信息配置：

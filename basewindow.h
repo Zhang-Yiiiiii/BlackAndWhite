@@ -1,11 +1,11 @@
 #ifndef BASEWINDOW_H
 #define BASEWINDOW_H
 
-/*
+/*****************************************************************
  * class: BaseWindow （基窗口类）
  *
  * 用处: 用于建立窗口框架、统一风格
- */
+ *****************************************************************/
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -22,12 +22,16 @@ class BaseWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    //------------------------构造析构----------------------------------
+
     explicit BaseWindow(QWidget *parent = nullptr);
     ~BaseWindow();
 
-    virtual void paintEvent(QPaintEvent*) override;
-
 protected:
+
+    //------------------------保护属性----------------------------------
+
     QPixmap m_background;
     QMenuBar* m_menubar;    //菜单栏
 
@@ -40,7 +44,12 @@ protected:
     QAction* m_lightOutRule;    //熄灯游戏说明
     QAction* m_quitAction;            //退出游戏菜单项
 
+    //------------------------保护方法----------------------------------
+
+    virtual void paintEvent(QPaintEvent*) override;
+
 protected slots:
+    //------------------------保护槽----------------------------------
 
     //显示兰顿蚂蚁说明
     void onShowAntRule();

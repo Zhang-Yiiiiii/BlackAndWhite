@@ -1,7 +1,10 @@
 #include "onlinewindow.h"
 #include "ui_onlinewindow.h"
+#include "config.h"
 
 #include <QString>
+
+//----------------------------------构造析构--------------------------------------------
 
 OnlineWindow::OnlineWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -58,6 +61,8 @@ OnlineWindow::~OnlineWindow()
     }
 }
 
+//----------------------------------公有方法--------------------------------------------
+
 //写数据
 OnlineWindow* OnlineWindow::write(const char* data)
 {
@@ -80,6 +85,23 @@ OnlineWindow* OnlineWindow::flush()
     return this;
 }
 
+//断开联机
+void OnlineWindow::disconnectOnline()
+{
+    if(m_clientConnection)
+    {
+        m_clientConnection->close();
+    }
+
+    if(m_server)
+    {
+        m_server->close();
+    }
+}
+
+//------------------------保护方法----------------------------------
+
+//画图事件
 void OnlineWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
@@ -94,19 +116,7 @@ void OnlineWindow::paintEvent(QPaintEvent*)
     painter.drawPixmap(260, 17, loginPic.width() - 15, loginPic.height() - 15, loginPic);
 }
 
-//断开联机
-void OnlineWindow::disconnectOnline()
-{
-    if(m_clientConnection)
-    {
-        m_clientConnection->close();
-    }
-
-    if(m_server)
-    {
-        m_server->close();
-    }
-}
+//----------------------------------私有槽--------------------------------------------
 
 //作为服务端 监听连接
 void OnlineWindow::onListenBtnClicked()
@@ -182,7 +192,7 @@ void OnlineWindow::onJoinBtnClicked()
     });
 }
 
-//处理获得的信息
+//处理收到的信息
 void OnlineWindow::handleInfo()
 {
     QString data = m_clientConnection->readAll();   //读取信息

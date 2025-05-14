@@ -1,6 +1,8 @@
 #include "buildmapdialog.h"
 #include "ui_buildmapdialog.h"
 
+//----------------------------------构造析构--------------------------------------------
+
 BuildMapDialog::BuildMapDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::BuildMapDialog)
@@ -24,6 +26,8 @@ BuildMapDialog::~BuildMapDialog()
 {
     delete ui;
 }
+
+//----------------------------------公有方法--------------------------------------------
 
 int BuildMapDialog::getNum1()
 {
@@ -49,6 +53,8 @@ int BuildMapDialog::getNum5()
 {
     return this->m_num5;
 }
+
+//----------------------------------私有槽--------------------------------------------
 
 //用户点击确定按钮
 void BuildMapDialog::onConfirmButtonClicked()

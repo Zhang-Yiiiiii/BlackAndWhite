@@ -1,14 +1,12 @@
 #include "lightoutgame.h"
 #include <bitset>
 
-LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
+//----------------------------------构造析构--------------------------------------------
+
+LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, BuildWay mode)
     : AbstractGameScene{gameLevel, userName, usermanager, parent, mode}
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
-
-    setboardSize(); //获取棋盘大小
-
-    initVector();   //初始化棋盘vector
 
     initGameInfo();    //初始化游戏信息
 
@@ -29,39 +27,12 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
     initClickRecord();  //初始化点击记录数组
 }
 
-//保存游戏
-void LightOutGame::saveGame()
+//----------------------------------公有方法--------------------------------------------
+
+//初始化点击数组
+void LightOutGame::initClickRecord()
 {
-    while(!isSolvable())  //不可解
-    {
-        QMessageBox::about(this, "提醒", "该设计无解，请重新设计");
-        return;
-    }
-
-    emit changeBack();
-}
-
-//计算总时间
-int LightOutGame::getTotalTime() const
-{
-    return m_passingTime;
-}
-
-//判断是否胜利
-bool LightOutGame::isWin() const
-{
-    for (int i = 0; i < m_boardRow; i++)
-    {
-        for( int j = 0; j < m_boardCol; j++)
-        {
-            if(!m_gameArray[i][j])
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
+    m_clickRecord.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
 }
 
 //翻转格子
@@ -100,7 +71,7 @@ void LightOutGame::flipCells(const int x, const int y)
     }
 }
 
-//部分枚举法 判断是否有解
+//判断是否有解
 bool LightOutGame::isSolvable()
 {
     const int N = m_boardRow * m_boardRow; //总数
@@ -373,24 +344,17 @@ bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& b, 
     return false;    //没有找到解
 }
 
-//保存数据
-void LightOutGame::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
-{
-    //将结果传给data
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            this->m_data->m_gameArray[m_gameLevel][i][j] = gameArray[i][j];
-            this->m_data->m_ansArray[m_gameLevel][i][j] = ans[i][j];
-        }
-    }
-}
+// //保存数据
+// void LightOutGame::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
+// {
+//     //将结果传给data
+// m_data->saveData(m_gameLevel, gameArray, ans);
+// }
 
-//初始化点击数组
-void LightOutGame::initClickRecord()
+//计算总时间
+int LightOutGame::getTotalTime() const
 {
-    m_clickRecord.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
+    return m_passingTime;
 }
 
 //显示提示
@@ -411,6 +375,37 @@ void LightOutGame::generateTipArray()
         }
     }
 }
+
+//保存游戏
+void LightOutGame::saveGame()
+{
+    while(!isSolvable())  //不可解
+    {
+        QMessageBox::about(this, "提醒", "该设计无解，请重新设计");
+        return;
+    }
+
+    emit changeBack();
+}
+
+//判断是否胜利
+bool LightOutGame::isWin() const
+{
+    for (int i = 0; i < m_boardRow; i++)
+    {
+        for( int j = 0; j < m_boardCol; j++)
+        {
+            if(!m_gameArray[i][j])
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+//----------------------------------公共槽--------------------------------------------
 
 //监听格子被点击
 void LightOutGame::onBoardClicked(int x, int y)

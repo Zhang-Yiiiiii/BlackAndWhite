@@ -2,14 +2,12 @@
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
 
-AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, gameMode mode)
+//----------------------------------构造析构--------------------------------------------
+
+AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, BuildWay mode)
     : AbstractGameScene{gameLevel, userName, usermanager, parent, mode}
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
-
-    setboardSize(); //获取棋盘大小
-
-    initVector();   //初始化棋盘vector
 
     AntGame::initGameInfo();    //初始化游戏信息
 
@@ -44,8 +42,10 @@ AntGame::~AntGame()
 {
 }
 
+//----------------------------------公有方法--------------------------------------------
+
 //保存自建地图
-void AntGame::saveGame(gameMode buildWay, int step, int x, int y, int direction)
+void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction)
 {
     //判断是否可解 并且保存地图
     if(buildWay == startingPointMode) //起点建图
@@ -69,16 +69,7 @@ void AntGame::saveGame(gameMode buildWay, int step, int x, int y, int direction)
     emit changeBack();
 }
 
-//更新当前步数
-void AntGame::updateCurrentSteps(unsigned int steps)
-{
-    m_currentSteps = steps;
-
-    if(m_currentStepsLabel)
-    {
-        m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
-    }
-}
+//----------------------------------私有方法--------------------------------------------
 
 //初始化游戏信息
 void AntGame::initGameInfo()
@@ -88,6 +79,10 @@ void AntGame::initGameInfo()
     {
         m_data = new Data;
     }
+
+    setboardSize(); //获取棋盘大小
+
+    initVector();   //初始化棋盘vector
 
     //初始化信息
     for(int i = 0; i < m_boardRow; i++)
@@ -104,6 +99,38 @@ void AntGame::initGameInfo()
     m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
     m_bugDir = m_data->m_bugDir[m_gameLevel];
     m_gameStep = m_data->m_stepArray[m_gameLevel];
+}
+
+//初始化bug
+void AntGame::initBugInfo()
+{
+    //初始化虫子所在位置、方向 750 400 游戏步数
+    m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
+    m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
+    m_bugDir = m_data->m_bugDir[m_gameLevel];
+    m_gameStep = m_data->m_stepArray[m_gameLevel];
+}
+
+//显示bug
+void AntGame::showBug()
+{
+    QPushButton * bugBtn = new QPushButton(this);
+
+    //移动bug
+    //虫子所在坐标轴与窗口长宽不对应
+    bugBtn->move(BOARDPOSX + m_bugPos.y() * (GRIDSIZE + 1), BOARDPOSY + m_bugPos.x() * (GRIDSIZE + 1));
+
+    //加载图片
+    QString pixStr = QString(BUGPATH).arg(m_bugDir);
+    m_bugPix.load(pixStr);
+    bugBtn->setFixedSize(m_bugPix.size());
+    bugBtn->setIconSize(m_bugPix.size());
+    bugBtn->setIcon(QIcon(m_bugPix));
+    bugBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
+
+    //设置属性
+    bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
+    bugBtn->setEnabled(false);  //设置不能点击
 }
 
 //显示时间
@@ -130,10 +157,59 @@ void AntGame::showTimeLabel()
     m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
 }
 
+//获取总时间
+int AntGame::getTotalTime() const
+{
+    //计算总时间
+    int totalTime = m_passingTime;
+    totalTime += m_penaltyTime;
+
+    return totalTime;
+}
+
+//初始化步数label
+void AntGame::showStepLabel()
+{
+    //步数说明
+    QLabel * stepLabel = new QLabel(this);
+    setLabelStyle(stepLabel);
+
+    stepLabel->setText("本关步数: " + QString::number(this->m_gameStep));
+    stepLabel->move(150, 360);
+}
+
+//更新当前步数
+void AntGame::updateCurrentSteps(unsigned int steps)
+{
+    m_currentSteps = steps;
+
+    if(m_currentStepsLabel)
+    {
+        m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
+    }
+}
+
+//判断是否胜利
+bool AntGame::isWin() const
+{
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(m_ansArray[i][j] != m_gameArray[i][j])
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 //起点建图
 bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
-    bool tempArray[BOARD_SIZE][BOARD_SIZE];
+    std::vector<std::vector<bool>> tempArray(BOARD_SIZE, std::vector<bool>(BOARD_SIZE));
     int tempStep = step;
 
     //起点
@@ -194,26 +270,14 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
     }
 
     //将结果传给data
-    for(int i = 0; i < BOARD_SIZE; i++)
-    {
-        for(int j = 0; j < BOARD_SIZE; j++)
-        {
-            this->m_data->m_gameArray[m_gameLevel][i][j] = tempArray[i][j];
-            this->m_data->m_ansArray[m_gameLevel][i][j] = gameArray[i][j];
-        }
-    }
-
-    this->m_data->m_bugDir[m_gameLevel] = bugDir;
-    this->m_data->m_bugPos[m_gameLevel] = QPoint(x, y);
-    this->m_data->m_stepArray[m_gameLevel] = step;
-
+    saveSolvableInfo(tempArray, gameArray, step, bugDir, QPoint(x, y));
     return true;
 }
 
 //终点建图
 bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
-    bool tempArray[BOARD_SIZE][BOARD_SIZE];
+    std::vector<std::vector<bool>> tempArray(BOARD_SIZE, std::vector<bool>(BOARD_SIZE));
     int tempStep = step;
     int dir = bugDir;
 
@@ -281,19 +345,8 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
     //将第一格的颜色改变
     tempArray[x][y] = !tempArray[x][y];
 
-    //将答案保存
-    for(int i = 0; i < BOARD_SIZE; i++)
-    {
-        for(int j = 0; j < BOARD_SIZE; j++)
-        {
-            this->m_data->m_gameArray[m_gameLevel][i][j] = gameArray[i][j];
-            this->m_data->m_ansArray[m_gameLevel][i][j] = tempArray[i][j];
-        }
-    }
-
-    this->m_data->m_bugDir[m_gameLevel] = dir;
-    this->m_data->m_bugPos[m_gameLevel] = pos;
-    this->m_data->m_stepArray[m_gameLevel] = step;
+    //将结果传给data
+    saveSolvableInfo(gameArray, tempArray, step, dir, pos);
 
     return true;
 }
@@ -313,108 +366,7 @@ void AntGame::generateTipArray()
     }
 }
 
-//显示当前步数
-void AntGame::onShowCurrentSteps()
-{
-    if(!m_currentStepsLabel)
-    {
-        m_currentStepsLabel = new QLabel(this);
-    }
-
-    setLabelStyle(m_currentStepsLabel);
-
-    m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
-    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
-    m_currentStepsLabel->show();
-}
-
-//获取总时间
-int AntGame::getTotalTime() const
-{
-    //计算总时间
-    int totalTime = m_passingTime;
-    totalTime += m_penaltyTime;
-
-    return totalTime;
-}
-
-//初始化bug
-void AntGame::initBugInfo()
-{
-    //初始化虫子所在位置、方向 750 400 游戏步数
-    m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
-    m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
-    m_bugDir = m_data->m_bugDir[m_gameLevel];
-    m_gameStep = m_data->m_stepArray[m_gameLevel];
-}
-
-//显示bug
-void AntGame::showBug()
-{
-    QPushButton * bugBtn = new QPushButton(this);
-
-    //移动bug
-    //虫子所在坐标轴与窗口长宽不对应
-    bugBtn->move(BOARDPOSX + m_bugPos.y() * (GRIDSIZE + 1), BOARDPOSY + m_bugPos.x() * (GRIDSIZE + 1));
-
-    //加载图片
-    QString pixStr = QString(BUGPATH).arg(m_bugDir);
-    m_bugPix.load(pixStr);
-    bugBtn->setFixedSize(m_bugPix.size());
-    bugBtn->setIconSize(m_bugPix.size());
-    bugBtn->setIcon(QIcon(m_bugPix));
-    bugBtn->setStyleSheet("QPushButton{border:0px}");  //设置不规则图形
-
-    //设置属性
-    bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
-    bugBtn->setEnabled(false);  //设置不能点击
-}
-
-//初始化步数label
-void AntGame::showStepLabel()
-{
-    //步数说明
-    QLabel * stepLabel = new QLabel(this);
-    setLabelStyle(stepLabel);
-
-    stepLabel->setText("本关步数: " + QString::number(this->m_gameStep));
-    stepLabel->move(150, 360);
-}
-
-//判断是否胜利
-bool AntGame::isWin() const
-{
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            if(m_ansArray[i][j] != m_gameArray[i][j])
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-//更新时间
-void AntGame::updateTime()
-{
-    int secs = m_elapsedTimer.elapsed() / 1000;
-    m_passingTime = secs;
-
-    int mins = secs / 60;
-    int hours = mins / 60;
-    secs %= 60;
-    mins %= 60;
-    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
-
-    secs = m_penaltyTime % 60;
-    mins = m_penaltyTime / 60 % 60;
-    hours = m_penaltyTime / 3600;
-    m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
-}
+//----------------------------------私有槽--------------------------------------------
 
 //提交
 void AntGame::onSubmitBtnClicked()
@@ -439,7 +391,7 @@ void AntGame::onSubmitBtnClicked()
     else
     {
         QMessageBox::about(this, "失败", "答案错误，罚时30秒");
-        this->resetGame(); //重置棋盘
+        this->onResetBtnClicked(); //重置棋盘
         this->m_penaltyTime += 30; //罚时增加
     }
 }
@@ -462,4 +414,37 @@ void AntGame::onBoardClicked(int x, int y)
 {
     updateCurrentSteps(++m_currentSteps);
     AbstractGameScene::onBoardClicked(x, y);
+}
+
+//显示当前步数
+void AntGame::onShowCurrentSteps()
+{
+    if(!m_currentStepsLabel)
+    {
+        m_currentStepsLabel = new QLabel(this);
+    }
+
+    setLabelStyle(m_currentStepsLabel);
+
+    m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
+    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
+    m_currentStepsLabel->show();
+}
+
+//更新时间
+void AntGame::onUpdateTime()
+{
+    int secs = m_elapsedTimer.elapsed() / 1000;
+    m_passingTime = secs;
+
+    int mins = secs / 60;
+    int hours = mins / 60;
+    secs %= 60;
+    mins %= 60;
+    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+
+    secs = m_penaltyTime % 60;
+    mins = m_penaltyTime / 60 % 60;
+    hours = m_penaltyTime / 3600;
+    m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
 }

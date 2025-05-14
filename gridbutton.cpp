@@ -1,6 +1,8 @@
 #include "gridbutton.h"
 #include "config.h"
 
+//----------------------------------构造析构--------------------------------------------
+
 GridButton::GridButton(bool flag, QWidget *parent)
     : QPushButton{parent}, m_flag(flag)
 {
@@ -25,6 +27,8 @@ GridButton::GridButton(bool flag, QWidget *parent)
         emit beClicked(m_posx, m_posy);
     });
 };
+
+//----------------------------------公有方法--------------------------------------------
 
 void GridButton::changeFlag()
 {

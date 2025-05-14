@@ -6,6 +6,8 @@
 #include <sstream>
 #include <QMessageBox>
 
+//----------------------------------构造析构--------------------------------------------
+
 BaseWindow::BaseWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::BaseWindow)
@@ -66,12 +68,16 @@ BaseWindow::~BaseWindow()
     delete ui;
 }
 
+//----------------------------------保护方法--------------------------------------------
+
 void BaseWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
     painter.drawPixmap(0, 0, m_background);
 }
+
+//----------------------------------保护槽--------------------------------------------
 
 //显示兰顿蚂蚁游戏说明
 void BaseWindow::onShowAntRule()

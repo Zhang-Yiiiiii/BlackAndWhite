@@ -1,11 +1,11 @@
 #ifndef HEXAGON_H
 #define HEXAGON_H
 
-/*
+/*****************************************************************
  * class: Hexagon （六边形）
  *
  * 用处: 作为主界面的选关按钮、传递被点击时的关卡数
- */
+ *****************************************************************/
 
 #include <QWidget>
 #include <QMainWindow>
@@ -24,7 +24,11 @@ class Hexagon : public QPushButton
 {
     Q_OBJECT
 public:
+    //------------------------构造析构----------------------------------
+
     Hexagon(int id, QPushButton * parent = nullptr);
+
+    //------------------------公有方法----------------------------------
 
     //设置序号
     Hexagon* setId(int id);
@@ -40,13 +44,17 @@ public:
 
 private:
 
+    //------------------------私有属性----------------------------------
+
     //按钮序号
     int m_id = 0;
 
     //边长
-    const int m_sideLength = 48;
+    const static int m_sideLength = 48;
 
 signals:
+
+    //------------------------信号----------------------------------
 
     //被点击时告诉主场景
     void beClicked(int gameLevel);

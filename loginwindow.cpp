@@ -1,6 +1,9 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include <QDebug>
+#include "config.h"
+
+//----------------------------------构造析构--------------------------------------------
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent)
@@ -54,6 +57,25 @@ LoginWindow::LoginWindow(QWidget *parent)
 
 }
 
+LoginWindow::~LoginWindow()
+{
+    delete ui;
+}
+
+//----------------------------------公共方法--------------------------------------------
+
+QString LoginWindow::getUserName()
+{
+    return this->m_userName;
+}
+
+QString LoginWindow::getUserPassword()
+{
+    return this->m_password;
+}
+
+//----------------------------------保护方法--------------------------------------------
+
 void LoginWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
@@ -73,25 +95,13 @@ void LoginWindow::paintEvent(QPaintEvent*)
 
 }
 
+//关闭事件
 void LoginWindow::closeEvent(QCloseEvent*)
 {
     emit this->userClose();
 }
 
-LoginWindow::~LoginWindow()
-{
-    delete ui;
-}
-
-QString LoginWindow::getUserName()
-{
-    return this->m_userName;
-}
-
-QString LoginWindow::getUserPassword()
-{
-    return this->m_password;
-}
+//----------------------------------私有槽--------------------------------------------
 
 //用户确定登录
 void LoginWindow::onLoginAccount()

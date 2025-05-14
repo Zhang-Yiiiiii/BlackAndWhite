@@ -1,12 +1,12 @@
 #ifndef USERMANAGER_H
 #define USERMANAGER_H
 
-/*
+/*****************************************************************
  * class: UserManager （用户管理者）
  *
  * 用处: 读取文件中的用户信息、修改用户通关记录、对关卡的最短通关时间排序
  *      将新信息保存进入文件
- */
+ *****************************************************************/
 
 #include <QString>
 #include <QDebug>
@@ -19,12 +19,17 @@
 class UserManager
 {
 public:
-    //构造和析构
+    //------------------------构造析构----------------------------------
+
     UserManager();
     ~UserManager();
 
+    //------------------------公共属性----------------------------------
+
     //排行榜数组
     QVector<std::pair<QString, int>> m_rankList;
+
+    //------------------------公共方法----------------------------------
 
     //验证用户信息 返回值等于1：用户不存在 2：密码错误 3：登录成功
     int verifyUserInfo(QString name, QString password);
@@ -45,6 +50,8 @@ public:
     UserManager* updateUserTime(QString username, int totalTime, int level);
 
 private:
+    //------------------------私有属性----------------------------------
+
     //记录用户人数
     int m_userNum = 0;
 
@@ -53,6 +60,8 @@ private:
 
     //判断文件是否为空
     bool m_fileIsEmpty = true;
+
+    //------------------------私有方法----------------------------------
 
     //初始化用户
     UserManager* initUser();
