@@ -40,5 +40,7 @@
         <file>icon/closeTip.png</file>
         <file>icon/showTip.png</file>
         <file>icon/rank.png</file>
+        <file>music/music.mp3</file>
+        <file>image/listenMusic.jpg</file>
     </qresource>
 </RCC>

@@ -10,6 +10,7 @@ release/lightoutgame.o
 release/loginwindow.o
 release/main.o
 release/mainscene.o
+release/musicplayer.o
 release/mypushbutton.o
 release/onlinewindow.o
 release/ranklist.o
@@ -26,5 +27,6 @@ release/moc_hexagon.o
 release/moc_lightoutgame.o
 release/moc_loginwindow.o
 release/moc_mainscene.o
+release/moc_musicplayer.o
 release/moc_onlinewindow.o
 release/moc_ranklist.o

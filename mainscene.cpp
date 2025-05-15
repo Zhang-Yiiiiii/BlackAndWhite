@@ -9,7 +9,6 @@
 MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
 {
-    this->setAttribute(Qt::WA_DeleteOnClose);
 
     QPoint pos(350, 100);
 
@@ -83,6 +82,9 @@ MainScene::MainScene(QWidget *parent)
 
     //设置动画
     setAnimations();
+
+    //设置音乐播放器
+    setMusicPlayer(new MusicPlayer(this));
 }
 
 MainScene::~MainScene()
@@ -214,6 +216,8 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
     {
         m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
+
+    m_gameScene->setMusicPlayer(m_musicPlayer); //设置音乐播放器
 
     Animator::transition(this, m_gameScene, 300); //使用动画进入
 

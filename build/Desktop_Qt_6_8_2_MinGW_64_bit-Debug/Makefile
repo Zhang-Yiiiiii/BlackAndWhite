@@ -119,6 +119,12 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_linguist.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimedia.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediatestlibprivate_private.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_network.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_network_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_opengl.pri \
@@ -162,6 +168,7 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
@@ -211,6 +218,8 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickvectorimagegenerator_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri \
+		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_sql.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_sql_private.pri \
 		../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_svg.pri \
@@ -258,7 +267,9 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 		../../../../qt/6.8.2/mingw_64/mkspecs/features/yacc.prf \
 		../../../../qt/6.8.2/mingw_64/mkspecs/features/lex.prf \
 		../../BlackAndWhiteBlock.pro \
+		../../../../qt/6.8.2/mingw_64/lib/Qt6MultimediaWidgets.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Widgets.prl \
+		../../../../qt/6.8.2/mingw_64/lib/Qt6Multimedia.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Gui.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Network.prl \
 		../../../../qt/6.8.2/mingw_64/lib/Qt6Core.prl \
@@ -315,6 +326,12 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_linguist.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimedia.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediatestlibprivate_private.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_network.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_network_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_opengl.pri:
@@ -358,6 +375,7 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quick_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri:
@@ -407,6 +425,8 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickvectorimagegenerator_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri:
+../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_sql.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_sql_private.pri:
 ../../../../qt/6.8.2/mingw_64/mkspecs/modules/qt_lib_svg.pri:
@@ -454,7 +474,9 @@ Makefile: ../../BlackAndWhiteBlock.pro ../../../../qt/6.8.2/mingw_64/mkspecs/win
 ../../../../qt/6.8.2/mingw_64/mkspecs/features/yacc.prf:
 ../../../../qt/6.8.2/mingw_64/mkspecs/features/lex.prf:
 ../../BlackAndWhiteBlock.pro:
+../../../../qt/6.8.2/mingw_64/lib/Qt6MultimediaWidgets.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Widgets.prl:
+../../../../qt/6.8.2/mingw_64/lib/Qt6Multimedia.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Gui.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Network.prl:
 ../../../../qt/6.8.2/mingw_64/lib/Qt6Core.prl:

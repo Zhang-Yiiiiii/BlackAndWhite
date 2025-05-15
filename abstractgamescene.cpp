@@ -29,29 +29,6 @@ AbstractGameScene::~AbstractGameScene()
         delete m_data;
         m_data = nullptr;
     }
-
-    for(auto &btn : m_tipsButtons)
-    {
-        btn = nullptr;
-    }
-
-    for(size_t i = 0; i < m_board.size(); i++)
-    {
-        for(size_t j = 0; j < m_board[i].size(); j++)
-        {
-            m_board[i][j] = nullptr;
-        }
-    }
-
-    submitBtn = nullptr;
-    randomBtn = nullptr;
-    backBtn = nullptr;
-    resetBtn = nullptr;
-    m_timeLabel = nullptr;
-    m_showTimer = nullptr;
-    m_rankWindow = nullptr;
-    m_usermanager = nullptr;    //主界面传入的不用释放
-
 }
 
 //----------------------------------公有方法--------------------------------------------

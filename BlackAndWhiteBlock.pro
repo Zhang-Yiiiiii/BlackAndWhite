@@ -1,7 +1,11 @@
 QT       += core gui
 QT       += network
 
+
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+QT       += multimedia multimediawidgets
 
 CONFIG += c++17
 
@@ -22,6 +26,7 @@ SOURCES += \
     loginwindow.cpp \
     main.cpp \
     mainscene.cpp \
+    musicplayer.cpp \
     mypushbutton.cpp \
     onlinewindow.cpp \
     ranklist.cpp \
@@ -41,6 +46,7 @@ HEADERS += \
     lightoutgame.h \
     loginwindow.h \
     mainscene.h \
+    musicplayer.h \
     mypushbutton.h \
     onlinewindow.h \
     ranklist.h \

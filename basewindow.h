@@ -11,6 +11,7 @@
 #include <QMenuBar>
 #include <QPixmap>
 #include <QPainter>
+#include "musicplayer.h"
 
 namespace Ui
 {
@@ -28,6 +29,11 @@ public:
     explicit BaseWindow(QWidget *parent = nullptr);
     ~BaseWindow();
 
+    //------------------------公共方法----------------------------------
+
+    //设置音乐播放器
+    void setMusicPlayer(MusicPlayer*);
+
 protected:
 
     //------------------------保护属性----------------------------------
@@ -39,10 +45,13 @@ protected:
     QMenu* m_gameMenu;    //游戏菜单
     QMenu* m_toolMenu;    //工具菜单
 
-    QMenu* m_rule;     //说明菜单项
-    QAction* m_antRule;  //兰顿蚂蚁说明
+    QMenu* m_rule;              //说明菜单项
+    QAction* m_antRule;         //兰顿蚂蚁说明
     QAction* m_lightOutRule;    //熄灯游戏说明
-    QAction* m_quitAction;            //退出游戏菜单项
+    QAction* m_quitAction;      //退出游戏菜单项
+    QAction* m_musicAction;     //音乐菜单项
+
+    MusicPlayer* m_musicPlayer;  //音乐播放器
 
     //------------------------保护方法----------------------------------
 

@@ -19,7 +19,6 @@ BaseWindow::BaseWindow(QWidget *parent) :
     this->setWindowTitle(MYTITLE);              //设置标题
     this->setWindowIcon(QIcon(MYICON));         //设置图标
     this->m_background.load(BACKGROUDPATH);     //提前加载背景图片
-    this->setAttribute(Qt::WA_DeleteOnClose);   //设置自动释放内存
 
     //设置菜单栏
     m_menubar = menuBar();
@@ -53,19 +52,18 @@ BaseWindow::BaseWindow(QWidget *parent) :
 
 BaseWindow::~BaseWindow()
 {
-    // 不需要 delete，有 parent 管理
-    m_menubar = nullptr;
-
-    m_startMenu = nullptr;
-    m_gameMenu = nullptr;
-    m_toolMenu = nullptr;
-
-    m_rule = nullptr;
-    m_antRule = nullptr;
-    m_lightOutRule = nullptr;
-    m_quitAction = nullptr;
-
     delete ui;
+}
+
+//----------------------------------公共方法--------------------------------------------
+
+//设置音乐播放器
+void BaseWindow::setMusicPlayer(MusicPlayer *musicPlayer)
+{
+    //设置菜单
+    m_quitAction = m_menubar->addAction("音乐");
+    m_musicPlayer = musicPlayer;
+    connect(m_quitAction, &QAction::triggered, m_musicPlayer, &QWidget::show);
 }
 
 //----------------------------------保护方法--------------------------------------------
