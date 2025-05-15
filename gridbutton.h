@@ -1,52 +1,39 @@
+// gridbutton.h
 #ifndef GRIDBUTTON_H
 #define GRIDBUTTON_H
 
-/*****************************************************************
- * class: GridButton （格子按钮）
- *
- * 用处: 作为游戏界面的棋盘、记录格子的正反情况、记录格子标号
- *****************************************************************/
-
-#include <QWidget>
 #include <QPushButton>
 #include <QPixmap>
+#include <QPropertyAnimation>
 
 class GridButton : public QPushButton
 {
     Q_OBJECT
+    Q_PROPERTY(int rotationAngle READ rotationAngle WRITE setRotationAngle NOTIFY rotationAngleChanged)
 public:
-
-    //------------------------构造析构----------------------------------
-
     explicit GridButton(bool flag, QWidget *parent = nullptr);
-
-    //------------------------公有方法----------------------------------
-
-    //改变正反
     void changeFlag();
-
-    //设置格子标号
     GridButton* setPos(int posx, int posy);
 
+    int rotationAngle() const;
+    void setRotationAngle(int angle);
+
 private:
-
-    //------------------------私有属性----------------------------------
-
-    //格子标号
     int m_posx = 0;
     int m_posy = 0;
-
-    //加载图片
-    QPixmap m_pix;
-
-    //标志正反
-    bool m_flag = true;   //true 表示格子为白色 false表示格子为黑色
+    QPixmap m_frontPix;
+    QPixmap m_backPix;
+    bool m_flag = true;
+    bool m_animating = false;
+    bool m_targetFlag;
+    int m_rotationAngle = 0;
 
 signals:
-
-    //------------------------信号----------------------------------
-
     void beClicked(int x, int y);
+    void rotationAngleChanged();
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // GRIDBUTTON_H

@@ -1,61 +1,107 @@
+// gridbutton.cpp
 #include "gridbutton.h"
 #include "config.h"
-
-//----------------------------------构造析构--------------------------------------------
+#include <QPainter>
+#include <QPropertyAnimation>
 
 GridButton::GridButton(bool flag, QWidget *parent)
-    : QPushButton{parent}, m_flag(flag)
+    : QPushButton(parent), m_flag(flag)
 {
-    //加载图片 设置大小
-    if(flag)
-    {
-        m_pix.load(GRIDPATH1);    //根据flag加载图片
-    }
-    else
-    {
-        m_pix.load(GRIDPATH2);
-    }
+    m_frontPix.load(GRIDPATH1);  // 替换为实际路径
+    m_backPix.load(GRIDPATH2);   // 替换为实际路径
 
-    //设置大小和图标
-    this->setFixedSize(m_pix.size());
-    this->setIcon(m_pix);
-    this->setIconSize(m_pix.size());
+    QSize maxSize(qMax(m_frontPix.width(), m_backPix.width()),
+                  qMax(m_frontPix.height(), m_backPix.height()));
+    setFixedSize(maxSize);
 
-    //改写被点击的信号发送
+    setStyleSheet("background: transparent; border: none;");
+
     connect(this, &QPushButton::clicked, this, [ = ]()
     {
-        emit beClicked(m_posx, m_posy);
+        if(!m_animating)
+        {
+            emit beClicked(m_posx, m_posy);
+        }
     });
-};
+}
 
-//----------------------------------公有方法--------------------------------------------
+void GridButton::setRotationAngle(int angle)
+{
+    if (m_rotationAngle != angle)
+    {
+        m_rotationAngle = angle;
+        update();
+        emit rotationAngleChanged();
+    }
+}
 
 void GridButton::changeFlag()
 {
-
-    if(m_flag)  //现在是白色 改成黑色
+    if(m_animating)
     {
-        m_flag = false;
-        m_pix.load(GRIDPATH2);
-        this->setIcon(m_pix);
+        return;
+    }
+
+    m_targetFlag = !m_flag;
+    m_animating = true;
+
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "rotationAngle");
+    anim->setDuration(400);
+    anim->setEasingCurve(QEasingCurve::InOutQuad);
+    anim->setStartValue(0);
+    anim->setEndValue(180);
+
+    connect(anim, &QPropertyAnimation::finished, this, [ = ]()
+    {
+        m_flag = m_targetFlag;
+        m_animating = false;
+        setRotationAngle(0);
+        anim->deleteLater();
+    });
+
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void GridButton::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+    QTransform transform;
+    const QRect rect = this->rect();
+    const QPoint center = rect.center();
+
+    // 应用3D变换
+    transform.translate(center.x(), center.y());
+    transform.rotate(m_rotationAngle, Qt::YAxis);  // 使用Qt::YAxis
+    transform.translate(-center.x(), -center.y());
+
+    // 确定当前显示的图片
+    QPixmap currentPix;
+
+    if(m_rotationAngle <= 90)
+    {
+        currentPix = m_flag ? m_frontPix : m_backPix;
     }
     else
     {
-        m_flag = true;
-        m_pix.load(GRIDPATH1);
-        this->setIcon(m_pix);
+        currentPix = m_targetFlag ? m_frontPix : m_backPix;
     }
+
+    painter.setTransform(transform);
+    painter.drawPixmap(rect, currentPix);
 }
 
 GridButton* GridButton::setPos(int posx, int posy)
 {
-    if( posx < 0 || posy < 0)
-    {
-        return this;
-    }
-
     m_posx = posx;
     m_posy = posy;
-
     return this;
+}
+
+int GridButton::rotationAngle() const
+{
+    return m_rotationAngle;
 }
