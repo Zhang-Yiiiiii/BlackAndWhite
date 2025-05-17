@@ -31,6 +31,7 @@
 #include "loginwindow.h"
 #include "onlinewindow.h"
 #include "abstractgamescene.h"
+#include "mypushbutton.h"
 
 class MainScene : public BaseWindow
 {

@@ -41,6 +41,7 @@
         <file>icon/showTip.png</file>
         <file>icon/rank.png</file>
         <file>music/music.mp3</file>
-        <file>image/listenMusic.jpg</file>
+        <file>image/musicBackground.png</file>
+        <file>image/background.png</file>
     </qresource>
 </RCC>

@@ -9,6 +9,7 @@
 
 #include <QMainWindow>
 #include "abstractgamescene.h"
+#include "overlay.h"
 
 class AntGame : public AbstractGameScene
 {
@@ -23,6 +24,9 @@ public:
 
     //保存游戏数据
     void saveGame(BuildWay buildWay, int step, int x, int y, int direction);
+
+    //画图事件
+    void paintEvent(QPaintEvent* event) override;
 
 private:
 
@@ -41,7 +45,13 @@ private:
 
     int m_currentSteps = 0;         //当前步数
 
-    int m_penaltyTime = 0;          //罚时的秒数
+    int m_penaltyTime = 0;         //罚时的秒数
+
+    static bool m_isShowPath;      //是否显示路径
+
+    QVector<QPoint> m_path;        //路径数组
+
+    Overlay* m_overlay = nullptr;            //覆盖层
 
     //------------------------私有方法----------------------------------
 
@@ -67,6 +77,12 @@ private:
 
     void generateTipArray() override;   //生成提示数组
 
+    void recordPath();                  //记录路径
+
+    void generatePath();           //生成路径数组
+
+    void initOverlay();    //初始化覆盖层
+
 public slots:
 
     //------------------------私有槽----------------------------------
@@ -80,6 +96,12 @@ public slots:
     void onShowCurrentSteps();    //显示当前步数
 
     void onUpdateTime() override; //更新时间
+
+    void onShowPathClicked();   //显示路径
+
+    void onHidePathClicked();   //关闭路径
+
+    void onChooseColorClicked(); //选择路径颜色
 
 };
 

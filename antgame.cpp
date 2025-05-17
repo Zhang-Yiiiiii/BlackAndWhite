@@ -1,6 +1,9 @@
 #include "antgame.h"
+#include <QColorDialog>
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
+
+bool AntGame::m_isShowPath = false;
 
 //----------------------------------构造析构--------------------------------------------
 
@@ -36,6 +39,21 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     toolBar->addSeparator();
     QAction* currentStepsAction = toolBar->addAction("显示当前步数");     //显示当前步数
     connect(currentStepsAction, &QAction::triggered, this, &AntGame::onShowCurrentSteps);
+
+    //路径显示
+    QMenu* pathMenu = toolBar->addMenu("路径");
+    QAction* showPathAction = pathMenu->addAction("显示路径");
+    QAction* closePathAction = pathMenu->addAction("关闭路径");
+    connect(showPathAction, &QAction::triggered, this, &AntGame::onShowPathClicked);
+    connect(closePathAction, &QAction::triggered, this, &AntGame::onHidePathClicked);
+
+    QAction* chooseColorAction = pathMenu->addAction("路径颜色");
+    connect(chooseColorAction, &QAction::triggered, this, &AntGame::onChooseColorClicked);
+
+    recordPath();   //记录路径
+
+    initOverlay();  //初始化覆盖层
+
 }
 
 AntGame::~AntGame()
@@ -67,6 +85,22 @@ void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction)
 
     //进行返回操作
     emit changeBack();
+}
+
+void AntGame::paintEvent(QPaintEvent *event)
+{
+    BaseWindow::paintEvent(event);
+    QPainter painter(this);
+
+    if(m_isShowPath)
+    {
+        generatePath();
+    }
+    else
+    {
+
+    }
+
 }
 
 //----------------------------------私有方法--------------------------------------------
@@ -250,6 +284,12 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
             x++;
         }
 
+        //跃出格子
+        if(x >= BOARD_SIZE || x < 0 || y < 0 || y >= BOARD_SIZE)
+        {
+            return false;
+        }
+
         //改变方向
         if(tempArray[x][y])  //白色
         {
@@ -260,12 +300,6 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
         {
             bugDir += 3; //左转方向加三
             bugDir %= 4;
-        }
-
-        //跃出格子
-        if(x >= BOARD_SIZE || x < 0 || y < 0 || y >= BOARD_SIZE)
-        {
-            return false;
         }
     }
 
@@ -366,6 +400,45 @@ void AntGame::generateTipArray()
     }
 }
 
+//记录路径
+void AntGame::recordPath()
+{
+    for(auto &btns : m_board)
+    {
+        for(auto & btn : btns)
+        {
+            connect(btn, &GridButton::beClicked, this, [this, btn](int posx, int posy)
+            {
+                //像素坐标
+                QPoint pixPos = btn->mapTo(this, btn->rect().center());
+                m_path.append(pixPos);
+            });
+        }
+    }
+}
+
+//生成路径数组
+void AntGame::generatePath()
+{
+    if (!m_overlay || m_path.empty() || !m_isShowPath)
+    {
+        m_overlay->clearPath();
+        return;
+    }
+
+    // 更新覆盖层显示
+    m_overlay->setPath(m_path);
+}
+
+//初始化覆盖层
+void AntGame::initOverlay()
+{
+    // 创建覆盖层
+    m_overlay = new Overlay(this);
+    m_overlay->setGeometry(this->geometry());  // 初始大小匹配父窗口
+    m_overlay->raise();         // 提升到最上层
+}
+
 //----------------------------------私有槽--------------------------------------------
 
 //提交
@@ -407,6 +480,12 @@ void AntGame::onResetBtnClicked()
         m_penaltyTime += 30;
         updateCurrentSteps(0);
     }
+
+    //清除路径
+    m_path.clear();
+
+    //清除提示
+    clearTipsButton();
 }
 
 //棋盘被点击
@@ -447,4 +526,52 @@ void AntGame::onUpdateTime()
     mins = m_penaltyTime / 60 % 60;
     hours = m_penaltyTime / 3600;
     m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
+}
+
+//显示路径
+void AntGame::onShowPathClicked()
+{
+    if (!m_isShowPath)
+    {
+        m_isShowPath = true;
+        generatePath(); // 重新生成路径
+        m_overlay->update(); // 强制重绘覆盖层
+    }
+}
+
+//隐藏路径
+void AntGame::onHidePathClicked()
+{
+    if (m_isShowPath)
+    {
+        m_isShowPath = false;
+        m_overlay->clearPath(); // 清除路径数据
+        m_overlay->update();
+    }
+}
+
+//选择路径颜色
+void AntGame::onChooseColorClicked()
+{
+    // 弹出颜色选择对话框
+    QColor color = QColorDialog::getColor(
+                       Qt::red,                      // 默认颜色
+                       this,                        // 父窗口
+                       "选择路径颜色",               // 对话框标题
+                       QColorDialog::ShowAlphaChannel // 可选：允许选择透明度
+                   );
+
+    if (color.isValid())   // 用户点击了"确定"
+    {
+        // 更新覆盖层颜色
+        m_overlay->setPathColor(color);
+
+        // // 可选：将按钮背景色设置为当前颜色
+        // QString style = QString(
+        // "QPushButton { padding: 8px; background: %1; color: %2; }"
+        // ).arg(color.name()).arg(
+        // color.lightness() > 128 ? "black" : "white" // 自动调整文字颜色
+        // );
+        // m_btnChooseColor->setStyleSheet(style);
+    }
 }

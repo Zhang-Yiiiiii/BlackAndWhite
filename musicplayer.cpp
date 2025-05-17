@@ -232,7 +232,7 @@ void MusicPlayer::paintEvent(QPaintEvent* event)
     Q_UNUSED(event);
     QPainter painter(this);
 
-    QPixmap bg(":/image/listenMusic.jpg");
+    QPixmap bg(":/image/musicBackground.png");
 
     if (bg.isNull())
     {

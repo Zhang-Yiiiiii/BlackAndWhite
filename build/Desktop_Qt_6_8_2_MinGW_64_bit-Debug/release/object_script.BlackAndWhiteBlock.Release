@@ -13,6 +13,7 @@ release/mainscene.o
 release/musicplayer.o
 release/mypushbutton.o
 release/onlinewindow.o
+release/overlay.o
 release/ranklist.o
 release/user.o
 release/usermanager.o
@@ -29,4 +30,5 @@ release/moc_loginwindow.o
 release/moc_mainscene.o
 release/moc_musicplayer.o
 release/moc_onlinewindow.o
+release/moc_overlay.o
 release/moc_ranklist.o

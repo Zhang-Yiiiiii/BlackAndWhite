@@ -29,6 +29,7 @@ SOURCES += \
     musicplayer.cpp \
     mypushbutton.cpp \
     onlinewindow.cpp \
+    overlay.cpp \
     ranklist.cpp \
     user.cpp \
     usermanager.cpp
@@ -49,6 +50,7 @@ HEADERS += \
     musicplayer.h \
     mypushbutton.h \
     onlinewindow.h \
+    overlay.h \
     ranklist.h \
     user.h \
     usermanager.h

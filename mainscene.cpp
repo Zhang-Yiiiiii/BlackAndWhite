@@ -305,10 +305,7 @@ void MainScene::showBuildDialog(BuildWay buildWay)
 // 创建保存地图按钮
 void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, BuildWay buildWay)
 {
-    QPushButton *saveBtn = new QPushButton(m_gameScene);
-    saveBtn->setText("保 存");
-    saveBtn->setFont(QFont("华文新魏", 15));
-    saveBtn->setFixedSize(120, 50);
+    QPushButton *saveBtn = MyPushButton::createButton(MyPushButton::commonButton, "保存", m_gameScene);
     saveBtn->move(BACKGROUDWIDTH - saveBtn->width(), BACKGROUDHEIGHT - 4 * saveBtn->height());
     saveBtn->show();
 

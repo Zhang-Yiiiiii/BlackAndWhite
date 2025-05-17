@@ -38,6 +38,10 @@ void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameAr
             m_ansArray[gameLevel][i][j] = ans[i][j];
         }
     }
+
+    //保存至文件
+    saveAntData();
+    saveLightData();
 }
 
 void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans, int step, int dir, QPoint pos)
@@ -63,6 +67,10 @@ void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameAr
     m_bugDir[gameLevel] = dir;
     m_bugPos[gameLevel] = pos;
     m_stepArray[gameLevel] = step;
+
+    //保存至文件
+    saveAntData();
+    saveLightData();
 }
 
 //----------------------------------私有方法--------------------------------------------

@@ -13,6 +13,7 @@ debug/mainscene.o
 debug/musicplayer.o
 debug/mypushbutton.o
 debug/onlinewindow.o
+debug/overlay.o
 debug/ranklist.o
 debug/user.o
 debug/usermanager.o
@@ -29,4 +30,5 @@ debug/moc_loginwindow.o
 debug/moc_mainscene.o
 debug/moc_musicplayer.o
 debug/moc_onlinewindow.o
+debug/moc_overlay.o
 debug/moc_ranklist.o

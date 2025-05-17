@@ -12,7 +12,7 @@ BuildMapDialog::BuildMapDialog(QWidget *parent)
     this->setWindowTitle("自建地图");
 
     //设置关闭属性 防止内存泄露
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    //this->setAttribute(Qt::WA_DeleteOnClose);
 
     //点击确定按钮 获取 lineEdit 信息
     connect(this->ui->confirmButton, &QPushButton::clicked, this, &BuildMapDialog::onConfirmButtonClicked);
@@ -135,5 +135,5 @@ void BuildMapDialog::onConfirmButtonClicked()
 
     //信息正确
     emit this->getedInfo();
-    this->close();
+    this->hide();
 }
