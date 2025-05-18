@@ -37,7 +37,7 @@ public:
     int getId() const;
 
     //获取边长
-    int getSideLength() const;
+    static int getSideLength();
 
     //重写绘图函数
     void paintEvent(QPaintEvent *event) override;
@@ -50,7 +50,7 @@ private:
     int m_id = 0;
 
     //边长
-    const static int m_sideLength = 48;
+    const static int sideLength = 48;
 
 signals:
 

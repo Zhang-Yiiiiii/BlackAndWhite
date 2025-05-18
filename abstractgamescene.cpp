@@ -272,10 +272,15 @@ void AbstractGameScene::resetGame()
     {
         for(int j = 0; j < m_boardCol; j++)
         {
-            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j])  //有些格子被点击了
+            //分开判断 因为在求解过程中可能导致两者装态不一致
+            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j])
+            {
+                m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+            }
+
+            if(m_board[i][j]->getFlag() != m_data->m_gameArray[m_gameLevel][i][j])
             {
                 m_board[i][j]->changeFlag();
-                m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
             }
         }
     }

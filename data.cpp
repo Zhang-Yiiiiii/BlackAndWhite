@@ -84,6 +84,7 @@ void Data::saveData(int gameLevel, const std::vector<std::vector<bool> >& gameAr
 // 20*20 的gameArray
 // 20*20 的ansArray
 //
+//
 //熄灯游戏
 // 关卡数
 // gameArray
@@ -95,6 +96,10 @@ void Data::getData()
 {
     getAntGameData();
     getLightGameData();
+
+    //保存至文件
+    saveAntData();
+    saveLightData();
 }
 
 void Data::getAntGameData()
@@ -189,6 +194,11 @@ void Data::getLightGameData()
             break;
         }
 
+        // if(gameLevel >= 48)
+        // {
+        // break;
+        // }
+
         int rows = gameLevel - ANTGAMENUMBER + 3;
         int cols = gameLevel - ANTGAMENUMBER + 3;
 
@@ -233,6 +243,28 @@ void Data::getLightGameData()
     }
 
     ifs.close();
+
+    // 增加游戏关卡
+
+    // int level = 48;
+
+    // for(int i = 0; i < 5; i++)
+    // {
+
+    // int rows = level - ANTGAMENUMBER + 3;
+    // int cols = level - ANTGAMENUMBER + 3;
+
+    // QVector<QVector<bool >> v1(rows, QVector<bool>(cols, 1)); //游戏数组
+    // QVector<QVector<bool >> v2(rows, QVector<bool>(cols, 1));  //答案数组
+
+    // m_gameArray.insert(level, v1);
+    // m_ansArray.insert(level, v2);
+
+    // level++;
+    // m_lightGameLevel++;
+
+    // }
+
 }
 
 void Data::saveAntData()

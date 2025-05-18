@@ -126,7 +126,8 @@ void MainScene::showSelectBtn()
 {
     //六边形起始点
     int posx = 950;
-    const int length = m_selectBtns[0]->getSideLength();
+    const int length = Hexagon::getSideLength();
+
     int x = 950;
     int y = 200;
 
@@ -176,10 +177,12 @@ void MainScene::showSelectBtn()
     //显示lightGame的选关按钮
     posx = 400;
     x = 400;
-    y = 250;
+    y = 200;
     int level = ANTGAMENUMBER;
 
-    for(int i = 0; i < 4; i++)
+    const int rows = 5;
+
+    for(int i = 0; i < rows; i++)
     {
         for(int j = 0; j <= i; j++)
         {
@@ -273,9 +276,9 @@ void MainScene::buildAntGame(BuildWay buildWay)
 //自建light地图
 void MainScene::buildLightGame()
 {
-    int level = QInputDialog::getInt(this, "建立熄灯游戏", "请输入关卡数38-47");
+    int level = QInputDialog::getInt(this, "建立熄灯游戏", "请输入关卡数38-52");
 
-    if(level > 47 || level < 38)    //判断关卡是否输入正确
+    if(level > SELECTBTNNUMBER || level <= ANTGAMENUMBER)    //判断关卡是否输入正确
     {
         QToolTip::showText(this->rect().center(), "关卡数不正确", this);
         return;

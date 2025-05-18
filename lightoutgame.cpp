@@ -36,38 +36,39 @@ void LightOutGame::initClickRecord()
 }
 
 //翻转格子
-void LightOutGame::flipCells(const int x, const int y)
+void LightOutGame::flipCells(const int x, const int y, bool isShowAnimation)
 {
+    auto flip = [this, isShowAnimation](int x, int y)
+    {
+        m_board[x][y]->changeFlag(isShowAnimation);
+        m_gameArray[x][y] = !m_gameArray[x][y];
+    };
+
     //翻转自身
-    m_board[x][y]->changeFlag();
-    m_gameArray[x][y] = !m_gameArray[x][y];
+    flip(x, y);
 
     //翻转左边
     if(y - 1 >= 0)
     {
-        m_board[x][y - 1]->changeFlag();
-        m_gameArray[x][y - 1] = !m_gameArray[x][y - 1];
+        flip(x, y - 1);
     }
 
     //翻转上面
     if(x - 1 >= 0)
     {
-        m_board[x - 1][y]->changeFlag();
-        m_gameArray[x - 1][y] = !m_gameArray[x - 1][y];
+        flip(x - 1, y);
     }
 
     //翻转右边
     if(y + 1 < m_boardCol)
     {
-        m_board[x][y + 1]->changeFlag();
-        m_gameArray[x][y + 1] = !m_gameArray[x][y + 1];
+        flip(x, y + 1);
     }
 
     //翻转下面
     if(x + 1 < m_boardRow)
     {
-        m_board[x + 1][y]->changeFlag();
-        m_gameArray[x + 1][y] = !m_gameArray[x + 1][y];
+        flip(x + 1, y);
     }
 }
 
@@ -82,6 +83,7 @@ bool LightOutGame::isSolvable()
     bool flag = false;
 
     const int maxSolveGameLevel = 42;
+
     if(m_gameLevel < maxSolveGameLevel)    //42关之前使用枚举求解 这样有最小步数
     {
         flag = partialEnumeration(gameArray, ans);
@@ -95,7 +97,7 @@ bool LightOutGame::isSolvable()
     //判断
     if(!flag)
     {
-        return flag;
+        return false;
     }
 
     //计算答案
@@ -244,7 +246,7 @@ bool LightOutGame::linearAlgebra_solve(const std::vector<std::vector<bool >> & b
 }
 
 //部分枚举法求解
-bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& b, std::vector<int>& x)
+bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& gameArray, std::vector<int>& x)
 {
     int n = m_boardCol;
 
@@ -309,7 +311,7 @@ bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& b, 
             }
         }
 
-        m_gameArray.assign(b.begin(), b.end());
+        m_gameArray.assign(gameArray.begin(), gameArray.end());
     }
 
     //得到最终解
@@ -344,13 +346,6 @@ bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& b, 
     return false;    //没有找到解
 }
 
-// //保存数据
-// void LightOutGame::saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans)
-// {
-//     //将结果传给data
-// m_data->saveData(m_gameLevel, gameArray, ans);
-// }
-
 //计算总时间
 int LightOutGame::getTotalTime() const
 {
@@ -382,6 +377,7 @@ void LightOutGame::saveGame()
     while(!isSolvable())  //不可解
     {
         QMessageBox::about(this, "提醒", "该设计无解，请重新设计");
+        resetGame();
         return;
     }
 
@@ -421,4 +417,26 @@ void LightOutGame::onBoardClicked(int x, int y)
         m_board[x][y]->changeFlag();
         m_gameArray[x][y] = !m_gameArray[x][y];
     }
+}
+
+//随机生成地图按钮被点击
+void LightOutGame::onRandomBtnClicked()
+{
+    //记录当前模式
+    BuildWay mode = m_gameMode;
+    m_gameMode = playMode;  //实现熄灯游戏的周围翻转
+
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(std::rand() % 2) //对该格子随机进行翻转
+            {
+                flipCells(i, j, false);
+            }
+        }
+    }
+
+    //还原模式
+    m_gameMode = mode;
 }

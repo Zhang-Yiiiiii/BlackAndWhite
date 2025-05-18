@@ -35,7 +35,7 @@ void GridButton::setRotationAngle(int angle)
     }
 }
 
-void GridButton::changeFlag()
+void GridButton::changeFlag(bool isShowAnimation)
 {
     if(m_animating)
     {
@@ -47,6 +47,12 @@ void GridButton::changeFlag()
 
     QPropertyAnimation *anim = new QPropertyAnimation(this, "rotationAngle");
     anim->setDuration(400);
+
+    if(!isShowAnimation)    //主要是在随机生成中，翻转太快导致无法翻转
+    {
+        anim->setDuration(0);
+    }
+
     anim->setEasingCurve(QEasingCurve::InOutQuad);
     anim->setStartValue(0);
     anim->setEndValue(180);
@@ -99,6 +105,11 @@ GridButton* GridButton::setPos(int posx, int posy)
     m_posx = posx;
     m_posy = posy;
     return this;
+}
+
+bool GridButton::getFlag() const
+{
+    return m_flag;
 }
 
 int GridButton::rotationAngle() const

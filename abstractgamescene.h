@@ -207,7 +207,7 @@ signals:
     void sceneShow();
 
 public slots:
-    //------------------------私有槽----------------------------------
+    //------------------------公共槽----------------------------------
 
     //棋盘被点击
     virtual void onBoardClicked(int x, int y);
@@ -219,7 +219,7 @@ public slots:
     virtual void onResetBtnClicked();
 
     //随机生成地图按钮被点击
-    void onRandomBtnClicked();
+    virtual void onRandomBtnClicked();
 
     //更新显示时间
     virtual void onUpdateTime();

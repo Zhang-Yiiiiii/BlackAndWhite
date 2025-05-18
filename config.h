@@ -14,9 +14,9 @@
 #define CONNECTICONPAHT ":/icon/link.png"               //联机图标路径
 #define DISCONNECTICONPATH ":/icon/disconnect.png"      //断开联机图标
 
-#define SELECTBTNNUMBER 47                              //选关按钮数量
+#define SELECTBTNNUMBER 52                              //选关按钮数量
 #define ANTGAMENUMBER 37                                //兰顿蚂蚁的关卡数
-#define LIGHTGAMEBUMBER 10                              //熄灯游戏的关卡数
+#define LIGHTGAMEBUMBER 15                              //熄灯游戏的关卡数
 #define LIGHTOUTRULE "D:/QtProjects/BlackAndWhiteBlock/LightOutRule.txt" //熄灯游戏 说明文件
 #define ANTGAMERULE "D:/QtProjects/BlackAndWhiteBlock/AntGameRule.txt"  //兰顿蚂蚁 说明文件
 

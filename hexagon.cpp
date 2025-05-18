@@ -34,9 +34,9 @@ int Hexagon::getId() const
     return m_id;
 }
 
-int Hexagon::getSideLength() const
+int Hexagon::getSideLength()
 {
-    return m_sideLength;
+    return sideLength;
 }
 
 //重写绘图事件
@@ -51,7 +51,7 @@ void Hexagon::paintEvent(QPaintEvent *event)
     // 创建一个六边形的 QPainterPath
     QPainterPath hexagonPath;
     QRect rect = contentsRect();
-    const int sideLength = m_sideLength; // 六边形的边长
+    const int sideLength = Hexagon::sideLength; // 六边形的边长
     const int radius = sideLength ;  // 六边形的外接圆半径
 
     // 计算六边形的顶点

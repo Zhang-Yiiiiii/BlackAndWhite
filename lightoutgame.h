@@ -42,13 +42,13 @@ private:
     void initClickRecord();
 
     //翻转周围格子
-    void flipCells(const int x, const int y);
+    void flipCells(const int x, const int y, bool isShowAnimation = true);
 
     //是否可解
     bool isSolvable();
 
     //线性方程组求解
-    bool linearAlgebra_solve(const std::vector<std::vector<bool >>& b, std::vector<int>& x);
+    bool linearAlgebra_solve(const std::vector<std::vector<bool >>& gameArray, std::vector<int>& x);
 
     //部分枚举法求解
     bool partialEnumeration(const std::vector<std::vector<bool >> & b, std::vector<int>& x);
@@ -71,6 +71,9 @@ public slots:
 
     //重写棋盘被点击的槽函数
     void onBoardClicked(int x, int y) override;
+
+    //随机生成地图按钮被点击
+    void onRandomBtnClicked() override;
 
 };
 
