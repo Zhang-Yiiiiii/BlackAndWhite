@@ -12,7 +12,7 @@
 #include <bitset>
 #include "abstractgamescene.h"
 
-using row = std::bitset<257>;
+using row = std::bitset<500>;
 
 class LightOutGame : public AbstractGameScene
 {

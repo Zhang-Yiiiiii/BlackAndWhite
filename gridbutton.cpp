@@ -46,7 +46,7 @@ void GridButton::changeFlag(bool isShowAnimation)
     m_animating = true;
 
     QPropertyAnimation *anim = new QPropertyAnimation(this, "rotationAngle");
-    anim->setDuration(400);
+    anim->setDuration(300);
 
     if(!isShowAnimation)    //主要是在随机生成中，翻转太快导致无法翻转
     {

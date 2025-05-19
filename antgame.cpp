@@ -1,5 +1,6 @@
 #include "antgame.h"
 #include <QColorDialog>
+#include <QToolTip>
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
 
@@ -33,6 +34,11 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
     showPushButton();   //显示提交、返回、重置按钮
 
     showStepLabel();    //显示步数label
+
+    //逐步提示按钮
+    MyPushButton* showHintBtn = MyPushButton::createButton(MyPushButton::commonButton, "逐步提示", this);
+    showHintBtn->move(BACKGROUDWIDTH - showHintBtn->width(), BACKGROUDHEIGHT - 4 * showHintBtn->height());
+    connect(showHintBtn, &MyPushButton::clicked, this, &AntGame::onShowHintBtnClicked);
 
     //工具菜单
     QMenu* toolBar = qobject_cast<QMenu*>(m_menubar->children().at(3));
@@ -311,6 +317,8 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
 //终点建图
 bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
 {
+    m_hintArray.clear();
+
     std::vector<std::vector<bool>> tempArray(BOARD_SIZE, std::vector<bool>(BOARD_SIZE));
     int tempStep = step;
     int dir = bugDir;
@@ -374,6 +382,9 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
         {
             return false;
         }
+
+        //将数据保存至逐步提示数组
+        m_hintArray.append(QPoint(x, y));
     }
 
     //将第一格的颜色改变
@@ -412,6 +423,14 @@ void AntGame::recordPath()
                 //像素坐标
                 QPoint pixPos = btn->mapTo(this, btn->rect().center());
                 m_path.append(pixPos);
+
+                //判断是否点击的是提示格子
+                if(m_isHinting && hintSteps < m_hintArray.size())
+                    if(posx != m_hintArray[hintSteps].x() && posy != m_hintArray[hintSteps].y())
+                    {
+                        m_isHinting = false;
+                        hintSteps = 0;
+                    }
             });
         }
     }
@@ -437,6 +456,24 @@ void AntGame::initOverlay()
     m_overlay = new Overlay(this);
     m_overlay->setGeometry(this->geometry());  // 初始大小匹配父窗口
     m_overlay->raise();         // 提升到最上层
+}
+
+//棋盘是否是最初状态
+bool AntGame::isBoardInitial()
+{
+    for(int i = 0; i < m_boardRow; i++)
+    {
+        for(int j = 0; j < m_boardCol; j++)
+        {
+            if(m_gameArray[i][j] != m_data->m_gameArray[m_gameLevel][i][j])
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+
 }
 
 //----------------------------------私有槽--------------------------------------------
@@ -484,8 +521,11 @@ void AntGame::onResetBtnClicked()
     //清除路径
     m_path.clear();
 
-    //清除提示
+    //清除答案数组
     clearTipsButton();
+
+    //清楚逐步提示步数
+    hintSteps = 0;
 }
 
 //棋盘被点击
@@ -574,4 +614,51 @@ void AntGame::onChooseColorClicked()
         // );
         // m_btnChooseColor->setStyleSheet(style);
     }
+}
+
+//逐步显示提示
+void AntGame::onShowHintBtnClicked()
+{
+    if(!isBoardInitial() && !m_isHinting)
+    {
+        QPoint pos = QPoint(this->rect().width() / 2, 500);
+        QToolTip::showText(pos, "请先重置棋盘", this, rect(), 500);
+        return;
+    }
+    else if(isBoardInitial() && !m_isHinting)
+    {
+        destinationMaping(m_gameArray, m_bugPos, m_bugDir, m_gameStep); //求解步数
+        hintSteps = 0;
+        m_isHinting = true;
+    }
+
+    if(hintSteps >= m_gameStep)
+    {
+        return;
+    }
+
+    if(m_hintBtn)
+    {
+        m_hintBtn->deleteLater();
+    }
+
+    m_hintBtn = MyPushButton::createButton(MyPushButton::tipButton, "", this);
+
+    //棋盘位置
+    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+
+    int row = m_hintArray[hintSteps].x();    //行
+    int col = m_hintArray[hintSteps].y();    //列
+
+    m_hintBtn->move(x + (GRIDSIZE + 1)*col, y + (GRIDSIZE + 1)*row);
+    m_hintBtn->show();
+
+    connect(m_hintBtn, &QPushButton::clicked, m_hintBtn, [ = ]()
+    {
+        m_board[row][col]->click();
+        m_hintBtn->hide();
+        hintSteps++;
+    });
+
 }

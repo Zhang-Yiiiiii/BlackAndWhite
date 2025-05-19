@@ -12,11 +12,11 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     rankAction->setIcon(QIcon(RANKLISHICONPAHT));
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::onRankActionClicked);
 
-    QAction* tipAction = m_toolMenu->addAction("显示提示");     //显示提示
+    QAction* tipAction = m_toolMenu->addAction("显示答案");     //显示提示
     tipAction->setIcon(QIcon(SHOWTIPICONPATH));
     connect(tipAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
 
-    QAction* closeTipAction = m_toolMenu->addAction("关闭提示");   //关闭提示
+    QAction* closeTipAction = m_toolMenu->addAction("关闭答案");   //关闭提示
     closeTipAction->setIcon(QIcon(CLOSETIPICONPATH));
     connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
 }
@@ -284,6 +284,8 @@ void AbstractGameScene::resetGame()
             }
         }
     }
+
+    emit resetGameSignal();
 }
 
 //初始化按钮

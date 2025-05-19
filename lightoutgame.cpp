@@ -25,6 +25,8 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
     showPushButton();   //显示提交、返回、重置按钮
 
     initClickRecord();  //初始化点击记录数组
+
+    connect(this, &LightOutGame::resetGameSignal, this, &LightOutGame::initClickRecord); //清空点击数组
 }
 
 //----------------------------------公有方法--------------------------------------------
@@ -32,6 +34,7 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
 //初始化点击数组
 void LightOutGame::initClickRecord()
 {
+    m_clickRecord.clear();
     m_clickRecord.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
 }
 

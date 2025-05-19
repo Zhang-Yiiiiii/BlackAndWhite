@@ -206,6 +206,9 @@ signals:
     //显示信号
     void sceneShow();
 
+    //重置棋盘发出的信号
+    void resetGameSignal();
+
 public slots:
     //------------------------公共槽----------------------------------
 

@@ -10,6 +10,7 @@
 #include <QMainWindow>
 #include "abstractgamescene.h"
 #include "overlay.h"
+#include "mypushbutton.h"
 
 class AntGame : public AbstractGameScene
 {
@@ -53,6 +54,14 @@ private:
 
     Overlay* m_overlay = nullptr;            //覆盖层
 
+    QVector<QPoint> m_hintArray;    //逐步提示数组
+
+    int hintSteps = 0;                  //逐步提示的步数
+
+    bool m_isHinting = false;             //是否正在逐步提示
+
+    MyPushButton* m_hintBtn = nullptr;    //逐步提示按钮
+
     //------------------------私有方法----------------------------------
 
     void initGameInfo() override;   //初始化游戏信息
@@ -83,6 +92,8 @@ private:
 
     void initOverlay();    //初始化覆盖层
 
+    bool isBoardInitial();  //棋盘是否是最初状态
+
 public slots:
 
     //------------------------私有槽----------------------------------
@@ -102,6 +113,8 @@ public slots:
     void onHidePathClicked();   //关闭路径
 
     void onChooseColorClicked(); //选择路径颜色
+
+    void onShowHintBtnClicked(); //逐步显示提示按钮被点击
 
 };
 
