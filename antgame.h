@@ -46,7 +46,7 @@ private:
 
     int m_currentSteps = 0;         //当前步数
 
-    int m_penaltyTime = 0;         //罚时的秒数
+    //int m_penaltyTime = 0;         //罚时的秒数
 
     static bool m_isShowPath;      //是否显示路径
 
@@ -64,15 +64,15 @@ private:
 
     //------------------------私有方法----------------------------------
 
-    void initGameInfo() override;   //初始化游戏信息
+    //void initGameInfo() override;   //初始化游戏信息
 
     void initBugInfo();             //初始化虫子信息
 
     void showBug();                 //显示虫子
 
-    void showTimeLabel() override;  //显示时间label
+    //void showTimeLabel() override;  //显示时间label
 
-    int getTotalTime() const override;    //获取总时间
+    //int getTotalTime() const override;    //获取总时间
 
     void showStepLabel();           //显示步数label
 
@@ -106,7 +106,7 @@ public slots:
 
     void onShowCurrentSteps();    //显示当前步数
 
-    void onUpdateTime() override; //更新时间
+    //void onUpdateTime() override; //更新时间
 
     void onShowPathClicked();   //显示路径
 

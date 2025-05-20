@@ -102,14 +102,17 @@ protected:
     //重置按钮
     QPushButton* resetBtn = nullptr;
 
-    //设置提交按钮
+    //提交按钮
     QPushButton* submitBtn = nullptr;
 
     //随机按钮
     QPushButton* randomBtn = nullptr;
 
-    //设置返回按钮
+    //返回按钮
     QPushButton* backBtn = nullptr;
+
+    //提示按钮
+    QAction* showAnswearAction = nullptr;
 
     //游戏模式
     BuildWay m_gameMode = playMode;
@@ -117,8 +120,14 @@ protected:
     //经过时间的秒数
     int m_passingTime = 0;
 
+    //罚时的秒数
+    int m_penaltyTime = 0;
+
     //时间label
     QLabel* m_timeLabel = nullptr;
+
+    //罚时
+    QLabel* m_timePenaltyLabel = nullptr;
 
     //计时器
     QElapsedTimer m_elapsedTimer;
@@ -144,13 +153,13 @@ protected:
     void initVector();
 
     //初始化游戏信息
-    virtual void initGameInfo();
+    void initGameInfo();
 
     //显示棋盘
-    virtual void showBoard(bool isVisible = true);
+    void showBoard(bool isVisible = true);
 
     //显示时间label
-    virtual void showTimeLabel();
+    void showTimeLabel();
 
     //初始化定时器
     void initTimer();
@@ -159,15 +168,15 @@ protected:
     int saveTotalTime();
 
     //获取用户当前总时间
-    virtual int getTotalTime() const = 0;
+    virtual int getTotalTime() const;
 
     //检验是否胜利
     virtual bool isWin() const = 0;
 
     //设置提交、返回、重置按钮
-    virtual void setSubmitBtn();
-    virtual void setBackBtn();
-    virtual void setResetBtn();
+    void setSubmitBtn();
+    void setBackBtn();
+    void setResetBtn();
     void setRandomBtn();    //设置随机生成地图按钮
 
     //重置棋盘

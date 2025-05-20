@@ -8,21 +8,27 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
 
-    initGameInfo();    //初始化游戏信息
+    // initGameInfo();    //初始化游戏信息
 
-    setAnimationType(Animator::SlideFromTop);   //设置动画效果是滑动
+    //setAnimationType(Animator::SlideFromTop);   //设置动画效果是滑动
 
-    showBoard(false);    //显示棋盘
+    // showBoard(false);    //显示棋盘
 
-    setAnimation(); //设置动画
+    // setAnimation(); //设置动画
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
 
-    initTimer();    //初始化定时器
+    // initTimer();    //初始化定时器
 
-    showTimeLabel();    //显示时间
+    // showTimeLabel();    //显示时间
 
-    showPushButton();   //显示提交、返回、重置按钮
+    // showPushButton();   //显示提交、返回、重置按钮
+
+    //点击答案按钮罚时
+    connect(showAnswearAction, &QAction::triggered, this, [this]()
+    {
+        m_penaltyTime += m_boardRow * m_boardCol * 30; //每个格子罚时半分钟
+    });
 
     initClickRecord();  //初始化点击记录数组
 

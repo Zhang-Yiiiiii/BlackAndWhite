@@ -12,13 +12,27 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     rankAction->setIcon(QIcon(RANKLISHICONPAHT));
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::onRankActionClicked);
 
-    QAction* tipAction = m_toolMenu->addAction("显示答案");     //显示提示
-    tipAction->setIcon(QIcon(SHOWTIPICONPATH));
-    connect(tipAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
+    showAnswearAction = m_toolMenu->addAction("显示答案");     //显示答案
+    showAnswearAction->setIcon(QIcon(SHOWTIPICONPATH));
+    connect(showAnswearAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
 
-    QAction* closeTipAction = m_toolMenu->addAction("关闭答案");   //关闭提示
+    QAction* closeTipAction = m_toolMenu->addAction("关闭答案");   //关闭答案
     closeTipAction->setIcon(QIcon(CLOSETIPICONPATH));
     connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
+
+    initGameInfo();    //初始化游戏信息
+
+    setAnimationType(rand() % 2 ? Animator::SlideFromTop : Animator::FadeIn); //设置动画效果
+
+    showBoard(false);    //显示棋盘
+
+    setAnimation(); //设置动画
+
+    showTimeLabel();    //显示时间label
+
+    initTimer();    //初始化定时器
+
+    showPushButton();   //显示提交、返回、重置按钮
 }
 
 AbstractGameScene::~AbstractGameScene()
@@ -157,6 +171,7 @@ void AbstractGameScene::initGameInfo()
         for(int j = 0; j < m_boardCol; j++)
         {
             m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+            m_ansArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
         }
     }
 }
@@ -196,6 +211,17 @@ void AbstractGameScene::showTimeLabel()
     m_timeLabel->setText("所用时间：00:00:00");
     m_timeLabel->move(150, 400);
     setLabelStyle(m_timeLabel);
+
+    //罚时label
+    if(!m_timePenaltyLabel)
+    {
+        m_timePenaltyLabel = new QLabel(this);
+    }
+
+    m_timePenaltyLabel = new QLabel(this);
+    setLabelStyle(m_timePenaltyLabel);
+    m_timePenaltyLabel->setText("所罚时间：00:00:00");
+    m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
 }
 
 //初始化定时器
@@ -219,6 +245,16 @@ int AbstractGameScene::saveTotalTime()
 
     //更新时间
     m_usermanager->updateUserTime(m_userName, totalTime, m_gameLevel);
+
+    return totalTime;
+}
+
+//获取总时间
+int AbstractGameScene::getTotalTime() const
+{
+    //计算总时间
+    int totalTime = m_passingTime;
+    totalTime += m_penaltyTime;
 
     return totalTime;
 }
@@ -310,7 +346,7 @@ void AbstractGameScene::setAnimation(int delay)
 
             if(safeBtn)
             {
-                auto ani = Animator::createAnimator(safeBtn, m_animationType, 700);
+                auto ani = Animator::createAnimator(safeBtn, m_animationType, 600);
                 QTimer::singleShot(startTime, ani, [ani]()
                 {
                     ani ->start();
@@ -408,11 +444,12 @@ void AbstractGameScene::onSubmitBtnClicked()
 //重置按钮被点击
 void AbstractGameScene::onResetBtnClicked()
 {
-    int ret = QMessageBox::question(this, "问题", "是否确定重置？");
+    int ret = QMessageBox::question(this, "问题", "是否确定重置？重置罚时30秒");
 
     if(ret == QMessageBox::Yes)
     {
         this->resetGame(); //进行重置
+        m_penaltyTime += 30;
     }
 }
 
@@ -444,16 +481,30 @@ void AbstractGameScene::onRandomBtnClicked()
 //更新显示时间
 void AbstractGameScene::onUpdateTime()
 {
-    //获取秒数
+    // //获取秒数
+    // int secs = m_elapsedTimer.elapsed() / 1000;
+    // m_passingTime = secs;
+
+    // //转换成时分
+    // int mins = secs / 60;
+    // int hours = mins / 60;
+    // secs %= 60;
+    // mins %= 60;
+    // m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+
     int secs = m_elapsedTimer.elapsed() / 1000;
     m_passingTime = secs;
 
-    //转换成时分
     int mins = secs / 60;
     int hours = mins / 60;
     secs %= 60;
     mins %= 60;
     m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+
+    secs = m_penaltyTime % 60;
+    mins = m_penaltyTime / 60 % 60;
+    hours = m_penaltyTime / 3600;
+    m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
 }
 
 //提示功能

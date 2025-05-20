@@ -1080,6 +1080,7 @@ debug/moc_antgame.cpp: ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPauseAnimation \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpauseanimation.h \
 		../../overlay.h \
+		../../mypushbutton.h \
 		debug/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/debug/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtMultimediaWidgets -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtMultimedia -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\antgame.h -o debug\moc_antgame.cpp
@@ -4542,8 +4543,11 @@ debug/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPauseAnimation \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpauseanimation.h \
 		../../overlay.h \
+		../../mypushbutton.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QColorDialog \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qcolordialog.h
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qcolordialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QToolTip \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtooltip.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\antgame.o ..\..\antgame.cpp
 
 debug/basewindow.o: ../../basewindow.cpp ../../basewindow.h \

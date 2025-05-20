@@ -13,27 +13,21 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
 
-    AntGame::initGameInfo();    //初始化游戏信息
-
     initBugInfo();   //初始化bug信息
 
     setAnimationType(rand() % 2 ? Animator::FadeIn : Animator::SlideFromTop); //设置动画
-
-    showBoard(false);    //显示棋盘
-
-    setAnimation(); //设置动画
 
     showBug();      //显示bug
 
     usermanager->userSort(gameLevel);    //对本关的用户进行排序
 
-    initTimer();    //初始化定时器
-
-    AntGame::showTimeLabel();    //显示时间label
-
-    showPushButton();   //显示提交、返回、重置按钮
-
     showStepLabel();    //显示步数label
+
+    //点击答案按钮罚时
+    connect(showAnswearAction, &QAction::triggered, this, [this]()
+    {
+        m_penaltyTime += m_gameStep * 60; //每一步罚时一分钟
+    });
 
     //逐步提示按钮
     MyPushButton* showHintBtn = MyPushButton::createButton(MyPushButton::commonButton, "逐步提示", this);
@@ -102,44 +96,40 @@ void AntGame::paintEvent(QPaintEvent *event)
     {
         generatePath();
     }
-    else
-    {
-
-    }
 
 }
 
 //----------------------------------私有方法--------------------------------------------
 
-//初始化游戏信息
-void AntGame::initGameInfo()
-{
-    //初始化游戏信息对象
-    if(!m_data)
-    {
-        m_data = new Data;
-    }
+// //初始化游戏信息
+// void AntGame::initGameInfo()
+// {
+//     //初始化游戏信息对象
+// if(!m_data)
+// {
+// m_data = new Data;
+// }
 
-    setboardSize(); //获取棋盘大小
+// setboardSize(); //获取棋盘大小
 
-    initVector();   //初始化棋盘vector
+// initVector();   //初始化棋盘vector
 
-    //初始化信息
-    for(int i = 0; i < m_boardRow; i++)
-    {
-        for(int j = 0; j < m_boardCol; j++)
-        {
-            m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
-            m_ansArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
-        }
-    }
+//     //初始化信息
+// for(int i = 0; i < m_boardRow; i++)
+// {
+// for(int j = 0; j < m_boardCol; j++)
+// {
+// m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
+// m_ansArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
+// }
+// }
 
-    //初始化虫子所在位置、方向 750 400 游戏步数
-    m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
-    m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
-    m_bugDir = m_data->m_bugDir[m_gameLevel];
-    m_gameStep = m_data->m_stepArray[m_gameLevel];
-}
+//     //初始化虫子所在位置、方向 750 400 游戏步数
+// m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
+// m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
+// m_bugDir = m_data->m_bugDir[m_gameLevel];
+// m_gameStep = m_data->m_stepArray[m_gameLevel];
+// }
 
 //初始化bug
 void AntGame::initBugInfo()
@@ -173,39 +163,39 @@ void AntGame::showBug()
     bugBtn->setEnabled(false);  //设置不能点击
 }
 
-//显示时间
-void AntGame::showTimeLabel()
-{
-    //显示用时的label
-    if(!m_timeLabel)
-    {
-        m_timeLabel = new QLabel(this);
-    }
+// //显示时间
+// void AntGame::showTimeLabel()
+// {
+//     //显示用时的label
+// if(!m_timeLabel)
+// {
+// m_timeLabel = new QLabel(this);
+// }
 
-    setLabelStyle(m_timeLabel);
-    m_timeLabel->setText("所用时间：00:00:00");
-    m_timeLabel->move(150, 400);
+// setLabelStyle(m_timeLabel);
+// m_timeLabel->setText("所用时间：00:00:00");
+// m_timeLabel->move(150, 400);
 
-    //罚时label
-    if(!m_timePenaltyLabel)
-    {
-        m_timePenaltyLabel = new QLabel(this);
-    }
+//     //罚时label
+// if(!m_timePenaltyLabel)
+// {
+// m_timePenaltyLabel = new QLabel(this);
+// }
 
-    setLabelStyle(m_timePenaltyLabel);
-    m_timePenaltyLabel->setText("所罚时间：00:00:00");
-    m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
-}
+// setLabelStyle(m_timePenaltyLabel);
+// m_timePenaltyLabel->setText("所罚时间：00:00:00");
+// m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
+// }
 
-//获取总时间
-int AntGame::getTotalTime() const
-{
-    //计算总时间
-    int totalTime = m_passingTime;
-    totalTime += m_penaltyTime;
+// //获取总时间
+// int AntGame::getTotalTime() const
+// {
+//     //计算总时间
+// int totalTime = m_passingTime;
+// totalTime += m_penaltyTime;
 
-    return totalTime;
-}
+// return totalTime;
+// }
 
 //初始化步数label
 void AntGame::showStepLabel()
@@ -426,7 +416,7 @@ void AntGame::recordPath()
 
                 //判断是否点击的是提示格子
                 if(m_isHinting && hintSteps < m_hintArray.size())
-                    if(posx != m_hintArray[hintSteps].x() && posy != m_hintArray[hintSteps].y())
+                    if(posx != m_hintArray[hintSteps].x() || posy != m_hintArray[hintSteps].y())
                     {
                         m_isHinting = false;
                         hintSteps = 0;
@@ -439,7 +429,11 @@ void AntGame::recordPath()
 //生成路径数组
 void AntGame::generatePath()
 {
-    if (!m_overlay || m_path.empty() || !m_isShowPath)
+    if(!m_overlay)
+    {
+        return;
+    }
+    else if (m_path.empty() || !m_isShowPath)
     {
         m_overlay->clearPath();
         return;
@@ -533,6 +527,11 @@ void AntGame::onBoardClicked(int x, int y)
 {
     updateCurrentSteps(++m_currentSteps);
     AbstractGameScene::onBoardClicked(x, y);
+
+    if(hintSteps == m_gameStep) //如果是已经提示到最后一步之后再次点击
+    {
+        m_isHinting = false;
+    }
 }
 
 //显示当前步数
@@ -551,22 +550,22 @@ void AntGame::onShowCurrentSteps()
 }
 
 //更新时间
-void AntGame::onUpdateTime()
-{
-    int secs = m_elapsedTimer.elapsed() / 1000;
-    m_passingTime = secs;
+// void AntGame::onUpdateTime()
+// {
+// int secs = m_elapsedTimer.elapsed() / 1000;
+// m_passingTime = secs;
 
-    int mins = secs / 60;
-    int hours = mins / 60;
-    secs %= 60;
-    mins %= 60;
-    m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
+// int mins = secs / 60;
+// int hours = mins / 60;
+// secs %= 60;
+// mins %= 60;
+// m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
 
-    secs = m_penaltyTime % 60;
-    mins = m_penaltyTime / 60 % 60;
-    hours = m_penaltyTime / 3600;
-    m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
-}
+// secs = m_penaltyTime % 60;
+// mins = m_penaltyTime / 60 % 60;
+// hours = m_penaltyTime / 3600;
+// m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
+// }
 
 //显示路径
 void AntGame::onShowPathClicked()
@@ -619,23 +618,28 @@ void AntGame::onChooseColorClicked()
 //逐步显示提示
 void AntGame::onShowHintBtnClicked()
 {
-    if(!isBoardInitial() && !m_isHinting)
+    if(!isBoardInitial() && !m_isHinting)   //棋盘不是最初状态 也不处于提示状态
     {
         QPoint pos = QPoint(this->rect().width() / 2, 500);
         QToolTip::showText(pos, "请先重置棋盘", this, rect(), 500);
         return;
     }
-    else if(isBoardInitial() && !m_isHinting)
+    else if(isBoardInitial() && !m_isHinting)   //棋盘是初始状态 但不是提示状态
     {
         destinationMaping(m_gameArray, m_bugPos, m_bugDir, m_gameStep); //求解步数
         hintSteps = 0;
         m_isHinting = true;
     }
 
-    if(hintSteps >= m_gameStep)
+    if(hintSteps == m_gameStep)
     {
         return;
     }
+
+    // else if(hintSteps > m_gameStep) //点击次数大于游戏步数
+    // {
+    // m_isHinting = false;
+    // }
 
     if(m_hintBtn)
     {
@@ -660,5 +664,8 @@ void AntGame::onShowHintBtnClicked()
         m_hintBtn->hide();
         hintSteps++;
     });
+
+    //罚时增加
+    m_penaltyTime += 30;
 
 }
