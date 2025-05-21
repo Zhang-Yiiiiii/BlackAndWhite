@@ -97,9 +97,6 @@ void Data::getData()
     getAntGameData();
     getLightGameData();
 
-    //保存至文件
-    saveAntData();
-    saveLightData();
 }
 
 void Data::getAntGameData()

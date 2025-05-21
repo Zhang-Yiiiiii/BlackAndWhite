@@ -6,12 +6,13 @@
 //----------------------------------构造析构--------------------------------------------
 
 LoginWindow::LoginWindow(QWidget *parent)
-    : QWidget(parent)
+    : QDialog(parent)
     , ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
 
     this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
+    //this->setAttribute(Qt::WA_DeleteOnClose);
 
     this->setFixedSize(517, 363);
 

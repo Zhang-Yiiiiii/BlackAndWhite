@@ -21,8 +21,8 @@ public:
     //------------------------公共方法----------------------------------
 
     //获取用户名和密码
-    QString getUserName();
-    QString getUserPassword();
+    QString getUserName() const;
+    QString getUserPassword() const;
 
     //设置用户名和密码
     User* setUserName(QString);

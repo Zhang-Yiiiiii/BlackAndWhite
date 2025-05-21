@@ -10,13 +10,14 @@
 #include <QWidget>
 #include <QPixmap>
 #include <QPainter>
+#include <QDialog>
 
 namespace Ui
 {
     class LoginWindow;
 }
 
-class LoginWindow : public QWidget
+class LoginWindow : public QDialog
 {
     Q_OBJECT
 

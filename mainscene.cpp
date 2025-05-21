@@ -10,6 +10,8 @@ MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
 {
 
+    this->setWindowIcon(QIcon(MYICON));
+
     QPoint pos(350, 100);
 
     QLabel* temp1 = new QLabel(this);
@@ -95,10 +97,10 @@ MainScene::~MainScene()
         m_usermanager = nullptr;
     }
 
-    if(m_loginWindow)
-    {
-        m_loginWindow->deleteLater();
-    }
+    // if(m_loginWindow)
+    // {
+    // m_loginWindow->deleteLater();
+    // }
 
 }
 
@@ -251,19 +253,19 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
 //显示登录对话框
 void MainScene::showLoginWindow()
 {
+
     if(!m_loginWindow)
     {
-        m_loginWindow = new LoginWindow();  //不指定父窗口，否则主窗口隐藏时 登录界面也会隐藏
+        m_loginWindow = new LoginWindow(this);    //不指定父窗口，否则主窗口隐藏时 登录界面也会隐藏
     }
 
     m_loginWindow->setWindowIcon(QIcon(MYICON));
     m_loginWindow->move((this->width() - m_loginWindow->width()) / 2, (this->height() - m_loginWindow->height()) / 2);
 
-    this->hide();
     m_loginWindow->show();
 
     //关闭对话框时重新显示主页面
-    connect(m_loginWindow, &LoginWindow::userClose, this, &MainScene::show, Qt::UniqueConnection);
+    //connect(m_loginWindow, &LoginWindow::userClose, this, &MainScene::show, Qt::UniqueConnection);
 }
 
 //自建ant地图
@@ -465,10 +467,10 @@ void MainScene::onUserConfirmLogin()
         m_userName = m_loginWindow->getUserName();
         m_password = m_loginWindow->getUserPassword();
 
-        this->show();
+        //this->show();
         m_loginWindow->close();
-        delete m_loginWindow;
-        m_loginWindow = nullptr;
+        //delete m_loginWindow;
+        //m_loginWindow = nullptr;
     }
     else if(ret == 2) //密码错误
     {
@@ -499,6 +501,7 @@ void MainScene::onUserConfirmRegister()
     {
         //显示提示信息
         QToolTip::showText(pos, "用户名或密码长度不正确", this, this->rect(), 5000);
+
         return;
     }
 
@@ -516,10 +519,10 @@ void MainScene::onUserConfirmRegister()
         this->m_userName = name;
         this->m_password = pwd;
 
-        this->show();
-        m_loginWindow->close();
+        // this->show();
+        m_loginWindow->hide();
 
-        m_loginWindow->deleteLater();
+        //m_loginWindow->deleteLater();
 
         //添加用户信息
         this->m_usermanager->addUser(this->m_userName, this->m_password);
