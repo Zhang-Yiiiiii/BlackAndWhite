@@ -4,7 +4,7 @@
 /************主场景资源配置数据******************/
 #define BACKGROUDWIDTH 1500                             //背景宽
 #define BACKGROUDHEIGHT 800                             //背景高
-#define BACKGROUDPATH ":/image/mainScene.jpg"           //背景图片
+#define BACKGROUDPATH ":/image/newbackground.png"           //背景图片
 #define MYTITLE "非黑即白"                               //窗口标题
 
 #define MYICON ":/icon/debug1.png"                      //窗口图标

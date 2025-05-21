@@ -42,6 +42,8 @@ public:
 
     void closeEvent(QCloseEvent*) override;
 
+    void checkPasswordLength(const QString &password);
+
 private:
     //------------------------私有属性----------------------------------
 

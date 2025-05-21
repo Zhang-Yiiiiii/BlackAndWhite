@@ -72,6 +72,7 @@ void BaseWindow::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
+
     painter.drawPixmap(0, 0, m_background);
 }
 

@@ -83,7 +83,7 @@ MainScene::MainScene(QWidget *parent)
     showSelectBtn();
 
     //设置动画
-    setAnimations();
+    //setAnimations();
 
     //设置音乐播放器
     setMusicPlayer(new MusicPlayer(this));
@@ -224,7 +224,7 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
 
     m_gameScene->setMusicPlayer(m_musicPlayer); //设置音乐播放器
 
-    Animator::transition(this, m_gameScene, 300); //使用动画进入
+    Animator::transition(this, m_gameScene); //使用动画进入
 
     // 监听返回信号
     connect(m_gameScene, &AbstractGameScene::changeBack, this, &MainScene::onGameSceneChangeBack);
@@ -427,7 +427,7 @@ void MainScene::onGameSceneChangeBack()
 {
     m_gameScene->setInternalClose(true);  //确定是内部进行返回的
 
-    Animator::transition(m_gameScene, this, 300);
+    Animator::transition(m_gameScene, this);
 
     // 在淡入完成后再销毁游戏场景
     connect(m_gameScene, &AbstractGameScene::sceneShow, this, [this]()

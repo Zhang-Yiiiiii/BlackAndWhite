@@ -52,6 +52,25 @@ private:
     //边长
     const static int sideLength = 48;
 
+    QColor m_fillColor = Qt::white;
+    QColor m_textColor = Qt::black;
+
+    // 背景图（只加载一次）
+    QPixmap backgroundPixmap = QPixmap(":/image/newbackground.png");
+
+    // // 添加到 private:
+    // QColor m_backgroundColor = Qt::white; // 采样到的背景颜色
+    // QColor m_fillColor = Qt::white;       // 填充颜色（反色）
+    // QColor m_textColor = Qt::black;       // 文字颜色（反色）
+
+    // // 获取背景颜色的亮度（0~255）
+    // int getBackgroundLuminance() const;
+
+    // // 判断颜色是否偏亮（亮度阈值可调）
+    // bool isLightBackground() const;
+
+    void sampleBackgroundColor();
+
 signals:
 
     //------------------------信号----------------------------------

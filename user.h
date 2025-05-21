@@ -33,6 +33,11 @@ public:
     //游戏记录
     QMap<int, int> m_gameRecord;    //关卡-最短通关时间
 
+    static const int nameMinLen = 1;
+    static const int nameMaxLen = 10;
+    static const int pwdMinLen = 6;
+    static const int pwdMaxLen = 12;
+
 private:
     //------------------------私有属性----------------------------------
 
@@ -41,11 +46,6 @@ private:
 
     //密码
     QString m_password = "";
-
-    static const int nameMinLen = 1;
-    static const int nameMaxLen = 10;
-    static const int pwdMinLen = 6;
-    static const int pwdMaxLen = 12;
 
 };
 

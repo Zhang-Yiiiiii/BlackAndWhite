@@ -37,10 +37,10 @@ public:
     //------------------------静态方法----------------------------------
 
     // 创建动画
-    static Animator* createAnimator(QWidget* target, AnimationType type, int duration = 500);
+    static Animator* createAnimator(QWidget* target, AnimationType type, int duration = 400);
 
     // 场景切换：淡出旧场景后淡入新场景
-    static void transition(QWidget* from, QWidget* to, int duration = 400);
+    static void transition(QWidget* from, QWidget* to, int duration = 500);
 
     //------------------------公有方法----------------------------------
 

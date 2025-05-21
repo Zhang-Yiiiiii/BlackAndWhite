@@ -2,6 +2,7 @@
 #include "ui_loginwindow.h"
 #include <QDebug>
 #include "config.h"
+#include "user.h"
 
 //----------------------------------构造析构--------------------------------------------
 
@@ -56,6 +57,9 @@ LoginWindow::LoginWindow(QWidget *parent)
     //请求注册 按钮的点击
     connect(this->ui->registerButton, &QPushButton::clicked, this, &LoginWindow::onRequestRegister);
 
+    //检测密码长度
+    connect(ui->passwdEdit, &QLineEdit::textChanged, this, &LoginWindow::checkPasswordLength);
+
 }
 
 LoginWindow::~LoginWindow()
@@ -102,6 +106,40 @@ void LoginWindow::closeEvent(QCloseEvent*)
     emit this->userClose();
 }
 
+void LoginWindow::checkPasswordLength(const QString &password)
+{
+    const int currentLength = password.length();
+    const int PASSWORD_MAX_LENGTH = User::pwdMaxLen;
+    const int PASSWORD_MIN_LENGTH = User::pwdMinLen;
+
+    // 判断长度是否超限
+    if (currentLength > PASSWORD_MAX_LENGTH || currentLength < PASSWORD_MIN_LENGTH)
+    {
+        // 在checkPasswordLength函数中添加
+        // 设置背景色+红色边框（保留原有透明度背景）
+        this->ui->passwdEdit->setStyleSheet(
+            "QLineEdit {"
+            "   background-color: rgba(255, 255, 255, 100);"  // 保持原始背景
+            "   border: 2px solid red;"                       // 新增红色边框
+            "}"
+        );
+
+        // 显示红色警告
+        // ui->lengthWarningLabel->setText(QString("密码过长（最多%1位）").arg(PASSWORD_MAX_LENGTH));
+        // ui->lengthWarningLabel->setStyleSheet("color: red; font-size: 12px;");
+        // ui->lengthWarningLabel->show();
+    }
+    else
+    {
+        this->ui->passwdEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
+        // 隐藏提示或显示确认信息
+        //ui->lengthWarningLabel->hide();
+        // 可选：显示绿色确认提示
+        // ui->lengthWarningLabel->setText("✓ 长度符合要求");
+        // ui->lengthWarningLabel->setStyleSheet("color: green;");
+    }
+}
+
 //----------------------------------私有槽--------------------------------------------
 
 //用户确定登录
@@ -138,6 +176,7 @@ void LoginWindow::onBack()
     connect(this->ui->registerButton, &QPushButton::clicked, this, &LoginWindow::onRequestRegister);
     //将密码显示方式改成密码模式
     this->ui->passwdEdit->setEchoMode(QLineEdit::Password);
+
 }
 
 //用户点击注册账号按钮
