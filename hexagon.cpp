@@ -217,6 +217,8 @@ void Hexagon::paintEvent(QPaintEvent *event)
     buffer.fill(Qt::transparent);
 
     QPainter bufPainter(&buffer);
+    QPoint centerPt = rect.center(); // 中心点坐标
+    QColor centerColor; // 用于存储中心点颜色
 
     for (int y = 0; y < rect.height(); y += 1)
     {
@@ -243,17 +245,38 @@ void Hexagon::paintEvent(QPaintEvent *event)
 
             QColor fillColor = (bgColor.lightness() < 128) ? Qt::white : Qt::black;
             buffer.setPixelColor(x, y, fillColor);
+
+            // 记录中心点颜色
+            if (x == centerPt.x() && y == centerPt.y())
+            {
+                centerColor = fillColor;
+            }
         }
     }
 
     // 把像素图绘制到按钮上
     painter.drawImage(0, 0, buffer);
 
-    // 绘制文本（居中）
+    if (centerColor.isValid())
+    {
+        // 方法1：直接RGB反色（适用于纯黑/纯白）
+        m_textColor = QColor(255 - centerColor.red(),
+                             255 - centerColor.green(),
+                             255 - centerColor.blue());
+
+        // 方法2：亮度对比（更稳健）
+        // m_textColor = (centerColor.lightness() < 128) ? Qt::white : Qt::black;
+    }
+    else
+    {
+        m_textColor = Qt::red; // 备用颜色
+    }
+
+    //绘制文本（居中）
     QFont font("华文新魏", 15);
     font.setBold(true);
     painter.setFont(font);
-    painter.setPen(Qt::red); // 或自动反色处理
+    painter.setPen(m_textColor); // 或自动反色处理
 
     painter.drawText(rect, Qt::AlignCenter, this->text());
 }

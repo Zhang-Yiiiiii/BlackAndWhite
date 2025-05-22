@@ -197,6 +197,9 @@ protected:
     //设置label样式
     void setLabelStyle(QLabel* label);
 
+    //重写绘图事件
+    //void paintEvent(QPaintEvent * event) override;
+
     //重写showEvent
     void showEvent(QShowEvent* event) override;
 

@@ -20,6 +20,7 @@ SOURCES += \
     basewindow.cpp \
     buildmapdialog.cpp \
     data.cpp \
+    fancybaseplate.cpp \
     gridbutton.cpp \
     hexagon.cpp \
     lightoutgame.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     buildmapdialog.h \
     config.h \
     data.h \
+    fancybaseplate.h \
     gridbutton.h \
     hexagon.h \
     lightoutgame.h \

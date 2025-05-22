@@ -1,6 +1,7 @@
 #include "abstractgamescene.h"
 #include "config.h"
 #include "mypushbutton.h"
+#include "fancybaseplate.h"
 
 #include <QPointer>
 
@@ -23,6 +24,19 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     initGameInfo();    //初始化游戏信息
 
     setAnimationType(rand() % 2 ? Animator::SlideFromTop : Animator::FadeIn); //设置动画效果
+
+    //棋盘位置
+    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+
+    // 创建 8x8 棋盘，位置在 (50, 50)
+    FancyBasePlate* basePlate = new FancyBasePlate(
+        this,   // 父组件
+        QPoint(x, y), // 位置
+        m_boardRow,              // 行数
+        m_boardCol               // 列数
+    );
+    basePlate->show();
 
     showBoard(false);    //显示棋盘
 
@@ -385,6 +399,25 @@ void AbstractGameScene::setLabelStyle(QLabel *label)
                          "border-radius: 10px; }");
     label->setAlignment(Qt::AlignCenter);
 }
+
+// //重写绘图事件
+// void AbstractGameScene::paintEvent(QPaintEvent *event)
+// {
+// BaseWindow::paintEvent(event);
+
+// QPainter painter(this);
+
+//     //棋盘位置
+// int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+// int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+
+//     // 1. 绘制底盘（略大于矩阵）
+// QRect matrixRect = QRect(x - 100, y - 100, 500, 500); // 举例
+// QRect basePlateRect = matrixRect.adjusted(-2, -2, 2, 2);     // 四周扩张 2 像素
+
+// QColor baseColor = QColor(64, 64, 64, 64); // 深灰色底板，适配黑白背景
+// painter.fillRect(basePlateRect, baseColor);
+// }
 
 //重写显示事件
 void AbstractGameScene::showEvent(QShowEvent *event)
