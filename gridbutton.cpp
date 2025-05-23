@@ -7,12 +7,7 @@
 GridButton::GridButton(bool flag, QWidget *parent)
     : QPushButton(parent), m_flag(flag)
 {
-    m_frontPix.load(GRIDPATH1);  // 替换为实际路径
-    m_backPix.load(GRIDPATH2);   // 替换为实际路径
-
-    QSize maxSize(qMax(m_frontPix.width(), m_backPix.width()),
-                  qMax(m_frontPix.height(), m_backPix.height()));
-    setFixedSize(maxSize);
+    setFixedSize(GRIDSIZE, GRIDSIZE);
 
     setStyleSheet("background: transparent; border: none;");
 
@@ -81,23 +76,24 @@ void GridButton::paintEvent(QPaintEvent *event)
 
     // 应用3D变换
     transform.translate(center.x(), center.y());
-    transform.rotate(m_rotationAngle, Qt::YAxis);  // 使用Qt::YAxis
+    transform.rotate(m_rotationAngle, Qt::YAxis);
     transform.translate(-center.x(), -center.y());
 
-    // 确定当前显示的图片
-    QPixmap currentPix;
+    // 设置颜色而不是图片
+    QColor currentColor;
 
     if(m_rotationAngle <= 90)
     {
-        currentPix = m_flag ? m_frontPix : m_backPix;
+        currentColor = m_flag ? Qt::white : Qt::black;
     }
     else
     {
-        currentPix = m_targetFlag ? m_frontPix : m_backPix;
+        currentColor = m_targetFlag ? Qt::white : Qt::black;
     }
 
     painter.setTransform(transform);
-    painter.drawPixmap(rect, currentPix);
+    painter.fillRect(rect, currentColor);
+
 }
 
 GridButton* GridButton::setPos(int posx, int posy)
