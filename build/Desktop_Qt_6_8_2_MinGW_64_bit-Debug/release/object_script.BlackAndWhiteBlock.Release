@@ -1,6 +1,7 @@
 release/abstractgamescene.o
 release/animator.o
 release/antgame.o
+release/avatarwidget.o
 release/basewindow.o
 release/buildmapdialog.o
 release/data.o
@@ -18,10 +19,12 @@ release/overlay.o
 release/ranklist.o
 release/user.o
 release/usermanager.o
+release/userutils.o
 release/qrc_res.o
 release/moc_abstractgamescene.o
 release/moc_animator.o
 release/moc_antgame.o
+release/moc_avatarwidget.o
 release/moc_basewindow.o
 release/moc_buildmapdialog.o
 release/moc_fancybaseplate.o

@@ -1,6 +1,7 @@
 debug/abstractgamescene.o
 debug/animator.o
 debug/antgame.o
+debug/avatarwidget.o
 debug/basewindow.o
 debug/buildmapdialog.o
 debug/data.o
@@ -18,10 +19,12 @@ debug/overlay.o
 debug/ranklist.o
 debug/user.o
 debug/usermanager.o
+debug/userutils.o
 debug/qrc_res.o
 debug/moc_abstractgamescene.o
 debug/moc_animator.o
 debug/moc_antgame.o
+debug/moc_avatarwidget.o
 debug/moc_basewindow.o
 debug/moc_buildmapdialog.o
 debug/moc_fancybaseplate.o

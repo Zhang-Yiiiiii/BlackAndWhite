@@ -39,7 +39,6 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     m_muteButton = new QPushButton(this);
 
     // 设置组件参数
-    //m_slider->setEnabled(false);
     m_volumeSlider->setRange(0, 100);  // 音量范围0-100%
     m_volumeSlider->setValue(50);      // 初始音量位置
     updatePlayPauseIcon();

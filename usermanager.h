@@ -35,6 +35,7 @@ public:
     bool addUser(const QString& userName, const QString& pwd);
     UserManager* updateUserTime(const QString& username, int totalTime, int level);
     UserManager* userSort(int level);
+    User* findUser(const QString& userName) const;
 
     QVector<std::pair<QString, int>> m_rankList;
 
@@ -50,7 +51,6 @@ private:
 
     UserManager* loadFromFile();
     UserManager* saveToFile() const;
-    User* findUser(const QString& userName) const;
     void releaseUsers();
 };
 

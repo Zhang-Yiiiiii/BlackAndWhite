@@ -31,7 +31,7 @@
 #include "loginwindow.h"
 #include "onlinewindow.h"
 #include "abstractgamescene.h"
-#include "mypushbutton.h"
+#include "avatarwidget.h"
 
 class MainScene : public BaseWindow
 {
@@ -43,6 +43,8 @@ public:
 
     MainScene(QWidget *parent = nullptr);
     ~MainScene();
+
+    // bool eventFilter(QObject *watched, QEvent *event ) override;
 
 private:
 
@@ -115,6 +117,10 @@ private:
 
     //比较联机双方结果
     void compareResults(int ourTime, int rivalTime);
+
+private:
+    AvatarWidget* m_avatarWidget;
+    User* m_currentUser;
 
 private slots:
     //------------------------私有槽----------------------------------

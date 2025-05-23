@@ -17,6 +17,7 @@ SOURCES += \
     abstractgamescene.cpp \
     animator.cpp \
     antgame.cpp \
+    avatarwidget.cpp \
     basewindow.cpp \
     buildmapdialog.cpp \
     data.cpp \
@@ -33,12 +34,14 @@ SOURCES += \
     overlay.cpp \
     ranklist.cpp \
     user.cpp \
-    usermanager.cpp
+    usermanager.cpp \
+    userutils.cpp
 
 HEADERS += \
     abstractgamescene.h \
     animator.h \
     antgame.h \
+    avatarwidget.h \
     basewindow.h \
     buildmapdialog.h \
     config.h \
@@ -55,7 +58,8 @@ HEADERS += \
     overlay.h \
     ranklist.h \
     user.h \
-    usermanager.h
+    usermanager.h \
+    userutils.h
 
 FORMS += \
     basewindow.ui \

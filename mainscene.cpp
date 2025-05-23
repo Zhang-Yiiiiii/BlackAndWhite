@@ -1,9 +1,14 @@
 #include "mainscene.h"
 
 #include <QGraphicsOpacityEffect>
+#include <QToolBar>
+#include <QBuffer>
 #include "lightoutgame.h"
 #include "antgame.h"
 #include "animator.h"
+#include "mypushbutton.h"
+#include "userutils.h"
+#include <QStandardPaths>
 
 //----------------------------------构造和析构--------------------------------------------
 MainScene::MainScene(QWidget *parent)
@@ -87,6 +92,14 @@ MainScene::MainScene(QWidget *parent)
 
     //设置音乐播放器
     setMusicPlayer(new MusicPlayer(this));
+
+    m_currentUser = UserUtils::findUserByName(m_userName);
+
+    // 你应该已经在构造函数中获取 currentUser（比如从登录页面传入）
+    m_avatarWidget = new AvatarWidget(m_currentUser, this);
+    m_avatarWidget->move(40, 40);  // 左上角
+    m_avatarWidget->show();
+
 }
 
 MainScene::~MainScene()

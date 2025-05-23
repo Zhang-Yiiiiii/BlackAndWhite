@@ -1,52 +1,94 @@
+// #include "user.h"
+
+// //----------------------------------构造析构--------------------------------------------
+
+// User::User() {}
+
+// //----------------------------------公共方法--------------------------------------------
+
+// QString User::getUserName() const
+// {
+// return m_userName;
+// }
+
+// QString User::getUserPassword() const
+// {
+// return m_password;
+// }
+
+// User* User::setUserName(const QString& name)
+// {
+// m_userName = name;
+// return this;
+// }
+
+// User* User::setUserPassword(const QString& password)
+// {
+// m_password = password;
+
+// return this;
+// }
+
+// user.cpp
 #include "user.h"
-#include "config.h"
-#include <QMessageBox>
 
-//----------------------------------构造析构--------------------------------------------
-
-User::User()
-{
-    //初始化
-    for(int i = 0; i < SELECTBTNNUMBER; i++)
-    {
-        m_gameRecord[i + 1] = -1;
-    }
-}
-
-//----------------------------------公共方法--------------------------------------------
+User::User() {}
 
 QString User::getUserName() const
 {
-    return this->m_userName;
+
+    return m_userName;
 }
 
 QString User::getUserPassword() const
 {
-    return this->m_password;
+
+    return m_password;
 }
 
-User* User::setUserName(QString name)
+QString User::getAvatarPath() const
 {
-    //判断名字长度是否合适
-    const int size = name.size();
 
-    //if(size >= nameMinLen && size <= nameMaxLen)
-    {
-        this->m_userName = name;
-    }
+    return m_avatarPath;
+}
 
+User* User::setUserName(const QString& name)
+{
+    m_userName = name.left(nameMaxLen);
     return this;
 }
 
-User* User::setUserPassword(QString pwd)
+User* User::setUserPassword(const QString& password)
 {
-    //判断密码长度是否合适
-    const int size = pwd.size();
+    m_password = password;
+    return this;
+}
 
-    //if(size >= pwdMinLen && size <= pwdMaxLen)
+User* User::setAvatarPath(const QString& path)
+{
+    m_avatarPath = path;
+    return this;
+}
+
+QString User::toTextLine() const
+{
+
+    return QString("%1,%2,%3").arg(m_userName, m_password, m_avatarPath);
+}
+
+User* User::fromTextLine(const QString& line)
+{
+
+    QStringList parts = line.split(",");
+
+    if (parts.size() >= 3)
     {
-        this->m_password = pwd;
+        User* user = new User();
+        user->setUserName(parts[0]);
+        user->setUserPassword(parts[1]);
+        user->setAvatarPath(parts[2]);
+        return user;
     }
 
-    return this;
+    return nullptr;
 }

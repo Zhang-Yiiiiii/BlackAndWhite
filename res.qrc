@@ -45,5 +45,6 @@
         <file>image/background.png</file>
         <file>image/MainBackground.png</file>
         <file>image/newbackground.png</file>
+        <file>image/default_avatar.png</file>
     </qresource>
 </RCC>
