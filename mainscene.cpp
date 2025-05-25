@@ -10,6 +10,8 @@
 #include "userutils.h"
 #include <QStandardPaths>
 
+const QPoint avatar_pos = QPoint(60, 60);
+
 //----------------------------------构造和析构--------------------------------------------
 MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
@@ -93,11 +95,10 @@ MainScene::MainScene(QWidget *parent)
     //设置音乐播放器
     setMusicPlayer(new MusicPlayer(this));
 
-    m_currentUser = UserUtils::findUserByName(m_userName);
-
     // 你应该已经在构造函数中获取 currentUser（比如从登录页面传入）
+    m_currentUser = UserUtils::findUserByName("default");   //默认用户名
     m_avatarWidget = new AvatarWidget(m_currentUser, this);
-    m_avatarWidget->move(40, 40);  // 左上角
+    m_avatarWidget->move(avatar_pos);  // 左上角
     m_avatarWidget->show();
 
 }
@@ -216,6 +217,11 @@ void MainScene::setAnimations()
     for(auto btn : m_selectBtns)
     {
         Animator * ani = Animator::createAnimator(btn, Animator::SlideFromTop);
+        ani->onFinished([ = ]()
+        {
+            ani->deleteLater();
+        });
+
         ani->start();
     }
 }
@@ -480,10 +486,12 @@ void MainScene::onUserConfirmLogin()
         m_userName = m_loginWindow->getUserName();
         m_password = m_loginWindow->getUserPassword();
 
-        //this->show();
         m_loginWindow->close();
-        //delete m_loginWindow;
-        //m_loginWindow = nullptr;
+
+        //显示头像
+        m_currentUser = UserUtils::findUserByName(m_userName);
+        m_avatarWidget->setUser(m_currentUser);
+
     }
     else if(ret == 2) //密码错误
     {
@@ -532,13 +540,13 @@ void MainScene::onUserConfirmRegister()
         this->m_userName = name;
         this->m_password = pwd;
 
-        // this->show();
         m_loginWindow->hide();
-
-        //m_loginWindow->deleteLater();
 
         //添加用户信息
         this->m_usermanager->addUser(this->m_userName, this->m_password);
+        m_currentUser = m_usermanager->findUser(m_userName);
+
+        UserUtils::saveSingleUser(m_currentUser);
     }
 }
 

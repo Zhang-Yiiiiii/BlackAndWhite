@@ -57,7 +57,7 @@ private:
     // void saveSolvableInfo(const std::vector<std::vector<bool> >&, const std::vector<std::vector<bool >> & );
 
     //获取用户当前总时间
-    int getTotalTime() const override;
+    //int getTotalTime() const override;
 
     //生成提示数组
     void generateTipArray() override;

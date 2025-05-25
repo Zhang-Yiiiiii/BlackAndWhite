@@ -67,15 +67,15 @@ public:
 
     QMap<int, int> m_gameRecord;
 
-    static const int nameMinLen = 1;
-    static const int nameMaxLen = 10;
+    static const int nameMinLen = 0;
+    static const int nameMaxLen = 20;
     static const int pwdMinLen = 6;
     static const int pwdMaxLen = 12;
 
 private:
     QString m_userName = "";
     QString m_password = "";
-    QString m_avatarPath = "";
+    QString m_avatarPath = ":/image/default_avatar.png";
 };
 
 #endif // USER_H

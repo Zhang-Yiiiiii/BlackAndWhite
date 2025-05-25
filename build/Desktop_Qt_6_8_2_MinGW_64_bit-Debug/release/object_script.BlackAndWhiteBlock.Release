@@ -6,6 +6,7 @@ release/basewindow.o
 release/buildmapdialog.o
 release/data.o
 release/fancybaseplate.o
+release/gamehelpdialog.o
 release/gridbutton.o
 release/hexagon.o
 release/lightoutgame.o
@@ -28,6 +29,7 @@ release/moc_avatarwidget.o
 release/moc_basewindow.o
 release/moc_buildmapdialog.o
 release/moc_fancybaseplate.o
+release/moc_gamehelpdialog.o
 release/moc_gridbutton.o
 release/moc_hexagon.o
 release/moc_lightoutgame.o

@@ -3,12 +3,15 @@
 #include "userutils.h"
 #include <QFileDialog>
 #include <QDir>
+#include <QSize>
+
+const QSize avatar_size = QSize(70, 70);
 
 AvatarWidget::AvatarWidget(User* user, QWidget* parent)
     : QLabel(parent), m_user(user)
 {
     setCursor(Qt::PointingHandCursor);
-    setFixedSize(64, 64);
+    setFixedSize(avatar_size);
     setScaledContents(true);
 
     if(!user)
@@ -24,7 +27,22 @@ AvatarWidget::AvatarWidget(User* user, QWidget* parent)
 
 QSize AvatarWidget::sizeHint() const
 {
-    return QSize(64, 64);
+    return QSize(avatar_size);
+}
+
+void AvatarWidget::setUser(User *user)
+{
+    m_user = user;
+
+    if(!user)
+    {
+        updateAvatar("");
+    }
+    else
+    {
+        updateAvatar(user->getAvatarPath());
+    }
+
 }
 
 void AvatarWidget::mousePressEvent(QMouseEvent* event)
@@ -46,7 +64,7 @@ void AvatarWidget::mousePressEvent(QMouseEvent* event)
 
             qDebug() << newFilePath;
 
-            QPixmap(filePath).scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation)
+            QPixmap(filePath).scaled(avatar_size, Qt::KeepAspectRatio, Qt::SmoothTransformation)
             .save(newFilePath);
 
             m_user->setAvatarPath(newFilePath);

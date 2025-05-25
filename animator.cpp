@@ -1,5 +1,6 @@
 #include "animator.h"
 #include<QPointer>
+#include <QAbstractAnimation>
 
 //----------------------------------静态方法--------------------------------------------
 
@@ -17,29 +18,29 @@ void Animator::transition(QWidget* from, QWidget* to, int duration)
 
     // 先淡出
     Animator* fadeOut = Animator::createAnimator(from, FadeOut, duration);
-    fadeOut->onFinished([from, to, duration]()
+
+    fadeOut->onStart([from, to, duration]()
     {
 
-        from->hide();
+        to->setGeometry(from->geometry());
+        //from->hide();
 
         // 再淡入
         Animator* fadeIn = Animator::createAnimator(to, FadeIn, duration);
-        fadeIn->onFinished([to]()
+        fadeIn->onFinished([from, to]()
         {
             // 清理特效
             //to->setGraphicsEffect(nullptr);
             to->raise();           // 保证窗口显示在最前
             to->activateWindow();  // 激活窗口防止主窗口缺失
+            from->hide();
 
         });
 
         to->setWindowOpacity(0);
-
-        to->setGeometry(from->geometry());
-
         to->show();
-
         fadeIn->start();
+
     });
 
     fadeOut->start();
@@ -68,6 +69,24 @@ Animator* Animator::onFinished(std::function<void()> callback)
     if (m_animation)
     {
         connect(m_animation, &QPropertyAnimation::finished, this, std::move(callback));
+    }
+
+    return this;
+}
+
+//动画开始的回调
+Animator* Animator::onStart(std::function<void ()> callback)
+{
+    if(m_animation)
+    {
+        connect(m_animation, &QAbstractAnimation::stateChanged,
+                [callback](QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
+        {
+            if (newState == QAbstractAnimation::Running && oldState == QAbstractAnimation::Stopped)
+            {
+                callback();
+            }
+        });
     }
 
     return this;

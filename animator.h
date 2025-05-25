@@ -40,12 +40,15 @@ public:
     static Animator* createAnimator(QWidget* target, AnimationType type, int duration = 400);
 
     // 场景切换：淡出旧场景后淡入新场景
-    static void transition(QWidget* from, QWidget* to, int duration = 500);
+    static void transition(QWidget* from, QWidget* to, int duration = 600);
 
     //------------------------公有方法----------------------------------
 
     // 动画完成回调
     Animator* onFinished(std::function<void()> callback);
+
+    //动画开始的操作
+    Animator* onStart(std::function<void()> callback);
 
     // 启动动画
     Animator* start();

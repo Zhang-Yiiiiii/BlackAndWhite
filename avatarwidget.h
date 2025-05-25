@@ -15,6 +15,8 @@ public:
     AvatarWidget(User* user, QWidget* parent = nullptr);
     QSize sizeHint() const override;
 
+    void setUser(User* user);
+
 protected:
     void mousePressEvent(QMouseEvent* event) override;
 

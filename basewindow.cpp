@@ -23,7 +23,7 @@ BaseWindow::BaseWindow(QWidget *parent) :
     //设置菜单栏
     m_menubar = menuBar();
     m_menubar->setParent(this);
-    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(217, 217, 217, 150); color: rgb(66, 66, 66);");
+    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(70, 70, 70, 0); color: black;");
 
     //设置菜单
     m_startMenu = m_menubar->addMenu("开始");
@@ -31,15 +31,20 @@ BaseWindow::BaseWindow(QWidget *parent) :
     m_toolMenu = m_menubar->addMenu("工具");
 
     //设置菜单项
-    //游戏说明
-    m_rule = m_gameMenu->addMenu("说明");
-    m_rule->setIcon(QIcon(INTRODUCTIONICONPATH));
+    //游戏帮助
+    m_rule = m_menubar->addMenu("帮助");
 
-    m_antRule = m_rule->addAction("兰顿蚂蚁");
-    m_lightOutRule = m_rule->addAction("熄灯游戏");
+    QAction* gameHelpAction = m_rule->addAction("游戏帮助");
+    gameHelpAction->setIcon(QIcon(INTRODUCTIONICONPATH));
 
-    connect(m_antRule, &QAction::triggered, this, &BaseWindow::onShowAntRule);
-    connect(m_lightOutRule, &QAction::triggered, this, &BaseWindow::onShowLightOutRule);
+    m_gameHelpDia = new GameHelpDialog(this);
+    connect(gameHelpAction, &QAction::triggered, m_gameHelpDia, &QDialog::show);
+
+    // m_antRule = m_rule->addAction("兰顿蚂蚁");
+    // m_lightOutRule = m_rule->addAction("熄灯游戏");
+
+    // connect(m_antRule, &QAction::triggered, this, &BaseWindow::onShowAntRule);
+    // connect(m_lightOutRule, &QAction::triggered, this, &BaseWindow::onShowLightOutRule);
 
     //退出游戏
     m_quitAction = m_startMenu->addAction("退出游戏");

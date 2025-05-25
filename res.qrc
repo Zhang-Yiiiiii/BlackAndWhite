@@ -46,5 +46,7 @@
         <file>image/MainBackground.png</file>
         <file>image/newbackground.png</file>
         <file>image/default_avatar.png</file>
+        <file>rule/lightoutGameRule.md</file>
+        <file>rule/antGameRule.md</file>
     </qresource>
 </RCC>

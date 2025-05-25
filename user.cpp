@@ -31,8 +31,15 @@
 
 // user.cpp
 #include "user.h"
+#include "config.h"
 
-User::User() {}
+User::User()
+{
+    for(int i = 0; i < SELECTBTNNUMBER; i++)
+    {
+        m_gameRecord[i + 1] = -1; //未通过此关
+    }
+}
 
 QString User::getUserName() const
 {

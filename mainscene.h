@@ -32,6 +32,7 @@
 #include "onlinewindow.h"
 #include "abstractgamescene.h"
 #include "avatarwidget.h"
+#include "GameHelpDialog.h"
 
 class MainScene : public BaseWindow
 {

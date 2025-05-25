@@ -355,11 +355,11 @@ bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& gam
     return false;    //没有找到解
 }
 
-//计算总时间
-int LightOutGame::getTotalTime() const
-{
-    return m_passingTime;
-}
+// //计算总时间
+// int LightOutGame::getTotalTime() const
+// {
+// return m_passingTime;
+// }
 
 //显示提示
 void LightOutGame::generateTipArray()

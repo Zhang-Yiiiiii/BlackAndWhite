@@ -361,8 +361,14 @@ void AbstractGameScene::setAnimation(int delay)
             if(safeBtn)
             {
                 auto ani = Animator::createAnimator(safeBtn, m_animationType, 600);
+                ani->onFinished([ = ]()
+                {
+                    ani->deleteLater();
+                });
+
                 QTimer::singleShot(startTime, ani, [ani]()
                 {
+
                     ani ->start();
                 });
             }
@@ -399,25 +405,6 @@ void AbstractGameScene::setLabelStyle(QLabel *label)
                          "border-radius: 10px; }");
     label->setAlignment(Qt::AlignCenter);
 }
-
-// //重写绘图事件
-// void AbstractGameScene::paintEvent(QPaintEvent *event)
-// {
-// BaseWindow::paintEvent(event);
-
-// QPainter painter(this);
-
-//     //棋盘位置
-// int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
-// int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
-
-//     // 1. 绘制底盘（略大于矩阵）
-// QRect matrixRect = QRect(x - 100, y - 100, 500, 500); // 举例
-// QRect basePlateRect = matrixRect.adjusted(-2, -2, 2, 2);     // 四周扩张 2 像素
-
-// QColor baseColor = QColor(64, 64, 64, 64); // 深灰色底板，适配黑白背景
-// painter.fillRect(basePlateRect, baseColor);
-// }
 
 //重写显示事件
 void AbstractGameScene::showEvent(QShowEvent *event)
@@ -514,20 +501,12 @@ void AbstractGameScene::onRandomBtnClicked()
 //更新显示时间
 void AbstractGameScene::onUpdateTime()
 {
-    // //获取秒数
-    // int secs = m_elapsedTimer.elapsed() / 1000;
-    // m_passingTime = secs;
 
-    // //转换成时分
-    // int mins = secs / 60;
-    // int hours = mins / 60;
-    // secs %= 60;
-    // mins %= 60;
-    // m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
-
+    //获取秒数
     int secs = m_elapsedTimer.elapsed() / 1000;
     m_passingTime = secs;
 
+    //转换成时分
     int mins = secs / 60;
     int hours = mins / 60;
     secs %= 60;
