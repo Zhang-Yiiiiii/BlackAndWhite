@@ -28,6 +28,16 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QFrame" name="frameBackgroud">
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
@@ -221,6 +231,12 @@
                <property name="frame">
                 <bool>true</bool>
                </property>
+               <property name="placeholderText">
+                <string>请输入用户名</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -271,7 +287,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>10</width>
+               <width>13</width>
                <height>20</height>
               </size>
              </property>
@@ -338,11 +354,17 @@
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
+               <property name="text">
+                <string/>
+               </property>
                <property name="frame">
                 <bool>true</bool>
                </property>
                <property name="echoMode">
                 <enum>QLineEdit::EchoMode::Password</enum>
+               </property>
+               <property name="placeholderText">
+                <string>请输入密码(6-12位)</string>
                </property>
               </widget>
              </item>
@@ -582,16 +604,6 @@
         </spacer>
        </item>
       </layout>
-     </item>
-     <item row="0" column="0">
-      <widget class="QFrame" name="frameBackgroud">
-       <property name="frameShape">
-        <enum>QFrame::Shape::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Shadow::Raised</enum>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

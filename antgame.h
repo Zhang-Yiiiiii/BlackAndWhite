@@ -29,6 +29,9 @@ public:
     //画图事件
     void paintEvent(QPaintEvent* event) override;
 
+    //评分
+    ScoreLevel Scoring() override;
+
 private:
 
     //------------------------私有属性----------------------------------
@@ -94,11 +97,13 @@ private:
 
     bool isBoardInitial();  //棋盘是否是最初状态
 
+    QString judgeDiff() override;   //判定难度
+
 public slots:
 
     //------------------------私有槽----------------------------------
 
-    void onSubmitBtnClicked() override; //提交按钮被点击
+    //void onSubmitBtnClicked() override; //提交按钮被点击
 
     void onResetBtnClicked() override;  //重置按钮被点击
 

@@ -12,8 +12,7 @@ int main(int argc, char* argv[])
     MainScene w;
 
     //设置全局字体
-    QFont font("华文新魏", 15);
-    a.setFont(font);
+    //a.setFont(QFont("华文新魏", 15));
 
     //设置图标
     a.setWindowIcon(QIcon(MYICON));

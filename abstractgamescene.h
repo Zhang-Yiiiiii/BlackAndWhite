@@ -20,6 +20,7 @@
 #include <QTimer>
 #include <vector>
 #include <QCloseEvent>
+#include <QMap>
 
 #include "basewindow.h"
 #include "ranklist.h"
@@ -36,6 +37,25 @@ enum BuildWay
     startingPointMode,  //起点建图
     destinationMode,    //终点建图
     onlineMode,     //联机模式
+};
+
+//评分等级
+enum ScoreLevel
+{
+    S,
+    A,
+    B,
+    C,
+    D
+};
+
+const QMap<ScoreLevel, QString> ScoreMap
+{
+    {S, "S"},
+    {A, "A"},
+    {B, "B"},
+    {C, "C"},
+    {D, "D"},
 };
 
 class AbstractGameScene : public BaseWindow
@@ -65,6 +85,9 @@ public:
     void saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans);
     void saveSolvableInfo(const std::vector<std::vector<bool> >& gameArray, const std::vector<std::vector<bool> >& ans, int steps, int dir, QPoint pos);
 
+    //评分
+    virtual ScoreLevel Scoring() = 0;
+
 protected:
     //------------------------保护属性----------------------------------
 
@@ -77,6 +100,9 @@ protected:
     //棋盘的行数和列数
     int m_boardRow;
     int m_boardCol;
+
+    //棋盘位置
+    QPoint boardPos;
 
     //棋盘
     std::vector<std::vector<GridButton*>> m_board;
@@ -129,6 +155,9 @@ protected:
     //罚时
     QLabel* m_timePenaltyLabel = nullptr;
 
+    //难度等级
+    QLabel * m_difficultyLabel = nullptr;
+
     //计时器
     QElapsedTimer m_elapsedTimer;
 
@@ -161,6 +190,9 @@ protected:
     //显示时间label
     void showTimeLabel();
 
+    //显示难度等级label
+    void showDifficultyLabel(QString difficulty);
+
     //初始化定时器
     void initTimer();
 
@@ -186,7 +218,7 @@ protected:
     void showPushButton();
 
     //设置动画效果
-    void setAnimation(int delay = 5);
+    void setAnimation(int delay = 6);
 
     //生成提示数组
     virtual void generateTipArray() = 0;
@@ -205,6 +237,9 @@ protected:
 
     //重写关闭事件
     void closeEvent(QCloseEvent* event) override;
+
+    //判定难度
+    virtual QString judgeDiff() = 0;
 
 signals:
     //------------------------信号----------------------------------

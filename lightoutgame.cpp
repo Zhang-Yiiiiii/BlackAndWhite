@@ -24,6 +24,8 @@ LightOutGame::LightOutGame(int gameLevel, QString userName, UserManager * userma
 
     // showPushButton();   //显示提交、返回、重置按钮
 
+    showDifficultyLabel(judgeDiff());     //显示难度
+
     //点击答案按钮罚时
     connect(showAnswearAction, &QAction::triggered, this, [this]()
     {
@@ -393,6 +395,36 @@ void LightOutGame::saveGame()
     emit changeBack();
 }
 
+//评分
+ScoreLevel LightOutGame::Scoring()
+{
+    ScoreLevel score;
+    int time = getTotalTime();
+
+    if(time <= qPow(2, m_boardRow))
+    {
+        score = ScoreLevel::S;
+    }
+    else if(time <= 2 * qPow(2, m_boardRow))
+    {
+        score = ScoreLevel::A;
+    }
+    else if(time <= 3 * qPow(3, m_boardRow))
+    {
+        score = ScoreLevel::B;
+    }
+    else if(time <= 4 * qPow(4, m_boardRow))
+    {
+        score = ScoreLevel::C;
+    }
+    else
+    {
+        score = ScoreLevel::D;
+    }
+
+    return score;
+}
+
 //判断是否胜利
 bool LightOutGame::isWin() const
 {
@@ -408,6 +440,32 @@ bool LightOutGame::isWin() const
     }
 
     return true;
+}
+
+//判定难度
+QString LightOutGame::judgeDiff()
+{
+    //根据棋盘大小判定
+    QString level = "";
+
+    if(m_boardRow <= 4)
+    {
+        level = "萌新";
+    }
+    else if(m_boardRow <= 7)
+    {
+        level = "标准";
+    }
+    else if(m_boardRow <= 10)
+    {
+        level = "困难";
+    }
+    else
+    {
+        level = "地狱";
+    }
+
+    return level;
 }
 
 //----------------------------------公共槽--------------------------------------------

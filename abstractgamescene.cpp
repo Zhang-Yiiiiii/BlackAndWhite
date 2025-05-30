@@ -1,23 +1,26 @@
 #include "abstractgamescene.h"
-#include "config.h"
 #include "mypushbutton.h"
 #include "fancybaseplate.h"
+#include "config.h"
 
 #include <QPointer>
 
 //----------------------------------构造和析构--------------------------------------------
 AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManager * usermanager, QWidget *parent, BuildWay mode)
-    : BaseWindow(parent), m_gameMode(mode), m_gameLevel{gameLevel}, m_userName(userName), m_usermanager(usermanager)
+    : BaseWindow(parent), m_userName(userName), m_gameLevel{gameLevel}, m_usermanager(usermanager), m_gameMode(mode)
 {
-    QAction * rankAction = m_gameMenu->addAction("排行榜");    //排行榜
+    //排行榜
+    QAction * rankAction = m_gameMenu->addAction("排行榜");
     rankAction->setIcon(QIcon(RANKLISHICONPAHT));
     connect(rankAction, &QAction::triggered, this, &AbstractGameScene::onRankActionClicked);
 
-    showAnswearAction = m_toolMenu->addAction("显示答案");     //显示答案
+    //显示答案
+    showAnswearAction = m_toolMenu->addAction("显示答案");
     showAnswearAction->setIcon(QIcon(SHOWTIPICONPATH));
     connect(showAnswearAction, &QAction::triggered, this, &AbstractGameScene::onShowTips);
 
-    QAction* closeTipAction = m_toolMenu->addAction("关闭答案");   //关闭答案
+    //关闭答案
+    QAction* closeTipAction = m_toolMenu->addAction("关闭答案");
     closeTipAction->setIcon(QIcon(CLOSETIPICONPATH));
     connect(closeTipAction, &QAction::triggered, this, &AbstractGameScene::clearTipsButton);
 
@@ -28,6 +31,8 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     //棋盘位置
     int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
     int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+    boardPos.setX(x);
+    boardPos.setY(y);
 
     // 创建 8x8 棋盘，位置在 (50, 50)
     FancyBasePlate* basePlate = new FancyBasePlate(
@@ -36,6 +41,7 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
         m_boardRow,              // 行数
         m_boardCol               // 列数
     );
+
     basePlate->show();
 
     showBoard(false);    //显示棋盘
@@ -47,6 +53,8 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     initTimer();    //初始化定时器
 
     showPushButton();   //显示提交、返回、重置按钮
+
+    m_menubar->raise(); //让菜单栏置顶 不然有时 点击没有反应
 }
 
 AbstractGameScene::~AbstractGameScene()
@@ -194,8 +202,8 @@ void AbstractGameScene::initGameInfo()
 void AbstractGameScene::showBoard(bool isVisible)
 {
     //棋盘位置
-    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
-    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+    int x = boardPos.x();
+    int y = boardPos.y();
 
     for(int i = 0; i < m_boardRow; i++)
     {
@@ -212,7 +220,7 @@ void AbstractGameScene::showBoard(bool isVisible)
             x += GRIDSIZE + 1;
         }
 
-        x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
+        x = boardPos.x();
         y += GRIDSIZE + 1;
     }
 }
@@ -236,6 +244,16 @@ void AbstractGameScene::showTimeLabel()
     setLabelStyle(m_timePenaltyLabel);
     m_timePenaltyLabel->setText("所罚时间：00:00:00");
     m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
+}
+
+//显示难度等级label
+void AbstractGameScene::showDifficultyLabel(QString difficulty)
+{
+    m_difficultyLabel = new QLabel(this);
+    setLabelStyle(m_difficultyLabel);
+    QString str = QString("难度等级：%1").arg(difficulty);
+    m_difficultyLabel->setText(str);
+    m_difficultyLabel->move(150, 400 + 3 * m_timeLabel->height() );
 }
 
 //初始化定时器
@@ -350,7 +368,7 @@ void AbstractGameScene::showPushButton()
 //设置动画
 void AbstractGameScene::setAnimation(int delay)
 {
-    int startTime = 400;
+    int startTime = 400;    //动画起始时间
 
     for(auto& btns : m_board)
     {
@@ -360,7 +378,7 @@ void AbstractGameScene::setAnimation(int delay)
 
             if(safeBtn)
             {
-                auto ani = Animator::createAnimator(safeBtn, m_animationType, 600);
+                auto ani = Animator::createAnimator(safeBtn, m_animationType, 800);
                 ani->onFinished([ = ]()
                 {
                     ani->deleteLater();
@@ -442,7 +460,11 @@ void AbstractGameScene::onSubmitBtnClicked()
     {
         if(m_gameMode == playMode)
         {
-            QMessageBox::about(this, "通过", "恭喜成功通过此关");
+            //计算评分
+            ScoreLevel score;
+            score = Scoring();
+            QString str = QString("恭喜成功通过此关 %1 级").arg(ScoreMap[score]);
+            QMessageBox::about(this, "通过", str);
             saveTotalTime();
             emit changeBack();  //进行返回
         }
@@ -456,8 +478,8 @@ void AbstractGameScene::onSubmitBtnClicked()
     }
     else
     {
-        QMessageBox::about(this, "失败", "答案错误");
-        this->resetGame(); //重置棋盘
+        QMessageBox::about(this, "失败", "答案错误，罚时30秒");
+        this->m_penaltyTime += 30; //罚时增加
     }
 }
 
@@ -537,8 +559,8 @@ void AbstractGameScene::onShowTips()
     generateTipArray();
 
     //棋盘位置
-    int x = (BACKGROUDWIDTH - m_boardRow * GRIDSIZE) / 2;
-    int y = (BACKGROUDHEIGHT - m_boardCol * GRIDSIZE) / 2;
+    int x = boardPos.x();
+    int y = boardPos.y();
 
     for(int i = 0; i < m_boardRow; i++)
     {

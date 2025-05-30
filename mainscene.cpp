@@ -10,7 +10,7 @@
 #include "userutils.h"
 #include <QStandardPaths>
 
-const QPoint avatar_pos = QPoint(60, 60);
+const QPoint avatar_pos = QPoint(80, 80);
 
 //----------------------------------构造和析构--------------------------------------------
 MainScene::MainScene(QWidget *parent)
@@ -18,29 +18,6 @@ MainScene::MainScene(QWidget *parent)
 {
 
     this->setWindowIcon(QIcon(MYICON));
-
-    QPoint pos(350, 100);
-
-    QLabel* temp1 = new QLabel(this);
-    QLabel* temp2 = new QLabel(this);
-
-    QFont font("华文新魏", 40);
-    font.setBold(true);
-    temp1->setFont(font);
-    temp1->setText("不要黑块");
-    temp1->setStyleSheet("color : black; ");
-    temp1->setFixedSize(230, 45);
-    temp1->setAlignment(Qt::AlignCenter);
-    temp1->move(pos);
-
-    pos.setX(1000);
-    font.setBold(true);
-    temp2->setFont(font);
-    temp2->setText("兰顿蚂蚁");
-    temp2->setStyleSheet("color : black; ");
-    temp2->setFixedSize(230, 45);
-    temp2->setAlignment(Qt::AlignCenter);
-    temp2->move(pos);
 
     //登录
     QAction* loginAction = m_startMenu->addAction("登录");
@@ -116,6 +93,33 @@ MainScene::~MainScene()
     // m_loginWindow->deleteLater();
     // }
 
+}
+
+void MainScene::showGameTitle()
+{
+    //标签位置
+    QPoint pos(350, 100);
+
+    QLabel* lightoutTitle = new QLabel(this);
+    QLabel* antTitle = new QLabel(this);
+
+    QFont font("华文新魏", 40);
+    font.setBold(true);
+    lightoutTitle->setFont(font);
+    lightoutTitle->setText("不要黑块");
+    lightoutTitle->setStyleSheet("color : black; ");
+    lightoutTitle->setFixedSize(230, 45);
+    lightoutTitle->setAlignment(Qt::AlignCenter);
+    lightoutTitle->move(pos);
+
+    pos.setX(1000);
+    font.setBold(true);
+    antTitle->setFont(font);
+    antTitle->setText("兰顿蚂蚁");
+    antTitle->setStyleSheet("color : black; ");
+    antTitle->setFixedSize(230, 45);
+    antTitle->setAlignment(Qt::AlignCenter);
+    antTitle->move(pos);
 }
 
 //----------------------------------私有方法--------------------------------------------

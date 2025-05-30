@@ -234,9 +234,11 @@ release/qrc_res.cpp: ../../res.qrc \
 		../../numberIcon/number-0.png \
 		../../icon/closeTip.png \
 		../../icon/delete.png \
+		../../icon/closeEye.png \
 		../../icon/upload.png \
 		../../icon/debug1.png \
 		../../icon/white.png \
+		../../icon/openEye.png \
 		../../icon/disconnect.png \
 		../../icon/unlock.png \
 		../../icon/manage.png \
@@ -502,6 +504,8 @@ release/moc_abstractgamescene.cpp: ../../abstractgamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -535,12 +539,19 @@ release/moc_abstractgamescene.cpp: ../../abstractgamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -574,7 +585,6 @@ release/moc_abstractgamescene.cpp: ../../abstractgamescene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -1023,6 +1033,8 @@ release/moc_antgame.cpp: ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -1056,12 +1068,19 @@ release/moc_antgame.cpp: ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -1095,7 +1114,6 @@ release/moc_antgame.cpp: ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -1561,6 +1579,14 @@ release/moc_basewindow.cpp: ../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		release/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtMultimediaWidgets -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtMultimedia -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\basewindow.h -o release\moc_basewindow.cpp
@@ -2813,6 +2839,8 @@ release/moc_lightoutgame.cpp: ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -2846,12 +2874,19 @@ release/moc_lightoutgame.cpp: ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -2885,7 +2920,6 @@ release/moc_lightoutgame.cpp: ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -3364,10 +3398,16 @@ release/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
-		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QMouseEvent \
@@ -3409,7 +3449,6 @@ release/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -3438,11 +3477,6 @@ release/moc_mainscene.cpp: ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QParallelAnimationGroup \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qparallelanimationgroup.h \
 		../../avatarwidget.h \
-		../../GameHelpDialog.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		release/moc_predefs.h \
 		../../../../qt/6.8.2/mingw_64/bin/moc.exe
 	D:\qt\6.8.2\mingw_64\bin\moc.exe $(DEFINES) --include D:/QtProjects/BlackAndWhiteBlock/build/Desktop_Qt_6_8_2_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/qt/6.8.2/mingw_64/mkspecs/win32-g++ -ID:/QtProjects/BlackAndWhiteBlock -ID:/qt/6.8.2/mingw_64/include -ID:/qt/6.8.2/mingw_64/include/QtMultimediaWidgets -ID:/qt/6.8.2/mingw_64/include/QtWidgets -ID:/qt/6.8.2/mingw_64/include/QtMultimedia -ID:/qt/6.8.2/mingw_64/include/QtGui -ID:/qt/6.8.2/mingw_64/include/QtNetwork -ID:/qt/6.8.2/mingw_64/include/QtCore -I. -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++ -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32 -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include -ID:/qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed -ID:/qt/Tools/mingw1310_64/x86_64-w64-mingw32/include ..\..\mainscene.h -o release\moc_mainscene.cpp
@@ -4593,6 +4627,8 @@ release/abstractgamescene.o: ../../abstractgamescene.cpp ../../abstractgamescene
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -4626,12 +4662,19 @@ release/abstractgamescene.o: ../../abstractgamescene.cpp ../../abstractgamescene
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -4665,7 +4708,6 @@ release/abstractgamescene.o: ../../abstractgamescene.cpp ../../abstractgamescene
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -5119,6 +5161,8 @@ release/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -5152,12 +5196,19 @@ release/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -5191,7 +5242,6 @@ release/antgame.o: ../../antgame.cpp ../../antgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -5668,6 +5718,14 @@ release/basewindow.o: ../../basewindow.cpp ../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		ui_basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QVariant \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QApplication \
@@ -5675,6 +5733,7 @@ release/basewindow.o: ../../basewindow.cpp ../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QStatusBar \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qstatusbar.h \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QMessageBox \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qmessagebox.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qdialogbuttonbox.h
@@ -6017,6 +6076,14 @@ release/data.o: ../../data.cpp ../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QVector \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qvector.h \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qfont.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qendian.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiglobal.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtgui-config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiexports.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qpoint.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/q23utility.h
@@ -6640,6 +6707,7 @@ release/gridbutton.o: ../../gridbutton.cpp ../../gridbutton.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractanimation.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qeasingcurve.h \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPainter \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qpainter.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextoption.h \
@@ -7082,6 +7150,8 @@ release/lightoutgame.o: ../../lightoutgame.cpp ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qtimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbasictimer.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QCloseEvent \
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../basewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPixmap \
 		../../musicplayer.h \
@@ -7115,12 +7185,19 @@ release/lightoutgame.o: ../../lightoutgame.cpp ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextcursor.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtextformat.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../ranklist.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QFrame \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -7154,7 +7231,6 @@ release/lightoutgame.o: ../../lightoutgame.cpp ../../lightoutgame.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDateTime \
 		../../data.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
-		../../config.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../animator.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsEffect \
@@ -7393,6 +7469,7 @@ release/loginwindow.o: ../../loginwindow.cpp ../../loginwindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../user.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QString \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QMap \
@@ -7662,10 +7739,16 @@ release/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
-		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QMouseEvent \
@@ -7707,7 +7790,6 @@ release/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -7735,12 +7817,7 @@ release/main.o: ../../main.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QEasingCurve \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QParallelAnimationGroup \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qparallelanimationgroup.h \
-		../../avatarwidget.h \
-		../../GameHelpDialog.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList
+		../../avatarwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\..\main.cpp
 
 release/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
@@ -8004,10 +8081,16 @@ release/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QPaintEvent \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QDialog \
+		../../GameHelpDialog.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../hexagon.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QIcon \
-		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QPoint \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QDebug \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QMouseEvent \
@@ -8049,7 +8132,6 @@ release/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QListView \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qlistview.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemview.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qabstractitemmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qitemselectionmodel.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qabstractitemdelegate.h \
@@ -8078,11 +8160,6 @@ release/mainscene.o: ../../mainscene.cpp ../../mainscene.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QParallelAnimationGroup \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qparallelanimationgroup.h \
 		../../avatarwidget.h \
-		../../GameHelpDialog.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QTextBrowser \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextbrowser.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtextedit.h \
-		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QStringList \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QGraphicsOpacityEffect \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QToolBar \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/qtoolbar.h \
@@ -8535,7 +8612,8 @@ release/mypushbutton.o: ../../mypushbutton.cpp ../../mypushbutton.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qinputmethod.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qlocale.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qguiapplication_platform.h \
-		../../config.h
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mypushbutton.o ..\..\mypushbutton.cpp
 
 release/onlinewindow.o: ../../onlinewindow.cpp ../../onlinewindow.h \
@@ -8778,6 +8856,7 @@ release/onlinewindow.o: ../../onlinewindow.cpp ../../onlinewindow.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QVBoxLayout \
 		../../../../../../qt/6.8.2/mingw_64/include/QtWidgets/QWidget \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\onlinewindow.o ..\..\onlinewindow.cpp
 
@@ -9336,7 +9415,15 @@ release/user.o: ../../user.cpp ../../user.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qcoreevent.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qobject_impl.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h \
-		../../config.h
+		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qfont.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qendian.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiglobal.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtgui-config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiexports.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\user.o ..\..\user.cpp
 
 release/usermanager.o: ../../usermanager.cpp ../../usermanager.h \
@@ -9463,6 +9550,14 @@ release/usermanager.o: ../../usermanager.cpp ../../usermanager.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qobject_impl.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qbindingstorage.h \
 		../../config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/QFont \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qfont.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qendian.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiglobal.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtgui-config.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qtguiexports.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs.h \
+		../../../../../../qt/6.8.2/mingw_64/include/QtGui/qwindowdefs_win.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/QFile \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qfile.h \
 		../../../../../../qt/6.8.2/mingw_64/include/QtCore/qfiledevice.h \

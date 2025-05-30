@@ -1,10 +1,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QFont>
+
 /************主场景资源配置数据******************/
+//QFont MYFONT("华文新魏", 15);
 #define BACKGROUDWIDTH 1500                             //背景宽
 #define BACKGROUDHEIGHT 800                             //背景高
-#define BACKGROUDPATH ":/image/newbackground.png"           //背景图片
+#define BACKGROUDPATH ":/image/newbackground.png"       //背景图片
 #define MYTITLE "非黑即白"                               //窗口标题
 
 #define MYICON ":/icon/debug1.png"                      //窗口图标
@@ -33,8 +36,8 @@
 #define GRIDNUMBER 400                                  //格子总数
 #define BOARDSIDELENGTH 20                              //棋盘边长
 #define BUGPATH ":/icon/debug%1.png"                    //虫子路径
-#define BOARDPOSX BACKGROUDWIDTH/2 - GRIDSIZE * 10      //棋盘左上角的X
-#define BOARDPOSY 50                                    //棋盘左上角的Y
+// #define BOARDPOSX BACKGROUDWIDTH/2 - GRIDSIZE * 10      //棋盘左上角的X
+// #define BOARDPOSY 50                                    //棋盘左上角的Y
 #define NUMBERPATH ":/numberIcon/number-%1.png"         //关卡数字的图片路径
 
 #define SHOWTIPICONPATH ":/icon/showTip.png"            //显示提示图标路径

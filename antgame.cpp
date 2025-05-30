@@ -23,6 +23,8 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
 
     showStepLabel();    //显示步数label
 
+    showDifficultyLabel(judgeDiff());   //显示难度
+
     //点击答案按钮罚时
     connect(showAnswearAction, &QAction::triggered, this, [this]()
     {
@@ -99,6 +101,36 @@ void AntGame::paintEvent(QPaintEvent *event)
 
 }
 
+//评分
+ScoreLevel AntGame::Scoring()
+{
+    ScoreLevel score;
+    int time = getTotalTime();
+
+    if(time <= m_gameStep)
+    {
+        score = ScoreLevel::S;
+    }
+    else if(time <= 2 * m_gameStep)
+    {
+        score = ScoreLevel::A;
+    }
+    else if(time <= 3 * m_gameStep)
+    {
+        score = ScoreLevel::B;
+    }
+    else if(time <= 4 * m_gameStep)
+    {
+        score = ScoreLevel::C;
+    }
+    else
+    {
+        score = ScoreLevel::D;
+    }
+
+    return score;
+}
+
 //----------------------------------私有方法--------------------------------------------
 
 // //初始化游戏信息
@@ -148,7 +180,7 @@ void AntGame::showBug()
 
     //移动bug
     //虫子所在坐标轴与窗口长宽不对应
-    bugBtn->move(BOARDPOSX + m_bugPos.y() * (GRIDSIZE + 1), BOARDPOSY + m_bugPos.x() * (GRIDSIZE + 1));
+    bugBtn->move(boardPos.x() + m_bugPos.y() * (GRIDSIZE + 1), boardPos.y() + m_bugPos.x() * (GRIDSIZE + 1));
 
     //加载图片
     QString pixStr = QString(BUGPATH).arg(m_bugDir);
@@ -470,35 +502,66 @@ bool AntGame::isBoardInitial()
 
 }
 
+//判定难度
+QString AntGame::judgeDiff()
+{
+    QString level = "";
+
+    //根据步数进行判定
+    if(m_gameStep <= 10)
+    {
+        level = "萌新";
+    }
+    else if (m_gameStep <= 20)
+    {
+        level = "标准";
+    }
+    else if (m_gameStep <= 50)
+    {
+        level = "进阶";
+    }
+    else if (m_gameStep <= 200)
+    {
+        level = "困难";
+    }
+    else if (m_gameStep <= 500)
+    {
+        level = "地狱";
+    }
+
+    return level;
+
+}
+
 //----------------------------------私有槽--------------------------------------------
 
-//提交
-void AntGame::onSubmitBtnClicked()
-{
-    //判断是否胜利
-    if(isWin())
-    {
-        if(m_gameMode == playMode)
-        {
-            QMessageBox::about(this, "通过", "恭喜你成功通过此关");
-            saveTotalTime();
-            emit changeBack();  //进行返回
-        }
-        else if (m_gameMode == onlineMode)
-        {
-            const int totalTime = getTotalTime();
-            saveTotalTime();
-            m_showTimer->stop();
-            emit gameOver(totalTime);
-        }
-    }
-    else
-    {
-        QMessageBox::about(this, "失败", "答案错误，罚时30秒");
-        this->onResetBtnClicked(); //重置棋盘
-        this->m_penaltyTime += 30; //罚时增加
-    }
-}
+// //提交
+// void AntGame::onSubmitBtnClicked()
+// {
+//     //判断是否胜利
+// if(isWin())
+// {
+// if(m_gameMode == playMode)
+// {
+// QMessageBox::about(this, "通过", "恭喜你成功通过此关");
+// saveTotalTime();
+// emit changeBack();  //进行返回
+// }
+// else if (m_gameMode == onlineMode)
+// {
+// const int totalTime = getTotalTime();
+// saveTotalTime();
+// m_showTimer->stop();
+// emit gameOver(totalTime);
+// }
+// }
+// else
+// {
+// QMessageBox::about(this, "失败", "答案错误，罚时30秒");
+// this->onResetBtnClicked(); //重置棋盘
+// this->m_penaltyTime += 30; //罚时增加
+// }
+// }
 
 //重置棋盘
 void AntGame::onResetBtnClicked()
@@ -545,7 +608,7 @@ void AntGame::onShowCurrentSteps()
     setLabelStyle(m_currentStepsLabel);
 
     m_currentStepsLabel->setText(QString("当前步数：%1").arg(m_currentSteps));
-    m_currentStepsLabel->move(150, 400 + 2 * m_timeLabel->height() + 20);
+    m_currentStepsLabel->move(150, 400 + 4 * m_timeLabel->height() + 20);
     m_currentStepsLabel->show();
 }
 
@@ -631,15 +694,10 @@ void AntGame::onShowHintBtnClicked()
         m_isHinting = true;
     }
 
-    if(hintSteps == m_gameStep)
+    if(hintSteps == m_gameStep) //到最后一步
     {
         return;
     }
-
-    // else if(hintSteps > m_gameStep) //点击次数大于游戏步数
-    // {
-    // m_isHinting = false;
-    // }
 
     if(m_hintBtn)
     {

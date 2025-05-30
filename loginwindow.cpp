@@ -51,6 +51,21 @@ LoginWindow::LoginWindow(QWidget *parent)
     // 置于顶层
     //this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
+    // 密码可见按钮
+    QAction *toggleAction = new QAction(this);
+    toggleAction->setIcon(QIcon(":/icon/closeEye.png")); // 默认闭眼图标
+    toggleAction->setCheckable(true); // 允许切换状态
+
+    // 将 QAction 添加到 QLineEdit 的右侧
+    ui->passwdEdit->addAction(toggleAction, QLineEdit::TrailingPosition);
+
+    // 连接信号槽：点击时切换密码可见性
+    connect(toggleAction, &QAction::toggled, [this, toggleAction](bool checked)
+    {
+        ui->passwdEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
+        toggleAction->setIcon(checked ? QIcon(":/icon/openEye.png") : QIcon(":/icon/closeEye.png"));
+    });
+
     // 登录 按钮的点击
     connect(this->ui->loginButton, &QPushButton::clicked, this, &LoginWindow::onLoginAccount);
 
@@ -134,7 +149,7 @@ void LoginWindow::checkPasswordLength(const QString &password)
         this->ui->passwdEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
         // 隐藏提示或显示确认信息
         //ui->lengthWarningLabel->hide();
-        // 可选：显示绿色确认提示
+        // 显示绿色确认提示
         // ui->lengthWarningLabel->setText("✓ 长度符合要求");
         // ui->lengthWarningLabel->setStyleSheet("color: green;");
     }

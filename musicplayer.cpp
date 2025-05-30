@@ -31,7 +31,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     // 控制按钮
     m_playButton = new QPushButton(this);
     m_openButton = new QPushButton("打开音乐", this);
-    m_loopButton = new QPushButton("循环: 开", this);
+    m_loopButton = new QPushButton("单曲循环", this);
 
     // 音量控制组件
     m_volumeSlider = new QSlider(Qt::Horizontal, this);
@@ -54,7 +54,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(m_loopButton, &QPushButton::clicked, this, [this]
     {
         m_loop = !m_loop;
-        m_loopButton->setText(m_loop ? "循环: 开" : "循环: 关");
+        m_loopButton->setText(m_loop ? "单曲循环" : "关");
     });
 
     //媒体加载状态监控
@@ -330,5 +330,4 @@ void MusicPlayer::updatePlayPauseIcon()
                                   QStyle::SP_MediaPlay;
 
     m_playButton->setIcon(style()->standardIcon(icon));
-
 }

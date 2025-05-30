@@ -19,6 +19,8 @@
 #include <QRect>
 #include <QMouseEvent>
 #include <QPainterPath>
+#include <QGraphicsEffect>
+#include <QGraphicsScale>
 
 class Hexagon : public QPushButton
 {
@@ -39,6 +41,7 @@ public:
     //获取边长
     static int getSideLength();
 
+protected:
     //重写绘图函数
     void paintEvent(QPaintEvent *event) override;
 
@@ -58,7 +61,6 @@ private:
     // 背景图（只加载一次）
     QPixmap backgroundPixmap = QPixmap(":/image/newbackground.png");
 
-    // // 添加到 private:
     // QColor m_backgroundColor = Qt::white; // 采样到的背景颜色
     // QColor m_fillColor = Qt::white;       // 填充颜色（反色）
     // QColor m_textColor = Qt::black;       // 文字颜色（反色）
@@ -69,7 +71,7 @@ private:
     // // 判断颜色是否偏亮（亮度阈值可调）
     // bool isLightBackground() const;
 
-    void sampleBackgroundColor();
+    void sampleBackgroundColor();   //采样背景颜色
 
 signals:
 

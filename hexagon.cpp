@@ -1,28 +1,8 @@
 #include "hexagon.h"
 #include <QTimer>
+#include <QPropertyAnimation>
 
 //----------------------------------构造析构--------------------------------------------
-
-// Hexagon::Hexagon(int id, QPushButton * parent):
-// QPushButton(parent), m_id(id + 1)
-// {
-//     //设置按钮大小
-// this->setFixedSize(110, 110);
-
-// setAttribute(Qt::WA_TranslucentBackground); // 关键：启用透明背景
-
-//     //设置边框为不规则
-//     //this->setStyleSheet("QPushButton{border:0px}");
-
-//     //设置按钮的数字
-// this->setText(QString::number(this->m_id));
-
-//     //告诉主场景被点击
-// connect(this, &QPushButton::clicked, this, [ = ]()
-// {
-// emit beClicked(this->m_id);
-// });
-// }
 
 Hexagon::Hexagon(int id, QPushButton *parent)
     : QPushButton(parent), m_id(id + 1)

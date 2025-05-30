@@ -48,5 +48,7 @@
         <file>image/default_avatar.png</file>
         <file>rule/lightoutGameRule.md</file>
         <file>rule/antGameRule.md</file>
+        <file>icon/closeEye.png</file>
+        <file>icon/openEye.png</file>
     </qresource>
 </RCC>

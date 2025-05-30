@@ -29,6 +29,9 @@ public:
     //保存地图的函数，用于自建地图
     void saveGame() ;
 
+    //评分
+    ScoreLevel Scoring() override;
+
 private:
 
     //------------------------私有属性----------------------------------
@@ -64,6 +67,9 @@ private:
 
     //检验是否胜利
     bool isWin() const override;
+
+    //判定难度
+    QString judgeDiff() override;
 
 public slots:
 

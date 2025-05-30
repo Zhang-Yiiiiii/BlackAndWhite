@@ -5,7 +5,7 @@
 #include <QDir>
 #include <QSize>
 
-const QSize avatar_size = QSize(70, 70);
+const QSize avatar_size = QSize(120, 120);
 
 AvatarWidget::AvatarWidget(User* user, QWidget* parent)
     : QLabel(parent), m_user(user)
@@ -21,8 +21,11 @@ AvatarWidget::AvatarWidget(User* user, QWidget* parent)
     else
     {
         updateAvatar(m_user->getAvatarPath());
+
     }
 
+    //setStyleSheet("border-radius: 50px; border: 2px solid black;");
+    //setMask(QRegion(0, 0, 100, 100, QRegion::Ellipse)); // 关键：裁剪点击区域
 }
 
 QSize AvatarWidget::sizeHint() const
@@ -73,6 +76,18 @@ void AvatarWidget::mousePressEvent(QMouseEvent* event)
             UserUtils::saveSingleUser(m_user);
         }
     }
+}
+
+void AvatarWidget::paintEvent(QPaintEvent *event)
+{
+    QLabel::paintEvent(event);
+
+    // QPainter painter(this);
+    // painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿
+    // painter.setBrush(Qt::NoBrush); // 填充颜色
+    // painter.setPen(Qt::black);  // 无边框
+    // painter.drawEllipse(rect()); // 绘制圆形
+
 }
 
 void AvatarWidget::updateAvatar(const QString& path)

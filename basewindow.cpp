@@ -23,7 +23,7 @@ BaseWindow::BaseWindow(QWidget *parent) :
     //设置菜单栏
     m_menubar = menuBar();
     m_menubar->setParent(this);
-    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(70, 70, 70, 0); color: black;");
+    m_menubar->setStyleSheet("font: 700 12pt \"Microsoft YaHei UI\"; background-color: rgba(255, 255, 255, 80); color: black;");
 
     //设置菜单
     m_startMenu = m_menubar->addMenu("开始");
