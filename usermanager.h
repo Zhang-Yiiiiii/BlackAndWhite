@@ -29,15 +29,28 @@ public:
     // 登录验证：1 用户不存在，2 密码错误，3 登录成功
     int verifyUserInfo(const QString& name, const QString& password) const;
 
+    //验证名字密码合理
     bool isUserNameRight(const QString& name) const;
     bool isPassWordRight(const QString& pwd) const;
 
+    //添加用户
     bool addUser(const QString& userName, const QString& pwd);
+
+    //更新时间
     UserManager* updateUserTime(const QString& username, int totalTime, int level);
+
+    //排序
     UserManager* userSort(int level);
+
+    //查找用户
     User* findUser(const QString& userName) const;
 
-    QVector<std::pair<QString, int>> m_rankList;
+    //增加经验
+    void addExp(User* user, unsigned change);
+
+    //------------------------公共属性----------------------------------
+
+    QVector<std::pair<QString, int>> m_rankList;    //最短通关时间的排序
 
 private:
 
@@ -52,6 +65,8 @@ private:
     UserManager* loadFromFile();
     UserManager* saveToFile() const;
     void releaseUsers();
+    void updateLV(User* user); //更新等级
+    void updateAllLv(); //更新所有用户等级
 };
 
 #endif // USERMANAGER_H

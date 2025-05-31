@@ -6,9 +6,10 @@
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QString>
 #include "user.h"
 
-class AvatarWidget : public QLabel
+class AvatarWidget : public QWidget
 {
     Q_OBJECT
 
@@ -17,6 +18,7 @@ public:
     QSize sizeHint() const override;
 
     void setUser(User* user);
+    void setUsername();
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -26,6 +28,11 @@ private:
     void updateAvatar(const QString& path);
     User* m_user;
     QPixmap m_pixmap;
+
+    QLabel* avatar;
+    QLabel* nameLabel;
+
+    void initUi();
 };
 
 #endif // AVATARWIDGET_H

@@ -4,15 +4,16 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QSize>
+#include <QVBoxLayout>
 
 const QSize avatar_size = QSize(120, 120);
 
 AvatarWidget::AvatarWidget(User* user, QWidget* parent)
-    : QLabel(parent), m_user(user)
+    : QWidget(parent), m_user(user)
 {
-    setCursor(Qt::PointingHandCursor);
-    setFixedSize(avatar_size);
-    setScaledContents(true);
+
+    setFixedSize(120, 160);
+    initUi();
 
     if(!user)
     {
@@ -20,6 +21,7 @@ AvatarWidget::AvatarWidget(User* user, QWidget* parent)
     }
     else
     {
+        setUsername();
         updateAvatar(m_user->getAvatarPath());
 
     }
@@ -43,9 +45,16 @@ void AvatarWidget::setUser(User *user)
     }
     else
     {
-        updateAvatar(user->getAvatarPath());
+        setUsername();   //设置名字
+        updateAvatar(user->getAvatarPath());    //更新头像
     }
 
+}
+
+void AvatarWidget::setUsername()
+{
+    QString str = QString(m_user->getUserName() + "  Lv.%1").arg(m_user->getLevel());
+    nameLabel->setText(str);
 }
 
 void AvatarWidget::mousePressEvent(QMouseEvent* event)
@@ -80,7 +89,7 @@ void AvatarWidget::mousePressEvent(QMouseEvent* event)
 
 void AvatarWidget::paintEvent(QPaintEvent *event)
 {
-    QLabel::paintEvent(event);
+    QWidget::paintEvent(event);
 
     // QPainter painter(this);
     // painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿
@@ -99,5 +108,30 @@ void AvatarWidget::updateAvatar(const QString& path)
         avatarPixmap.load(":/image/default_avatar.png");
     }
 
-    setPixmap(avatarPixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    avatar->setPixmap(avatarPixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void AvatarWidget::initUi()
+{
+    avatar = new QLabel(this);
+    nameLabel = new QLabel(this);
+
+    setCursor(Qt::PointingHandCursor);
+    avatar->setFixedSize(avatar_size);
+    avatar->setScaledContents(true);
+
+    QFont font = this->font();
+    font.setPointSize(12);
+    nameLabel->setFont(font);
+    nameLabel->setStyleSheet("color: black;");
+    nameLabel->setAlignment(Qt::AlignCenter);
+    nameLabel->show();
+    nameLabel->move((width() - nameLabel->width()) / 2, height() + 130);
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(avatar);
+    layout->addWidget(nameLabel);
+    layout->setSpacing(10);
+    layout->setContentsMargins(0, 0, 0, 0);
+    setLayout(layout);
 }

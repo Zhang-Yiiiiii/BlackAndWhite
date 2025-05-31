@@ -51,6 +51,9 @@ private:
 
     //------------------------私有属性----------------------------------
 
+    //用户
+    User* m_user = nullptr;
+
     //当前用户名和密码
     QString m_userName = "";
     QString m_password = "";

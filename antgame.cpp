@@ -533,6 +533,37 @@ QString AntGame::judgeDiff()
 
 }
 
+//计算经验
+unsigned int AntGame::calculateExp()
+{
+    int mul = 1;
+
+    switch(Scoring())
+    {
+        case S:
+            mul = 20;
+            break;
+
+        case A:
+            mul = 10;
+            break;
+
+        case B:
+            mul = 5;
+            break;
+
+        case C:
+            mul = 3;
+            break;
+
+        case D:
+            mul = 1;
+            break;
+    }
+
+    return mul * m_gameStep;
+}
+
 //----------------------------------私有槽--------------------------------------------
 
 // //提交

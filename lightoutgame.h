@@ -71,6 +71,9 @@ private:
     //判定难度
     QString judgeDiff() override;
 
+    //计算经验
+    unsigned calculateExp()override;
+
 public slots:
 
     //------------------------公共槽----------------------------------

@@ -99,6 +99,8 @@ private:
 
     QString judgeDiff() override;   //判定难度
 
+    unsigned calculateExp()override;    //计算经验
+
 public slots:
 
     //------------------------私有槽----------------------------------

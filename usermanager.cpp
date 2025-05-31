@@ -432,6 +432,13 @@ UserManager::UserManager()
     {
         loadFromFile();
     }
+
+    User* u = findUser("default");   //查找是否存在默认用户
+
+    if(!u)
+    {
+        addUser("default", "default");  //没有就添加
+    }
 }
 
 // 析构：释放用户并保存
@@ -535,6 +542,12 @@ User* UserManager::findUser(const QString& userName) const
     return nullptr;
 }
 
+void UserManager::addExp(User *user, unsigned int change)
+{
+    user->changeExp(change);
+    updateLV(user);
+}
+
 //----------------------------------私有方法--------------------------------------------
 
 // 加载用户
@@ -565,6 +578,11 @@ UserManager* UserManager::loadFromFile()
         user->setUserName(QString::fromUtf8(nameData));
         user->setUserPassword(QString::fromUtf8(pwdData));
 
+        //读入经验
+        unsigned exp;
+        ifs.read(reinterpret_cast<char*>(&exp), sizeof(int));
+        user->setExp(exp);
+
         int recordCount;
         ifs.read(reinterpret_cast<char*>(&recordCount), sizeof(int));
 
@@ -578,6 +596,8 @@ UserManager* UserManager::loadFromFile()
 
         m_users.push_back(user);
     }
+
+    updateAllLv();  //更新所有用户等级
 
     return this;
 }
@@ -607,6 +627,10 @@ UserManager* UserManager::saveToFile() const
         ofs.write(reinterpret_cast<const char*>(&pwdLen), sizeof(int));
         ofs.write(pwdData.data(), pwdLen);
 
+        //写入经验
+        unsigned exp = user->getExp();
+        ofs.write(reinterpret_cast<const char*>(&exp), sizeof(int));
+
         int recordCount = user->m_gameRecord.size();
         ofs.write(reinterpret_cast<const char*>(&recordCount), sizeof(int));
 
@@ -631,4 +655,27 @@ void UserManager::releaseUsers()
     }
 
     m_users.clear();
+}
+
+void UserManager::updateLV(User* user)
+{
+    unsigned exp = user->getExp();
+    unsigned lvArray[] {2000, 5000, 10000, 100000, 999999};
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(exp <= lvArray[i])
+        {
+            user->setLevel(static_cast<ScoreLevel>(5 - i - 1));
+            return ;
+        }
+    }
+}
+
+void UserManager::updateAllLv()
+{
+    for(User* user : m_users)
+    {
+        updateLV(user);
+    }
 }

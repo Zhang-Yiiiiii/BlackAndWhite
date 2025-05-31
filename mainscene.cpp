@@ -40,7 +40,7 @@ MainScene::MainScene(QWidget *parent)
     QAction* destinationMappingAction = antMappingMenu->addAction("终点建图");
     connect(destinationMappingAction, &QAction::triggered, this, [this]()
     {
-        this->buildAntGame(destinationMode);  //终点建图
+        this->buildAntGame(destinationMode);
     });
 
     //熄灯游戏建图
@@ -59,6 +59,9 @@ MainScene::MainScene(QWidget *parent)
 
     //初始化用户管理员
     this->m_usermanager = new UserManager;
+
+    //初始化用户 默认是default 用户
+    m_user = m_usermanager->findUser("default");
 
     //初始化选关按钮
     initSelectBtn();
@@ -487,6 +490,7 @@ void MainScene::onUserConfirmLogin()
         QToolTip::showText(pos, "登录成功", this, this->rect(), 5000);
 
         //记录用户信息
+        m_user = m_usermanager->findUser(m_userName);
         m_userName = m_loginWindow->getUserName();
         m_password = m_loginWindow->getUserPassword();
 

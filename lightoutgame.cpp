@@ -468,6 +468,13 @@ QString LightOutGame::judgeDiff()
     return level;
 }
 
+//计算经验
+unsigned int LightOutGame::calculateExp()
+{
+    int mul = static_cast<int>(5 - Scoring());  //倍数
+    return mul * m_boardRow * m_boardRow;
+}
+
 //----------------------------------公共槽--------------------------------------------
 
 //监听格子被点击

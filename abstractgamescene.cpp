@@ -463,9 +463,17 @@ void AbstractGameScene::onSubmitBtnClicked()
             //计算评分
             ScoreLevel score;
             score = Scoring();
+
+            //对话框
             QString str = QString("恭喜成功通过此关 %1 级").arg(ScoreMap[score]);
             QMessageBox::about(this, "通过", str);
+
+            //保存时间
+            m_showTimer->stop();    //停止计时
             saveTotalTime();
+
+            //计算经验
+            m_usermanager->addExp(m_usermanager->findUser(m_userName), calculateExp());
             emit changeBack();  //进行返回
         }
         else if (m_gameMode == onlineMode)

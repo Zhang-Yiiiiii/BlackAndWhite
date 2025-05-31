@@ -39,25 +39,6 @@ enum BuildWay
     onlineMode,     //联机模式
 };
 
-//评分等级
-enum ScoreLevel
-{
-    S,
-    A,
-    B,
-    C,
-    D
-};
-
-const QMap<ScoreLevel, QString> ScoreMap
-{
-    {S, "S"},
-    {A, "A"},
-    {B, "B"},
-    {C, "C"},
-    {D, "D"},
-};
-
 class AbstractGameScene : public BaseWindow
 {
     Q_OBJECT
@@ -240,6 +221,9 @@ protected:
 
     //判定难度
     virtual QString judgeDiff() = 0;
+
+    //计算经验
+    virtual unsigned calculateExp() = 0;
 
 signals:
     //------------------------信号----------------------------------
