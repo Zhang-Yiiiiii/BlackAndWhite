@@ -73,7 +73,7 @@ protected:
     //------------------------保护属性----------------------------------
 
     //用户名
-    QString m_userName = "";
+    QString m_userName = "default";
 
     //游戏关数
     int m_gameLevel;

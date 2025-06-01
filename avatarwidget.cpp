@@ -123,7 +123,7 @@ void AvatarWidget::initUi()
     QFont font = this->font();
     font.setPointSize(12);
     nameLabel->setFont(font);
-    nameLabel->setStyleSheet("color: black;");
+    nameLabel->setStyleSheet("QLabel { color: black; }");
     nameLabel->setAlignment(Qt::AlignCenter);
     nameLabel->show();
     nameLabel->move((width() - nameLabel->width()) / 2, height() + 130);

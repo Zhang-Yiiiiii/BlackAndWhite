@@ -28,6 +28,7 @@ class Ui_LoginWindow
 public:
     QGridLayout *gridLayout_2;
     QGridLayout *gridLayout;
+    QFrame *frameBackgroud;
     QHBoxLayout *horizontalLayout_15;
     QSpacerItem *horizontalSpacer_21;
     QVBoxLayout *verticalLayout;
@@ -63,13 +64,12 @@ public:
     QFrame *framePic;
     QGridLayout *gridLayout_3;
     QSpacerItem *horizontalSpacer_22;
-    QFrame *frameBackgroud;
 
     void setupUi(QWidget *LoginWindow)
     {
         if (LoginWindow->objectName().isEmpty())
             LoginWindow->setObjectName("LoginWindow");
-        LoginWindow->resize(589, 365);
+        LoginWindow->resize(574, 361);
         QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -81,6 +81,13 @@ public:
         gridLayout_2->setObjectName("gridLayout_2");
         gridLayout = new QGridLayout();
         gridLayout->setObjectName("gridLayout");
+        frameBackgroud = new QFrame(LoginWindow);
+        frameBackgroud->setObjectName("frameBackgroud");
+        frameBackgroud->setFrameShape(QFrame::Shape::StyledPanel);
+        frameBackgroud->setFrameShadow(QFrame::Shadow::Raised);
+
+        gridLayout->addWidget(frameBackgroud, 0, 0, 1, 1);
+
         horizontalLayout_15 = new QHBoxLayout();
         horizontalLayout_15->setObjectName("horizontalLayout_15");
         horizontalSpacer_21 = new QSpacerItem(18, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
@@ -153,6 +160,7 @@ public:
         userNameEdit->setMaximumSize(QSize(140, 25));
         userNameEdit->setStyleSheet(QString::fromUtf8("border-color: rgb(0, 0, 0);"));
         userNameEdit->setFrame(true);
+        userNameEdit->setClearButtonEnabled(false);
 
         horizontalLayout->addWidget(userNameEdit);
 
@@ -172,7 +180,7 @@ public:
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName("horizontalLayout_3");
-        horizontalSpacer_3 = new QSpacerItem(10, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+        horizontalSpacer_3 = new QSpacerItem(13, 20, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_3);
 
@@ -298,13 +306,6 @@ public:
 
         gridLayout->addLayout(horizontalLayout_15, 1, 1, 1, 1);
 
-        frameBackgroud = new QFrame(LoginWindow);
-        frameBackgroud->setObjectName("frameBackgroud");
-        frameBackgroud->setFrameShape(QFrame::Shape::StyledPanel);
-        frameBackgroud->setFrameShadow(QFrame::Shadow::Raised);
-
-        gridLayout->addWidget(frameBackgroud, 0, 0, 1, 1);
-
 
         gridLayout_2->addLayout(gridLayout, 0, 0, 1, 1);
 
@@ -322,7 +323,10 @@ public:
         LoginWindow->setWindowTitle(QCoreApplication::translate("LoginWindow", "\347\231\273\345\275\225", nullptr));
         labelLogin->setText(QCoreApplication::translate("LoginWindow", "LOGIN", nullptr));
         labelUsername->setText(QString());
+        userNameEdit->setPlaceholderText(QCoreApplication::translate("LoginWindow", "\350\257\267\350\276\223\345\205\245\347\224\250\346\210\267\345\220\215", nullptr));
         labelPassword->setText(QString());
+        passwdEdit->setText(QString());
+        passwdEdit->setPlaceholderText(QCoreApplication::translate("LoginWindow", "\350\257\267\350\276\223\345\205\245\345\257\206\347\240\201(6-12\344\275\215)", nullptr));
         registerButton->setText(QCoreApplication::translate("LoginWindow", "\346\263\250\345\206\214\350\264\246\345\217\267", nullptr));
         loginButton->setText(QCoreApplication::translate("LoginWindow", "\347\231\273    \345\275\225", nullptr));
     } // retranslateUi

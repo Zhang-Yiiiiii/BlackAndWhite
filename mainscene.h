@@ -47,6 +47,8 @@ public:
 
     // bool eventFilter(QObject *watched, QEvent *event ) override;
 
+    void showEvent(QShowEvent *event) override;
+
 private:
 
     //------------------------私有属性----------------------------------
@@ -55,8 +57,8 @@ private:
     User* m_user = nullptr;
 
     //当前用户名和密码
-    QString m_userName = "";
-    QString m_password = "";
+    QString m_userName = "default";
+    QString m_password = "default";
 
     //关卡按钮数组
     Hexagon* m_selectBtns[SELECTBTNNUMBER];
@@ -78,6 +80,9 @@ private:
 
     //是否是联机模式
     bool m_isOnlineMode = false;
+
+    //是否正在游戏
+    bool m_isGaming = false;
 
     //记录双方时间
     int m_ourTotalTime = 0;
@@ -158,6 +163,9 @@ private slots:
 
     //用户点击断开联机
     void onDisconnectTriggerd();
+
+signals:
+    void sceneShow();
 
 };
 

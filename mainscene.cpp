@@ -98,6 +98,12 @@ MainScene::~MainScene()
 
 }
 
+void MainScene::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    emit sceneShow();
+}
+
 void MainScene::showGameTitle()
 {
     //标签位置
@@ -236,10 +242,16 @@ void MainScene::setAnimations()
 //进入游戏场景
 void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, int bugX, int bugY, int bugDirection)
 {
+    m_isGaming = true;  //正在游戏
+
+    if(m_gameScene)
+    {
+        m_gameScene->deleteLater();
+    }
+
     if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式
     {
         //不指定父窗口 不然图标不显示
-
         m_gameScene = new AntGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
 
     }
@@ -363,16 +375,19 @@ void MainScene::setOnlineMode()
     // 监听我方完成游戏的信号
     connect(m_gameScene, &AntGame::gameOver, this, [ & ](int totalTime)
     {
+
         m_isWeFinished = true;
         m_ourTotalTime = totalTime;
 
-        // 发送胜利消息给对方
+        // 发送完成消息给对方
         m_onlineWindow->write("OVER_GAME" + QString::number(totalTime).toUtf8())->flush();
 
         // 检查对方是否已经完成游戏
-        if (m_isRivalFinished)
+        if (m_isRivalFinished)  //游戏结束
         {
             compareResults(m_ourTotalTime, m_rivalTotalTime);
+            m_isGaming = false;
+            emit m_gameScene->changeBack();
         }
         else
         {
@@ -387,16 +402,20 @@ void MainScene::setOnlineMode()
         m_rivalTotalTime = totalTime;
 
         // 检查我方是否已经完成游戏
-        if (m_isWeFinished)
+        if (m_isWeFinished) //游戏结束
         {
             compareResults(m_ourTotalTime, m_rivalTotalTime);
+            m_isGaming = false;
+            emit m_gameScene->changeBack();
         }
+
     });
 
     // 监听我方赢得游戏
     connect(m_onlineWindow, &OnlineWindow::weWinGame, this, [ = ]()
     {
         QMessageBox::about(m_gameScene, "提醒", "我方胜利");
+        m_isGaming = false;
         emit m_gameScene->changeBack();
     });
 
@@ -404,6 +423,7 @@ void MainScene::setOnlineMode()
     connect(m_onlineWindow, &OnlineWindow::weLoseGame, this, [ = ]()
     {
         QMessageBox::about(m_gameScene, "提醒", "对方胜利");
+        m_isGaming = false;
         emit m_gameScene->changeBack();
     });
 }
@@ -427,7 +447,7 @@ void MainScene::compareResults(int ourTime, int rivalTime)
         QMessageBox::about(m_gameScene, "提醒", "平局");
     }
 
-    emit m_gameScene->changeBack();
+    //emit m_gameScene->changeBack();
 }
 
 //----------------------------------私有槽--------------------------------------------
@@ -451,16 +471,33 @@ void MainScene::onHexagonClicked(int gameLevel)
 // 处理返回信号
 void MainScene::onGameSceneChangeBack()
 {
+
+    if(m_isOnlineMode && m_isGaming)  //如果是联机模式
+    {
+        auto ret = QMessageBox::question(this, "注意", "返回自动认输");
+
+        if(ret == QMessageBox::Yes)
+        {
+            m_onlineWindow->write("YOU_WIN");
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    m_isGaming = false;
+
     m_gameScene->setInternalClose(true);  //确定是内部进行返回的
 
     Animator::transition(m_gameScene, this);
 
-    // 在淡入完成后再销毁游戏场景
-    connect(m_gameScene, &AbstractGameScene::sceneShow, this, [this]()
-    {
-        // 在主界面彻底显示后，再删掉旧的场景
-        m_gameScene->deleteLater();
-    });
+    // // 在淡入完成后再销毁游戏场景
+    // connect(this, &MainScene::sceneShow, this, [this]()
+    // {
+    //     // 在主界面彻底显示后，再删掉旧的场景
+    // m_gameScene->deleteLater();
+    // });
 }
 
 //用户登录
