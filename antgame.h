@@ -24,13 +24,19 @@ public:
     //------------------------公有方法----------------------------------
 
     //保存游戏数据
-    void saveGame(BuildWay buildWay, int step, int x, int y, int direction);
+    void saveGame(BuildWay buildWay, int step, int x, int y, int direction, bool flag = 1); //flag表示是否要返回
+
+    //模拟/关闭
+    void simulate(BuildWay buildWay, int step, int x, int y, int direction, bool flag); //flag 表示模拟还是关闭
 
     //画图事件
     void paintEvent(QPaintEvent* event) override;
 
     //评分
     ScoreLevel Scoring() override;
+
+    //设置按钮是否可按
+    void setBtnEnabled(bool enable) override;
 
 private:
 
@@ -84,8 +90,8 @@ private:
     bool isWin() const override;          //检验是否胜利
 
     //判断是否有解
-    bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知起点
-    bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step); //已知终点
+    bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step, bool isSave = 1); //已知起点
+    bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step, bool isSave = 1 ); //已知终点
 
     void generateTipArray() override;   //生成提示数组
 

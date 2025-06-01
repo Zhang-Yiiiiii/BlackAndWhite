@@ -281,6 +281,11 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
 
         // 创建保存按钮
         createSaveButton(gameStep, bugX, bugY, bugDirection, enterWay);
+
+        if(enterWay == startingPointMode || enterWay == destinationMode)
+        {
+            createSimulationButton(gameStep, bugX, bugY, bugDirection, enterWay);   //创建模拟按钮
+        }
     }
     else if(enterWay == onlineMode)    // 联机模式
     {
@@ -355,6 +360,22 @@ void MainScene::createSaveButton(int gameStep, int bugX, int bugY, int bugDirect
     connect(saveBtn, &QPushButton::clicked, this, [this, gameStep, bugX, bugY, bugDirection, buildWay]()
     {
         onSaveButtonClicked(buildWay, gameStep, bugX, bugY, bugDirection);
+    });
+}
+
+//创建模拟按钮
+void MainScene::createSimulationButton(int gameStep, int bugX, int bugY, int bugDirection, BuildWay buildWay)
+{
+    static bool flag = 0;   //为0表示模拟 1表示关闭
+    QPushButton *simuBtn = MyPushButton::createButton(MyPushButton::commonButton, "模拟", m_gameScene);
+    simuBtn->move(BACKGROUDWIDTH - simuBtn->width(), BACKGROUDHEIGHT - 5 * simuBtn->height());
+    simuBtn->show();
+
+    connect(simuBtn, &QPushButton::clicked, this, [ = ]()
+    {
+        onSimuButtonClicked(buildWay, gameStep, bugX, bugY, bugDirection, flag);
+        flag = !flag;
+        simuBtn->setText(flag ? "关闭模拟" : "模拟");
     });
 }
 
@@ -632,6 +653,17 @@ void MainScene::onSaveButtonClicked(BuildWay buildWay, int gameStep, int bugX, i
             }
         }
     }
+}
+
+//模拟按钮的点击
+void MainScene::onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool flag)
+{
+
+    if(AntGame * antPtr = dynamic_cast<AntGame*>(m_gameScene))
+    {
+        antPtr->simulate(buildWay, gameStep, bugX, bugY, bugDirection, flag);
+    }
+
 }
 
 //用户点击联机模式

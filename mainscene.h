@@ -124,6 +124,9 @@ private:
     //创建保存按钮
     void createSaveButton(int gameStep, int bugX, int bugY, int bugDirection, BuildWay buildWay);
 
+    //创建模拟按钮
+    void createSimulationButton(int gameStep, int bugX, int bugY, int bugDirection, BuildWay buildWay);
+
     //设置联机模式
     void setOnlineMode();
 
@@ -157,6 +160,9 @@ private slots:
 
     //保存按钮点击
     void onSaveButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection);
+
+    //模拟按钮的点击
+    void onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool flag);
 
     //用户点击联机按钮
     void onOnlineTriggerd();

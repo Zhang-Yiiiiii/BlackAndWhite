@@ -50,7 +50,22 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
     showTimeLabel();    //显示时间label
 
-    initTimer();    //初始化定时器
+    QPointer<AbstractGameScene> selfPtr;
+    selfPtr = this; // 保存弱引用
+    QTimer::singleShot(2000, [ = ]()
+    {
+        if (!selfPtr)
+        {
+            return;    // 检查对象是否存活
+        }
+
+        initTimer();
+    });
+
+    // QTimer::singleShot(2000, [this]()
+    // {
+    // initTimer();    //初始化定时器
+    // });
 
     showPushButton();   //显示提交、返回、重置按钮
 
@@ -136,6 +151,22 @@ void AbstractGameScene::saveSolvableInfo(const std::vector<std::vector<bool> >& 
 
     //将答案保存
     m_data->saveData(m_gameLevel, gameArray, ans, steps, dir, pos);
+}
+
+//设置按钮是否可按
+void AbstractGameScene::setBtnEnabled(bool enable)
+{
+    //重置按钮
+    resetBtn->setEnabled(enable);
+
+    //提交按钮
+    submitBtn->setEnabled(enable);
+
+    //随机按钮
+    randomBtn->setEnabled(enable);
+
+    //返回按钮
+    backBtn->setEnabled(enable);
 }
 
 //----------------------------------保护方法--------------------------------------------

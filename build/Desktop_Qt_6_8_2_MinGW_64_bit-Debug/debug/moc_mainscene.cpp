@@ -55,6 +55,8 @@ static constexpr auto qt_meta_stringdata_ZN9MainSceneE = QtMocHelpers::stringDat
     "bugX",
     "bugY",
     "bugDirection",
+    "onSimuButtonClicked",
+    "flag",
     "onOnlineTriggerd",
     "onDisconnectTriggerd"
 );
@@ -68,7 +70,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -76,18 +78,19 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   74,    2, 0x06,    1 /* Public */,
+       1,    0,   80,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       3,    1,   75,    2, 0x08,    2 /* Private */,
-       5,    0,   78,    2, 0x08,    4 /* Private */,
-       6,    0,   79,    2, 0x08,    5 /* Private */,
-       7,    0,   80,    2, 0x08,    6 /* Private */,
-       8,    0,   81,    2, 0x08,    7 /* Private */,
-       9,    1,   82,    2, 0x08,    8 /* Private */,
-      12,    5,   85,    2, 0x08,   10 /* Private */,
-      17,    0,   96,    2, 0x08,   16 /* Private */,
-      18,    0,   97,    2, 0x08,   17 /* Private */,
+       3,    1,   81,    2, 0x08,    2 /* Private */,
+       5,    0,   84,    2, 0x08,    4 /* Private */,
+       6,    0,   85,    2, 0x08,    5 /* Private */,
+       7,    0,   86,    2, 0x08,    6 /* Private */,
+       8,    0,   87,    2, 0x08,    7 /* Private */,
+       9,    1,   88,    2, 0x08,    8 /* Private */,
+      12,    5,   91,    2, 0x08,   10 /* Private */,
+      17,    6,  102,    2, 0x08,   16 /* Private */,
+      19,    0,  115,    2, 0x08,   23 /* Private */,
+      20,    0,  116,    2, 0x08,   24 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
@@ -100,6 +103,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN9MainSceneE[] = {
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 10,   11,
     QMetaType::Void, 0x80000000 | 10, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int,   11,   13,   14,   15,   16,
+    QMetaType::Void, 0x80000000 | 10, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::Bool,   11,   13,   14,   15,   16,   18,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -138,6 +142,14 @@ Q_CONSTINIT const QMetaObject MainScene::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'onSimuButtonClicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<BuildWay, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        QtPrivate::TypeAndForceComplete<bool, std::false_type>,
         // method 'onOnlineTriggerd'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onDisconnectTriggerd'
@@ -159,8 +171,9 @@ void MainScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 5: _t->onUserConfirmRegister(); break;
         case 6: _t->onMapingInfoReceived((*reinterpret_cast< std::add_pointer_t<BuildWay>>(_a[1]))); break;
         case 7: _t->onSaveButtonClicked((*reinterpret_cast< std::add_pointer_t<BuildWay>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[5]))); break;
-        case 8: _t->onOnlineTriggerd(); break;
-        case 9: _t->onDisconnectTriggerd(); break;
+        case 8: _t->onSimuButtonClicked((*reinterpret_cast< std::add_pointer_t<BuildWay>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[3])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[4])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[5])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[6]))); break;
+        case 9: _t->onOnlineTriggerd(); break;
+        case 10: _t->onDisconnectTriggerd(); break;
         default: ;
         }
     }
@@ -195,14 +208,14 @@ int MainScene::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

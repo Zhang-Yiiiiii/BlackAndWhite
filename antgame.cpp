@@ -1,6 +1,7 @@
 #include "antgame.h"
 #include <QColorDialog>
 #include <QToolTip>
+#include <QPointer>
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
 
@@ -65,12 +66,12 @@ AntGame::~AntGame()
 //----------------------------------公有方法--------------------------------------------
 
 //保存自建地图
-void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction)
+void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction, bool flag) //flag表示是否返回 以及是否保存
 {
     //判断是否可解 并且保存地图
     if(buildWay == startingPointMode) //起点建图
     {
-        if(!startingPointMaping(this->m_gameArray, QPoint(x, y), direction, step)) //不可解
+        if(!startingPointMaping(this->m_gameArray, QPoint(x, y), direction, step, flag)) //不可解
         {
             QMessageBox::about(this, "提醒", "该设计游戏无解！请重新设计");
             return;
@@ -78,15 +79,72 @@ void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction)
     }
     else  //终点建图
     {
-        if(!destinationMaping(this->m_gameArray, QPoint(x, y), direction, step)) //不可解
+        if(!destinationMaping(this->m_gameArray, QPoint(x, y), direction, step, flag)) //不可解
         {
             QMessageBox::about(this, "提醒", "该设计游戏无解！请重新设计");
             return;
         }
     }
 
-    //进行返回操作
-    emit changeBack();
+    if(flag)
+    {
+        emit changeBack();        //进行返回操作
+    }
+}
+
+void AntGame::simulate(BuildWay buildWay, int step, int x, int y, int direction, bool flag)
+{
+    static int secs = 0;    //记录时间
+    const int delay = 1000;
+
+    if(flag == 0)   //模拟
+    {
+        // this->setEnabled(false);
+        setBtnEnabled(false);
+        saveGame(buildWay, step, x, y, direction, false);    //保存但是不返回
+        int time = 0;
+
+        for(const auto& point : m_hintArray)
+        {
+            int x = point.x(), y = point.y();
+            QPointer<GridButton> cellGuard(m_board[x][y]); // 弱引用
+            QTimer::singleShot(time, this, [ = ]()
+            {
+                secs += delay;
+
+                if(secs == m_hintArray.size() * delay)
+                {
+                    //this->setEnabled(true);
+                    setBtnEnabled(true);
+                }
+
+                emit cellGuard->beClicked(x, y);
+            });
+
+            time += delay;
+        }
+    }
+    else
+    {
+        // if(secs < m_hintArray.size() * 1000)
+        // {
+        // QMessageBox::about(this, "提醒", "请等待模拟完成");
+        // return;
+        // }
+
+        resetGame();
+
+        //清除路径
+        m_path.clear();
+
+        //清除答案数组
+        clearTipsButton();
+
+        //清楚逐步提示步数
+        hintSteps = 0;
+
+        secs = 0;
+    }
 }
 
 void AntGame::paintEvent(QPaintEvent *event)
@@ -111,24 +169,38 @@ ScoreLevel AntGame::Scoring()
     {
         score = ScoreLevel::S;
     }
+
     else if(time <= 2 * m_gameStep)
     {
         score = ScoreLevel::A;
     }
+
     else if(time <= 3 * m_gameStep)
     {
         score = ScoreLevel::B;
     }
+
     else if(time <= 4 * m_gameStep)
     {
         score = ScoreLevel::C;
     }
+
     else
     {
         score = ScoreLevel::D;
     }
 
     return score;
+}
+
+void AntGame::setBtnEnabled(bool enable)
+{
+    // 遍历所有子对象
+    for (QPushButton *btn : findChildren<QPushButton*>())
+    {
+        btn->setEnabled(enable);
+    }
+
 }
 
 //----------------------------------私有方法--------------------------------------------
@@ -269,8 +341,10 @@ bool AntGame::isWin() const
 }
 
 //起点建图
-bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
+bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step, bool isSave)
 {
+    m_hintArray.clear();    //提示数组
+
     std::vector<std::vector<bool>> tempArray(BOARD_SIZE, std::vector<bool>(BOARD_SIZE));
     int tempStep = step;
 
@@ -291,6 +365,9 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
     // 3 改变前一个格子颜色
     while(tempStep--)
     {
+        //将数据保存至逐步提示数组
+        m_hintArray.append(QPoint(x, y));
+
         //改变前一格颜色
         tempArray[x][y] = !tempArray[x][y];
 
@@ -329,17 +406,19 @@ bool AntGame::startingPointMaping(std::vector<std::vector<bool> >& gameArray, QP
             bugDir += 3; //左转方向加三
             bugDir %= 4;
         }
+
     }
 
     //将结果传给data
-    saveSolvableInfo(tempArray, gameArray, step, bugDir, QPoint(x, y));
+    if(isSave)
+        saveSolvableInfo(tempArray, gameArray, step, bugDir, QPoint(x, y));
     return true;
 }
 
 //终点建图
-bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step)
+bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoint pos, int bugDir, int step, bool isSave)
 {
-    m_hintArray.clear();
+    m_hintArray.clear();    //提示数组
 
     std::vector<std::vector<bool>> tempArray(BOARD_SIZE, std::vector<bool>(BOARD_SIZE));
     int tempStep = step;

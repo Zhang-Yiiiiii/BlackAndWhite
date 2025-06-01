@@ -69,6 +69,9 @@ public:
     //评分
     virtual ScoreLevel Scoring() = 0;
 
+    //禁用按钮
+    virtual void setBtnEnabled(bool enable);
+
 protected:
     //------------------------保护属性----------------------------------
 
