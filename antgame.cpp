@@ -205,36 +205,6 @@ void AntGame::setBtnEnabled(bool enable)
 
 //----------------------------------私有方法--------------------------------------------
 
-// //初始化游戏信息
-// void AntGame::initGameInfo()
-// {
-//     //初始化游戏信息对象
-// if(!m_data)
-// {
-// m_data = new Data;
-// }
-
-// setboardSize(); //获取棋盘大小
-
-// initVector();   //初始化棋盘vector
-
-//     //初始化信息
-// for(int i = 0; i < m_boardRow; i++)
-// {
-// for(int j = 0; j < m_boardCol; j++)
-// {
-// m_gameArray[i][j] = m_data->m_gameArray[m_gameLevel][i][j];
-// m_ansArray[i][j] = m_data->m_ansArray[m_gameLevel][i][j];
-// }
-// }
-
-//     //初始化虫子所在位置、方向 750 400 游戏步数
-// m_bugPos.setX(m_data->m_bugPos[m_gameLevel].x());
-// m_bugPos.setY(m_data->m_bugPos[m_gameLevel].y());
-// m_bugDir = m_data->m_bugDir[m_gameLevel];
-// m_gameStep = m_data->m_stepArray[m_gameLevel];
-// }
-
 //初始化bug
 void AntGame::initBugInfo()
 {
@@ -266,40 +236,6 @@ void AntGame::showBug()
     bugBtn->setAttribute(Qt::WA_TransparentForMouseEvents);  //设置可以透明点击
     bugBtn->setEnabled(false);  //设置不能点击
 }
-
-// //显示时间
-// void AntGame::showTimeLabel()
-// {
-//     //显示用时的label
-// if(!m_timeLabel)
-// {
-// m_timeLabel = new QLabel(this);
-// }
-
-// setLabelStyle(m_timeLabel);
-// m_timeLabel->setText("所用时间：00:00:00");
-// m_timeLabel->move(150, 400);
-
-//     //罚时label
-// if(!m_timePenaltyLabel)
-// {
-// m_timePenaltyLabel = new QLabel(this);
-// }
-
-// setLabelStyle(m_timePenaltyLabel);
-// m_timePenaltyLabel->setText("所罚时间：00:00:00");
-// m_timePenaltyLabel->move(150, 400 + m_timeLabel->height() + 10);
-// }
-
-// //获取总时间
-// int AntGame::getTotalTime() const
-// {
-//     //计算总时间
-// int totalTime = m_passingTime;
-// totalTime += m_penaltyTime;
-
-// return totalTime;
-// }
 
 //初始化步数label
 void AntGame::showStepLabel()
@@ -645,34 +581,6 @@ unsigned int AntGame::calculateExp()
 
 //----------------------------------私有槽--------------------------------------------
 
-// //提交
-// void AntGame::onSubmitBtnClicked()
-// {
-//     //判断是否胜利
-// if(isWin())
-// {
-// if(m_gameMode == playMode)
-// {
-// QMessageBox::about(this, "通过", "恭喜你成功通过此关");
-// saveTotalTime();
-// emit changeBack();  //进行返回
-// }
-// else if (m_gameMode == onlineMode)
-// {
-// const int totalTime = getTotalTime();
-// saveTotalTime();
-// m_showTimer->stop();
-// emit gameOver(totalTime);
-// }
-// }
-// else
-// {
-// QMessageBox::about(this, "失败", "答案错误，罚时30秒");
-// this->onResetBtnClicked(); //重置棋盘
-// this->m_penaltyTime += 30; //罚时增加
-// }
-// }
-
 //重置棋盘
 void AntGame::onResetBtnClicked()
 {
@@ -722,24 +630,6 @@ void AntGame::onShowCurrentSteps()
     m_currentStepsLabel->show();
 }
 
-//更新时间
-// void AntGame::onUpdateTime()
-// {
-// int secs = m_elapsedTimer.elapsed() / 1000;
-// m_passingTime = secs;
-
-// int mins = secs / 60;
-// int hours = mins / 60;
-// secs %= 60;
-// mins %= 60;
-// m_timeLabel->setText(QString::asprintf("所用时间：%02d:%02d:%02d", hours, mins, secs));
-
-// secs = m_penaltyTime % 60;
-// mins = m_penaltyTime / 60 % 60;
-// hours = m_penaltyTime / 3600;
-// m_timePenaltyLabel->setText(QString::asprintf("所罚时间：%02d:%02d:%02d", hours, mins, secs));
-// }
-
 //显示路径
 void AntGame::onShowPathClicked()
 {
@@ -778,7 +668,7 @@ void AntGame::onChooseColorClicked()
         // 更新覆盖层颜色
         m_overlay->setPathColor(color);
 
-        // // 可选：将按钮背景色设置为当前颜色
+        // // 将按钮背景色设置为当前颜色
         // QString style = QString(
         // "QPushButton { padding: 8px; background: %1; color: %2; }"
         // ).arg(color.name()).arg(

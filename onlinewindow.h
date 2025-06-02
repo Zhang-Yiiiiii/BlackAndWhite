@@ -39,6 +39,9 @@ public:
     //断开联机
     void disconnectOnline();
 
+    //设置背景
+    void setBackground(const QString file);
+
 private:
     //------------------------私有属性----------------------------------
 
@@ -47,12 +50,6 @@ private:
 
     QTcpServer* m_server = nullptr;
     QTcpSocket* m_clientConnection = nullptr;
-
-protected:
-    //------------------------保护方法----------------------------------
-
-    //重写画图事件
-    void paintEvent(QPaintEvent*) override;
 
 signals:
     //------------------------信号----------------------------------

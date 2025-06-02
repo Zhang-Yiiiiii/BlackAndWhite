@@ -11,7 +11,7 @@
 #include <QMenuBar>
 #include <QPixmap>
 #include <QPainter>
-#include "musicplayer.h"
+#include "musicplayerr.h"
 #include "GameHelpDialog.h"
 
 namespace Ui
@@ -33,7 +33,7 @@ public:
     //------------------------公共方法----------------------------------
 
     //设置音乐播放器
-    void setMusicPlayer(MusicPlayer*);
+    void setMusicPlayerr(MusicPlayerr*);
 
 protected:
 
@@ -54,7 +54,7 @@ protected:
     QAction* m_quitAction;      //退出游戏菜单项
     QAction* m_musicAction;     //音乐菜单项
 
-    MusicPlayer* m_musicPlayer;  //音乐播放器
+    MusicPlayerr* m_musicPlayer;  //音乐播放器
 
     //------------------------保护方法----------------------------------
 

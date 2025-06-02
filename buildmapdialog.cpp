@@ -10,6 +10,7 @@ BuildMapDialog::BuildMapDialog(QWidget *parent)
     ui->setupUi(this);
 
     this->setWindowTitle("自建地图");
+    setBackground(":/image/musicBackgnd.png");
 
     //设置关闭属性 防止内存泄露
     //this->setAttribute(Qt::WA_DeleteOnClose);
@@ -52,6 +53,18 @@ int BuildMapDialog::getNum4()
 int BuildMapDialog::getNum5()
 {
     return this->m_num5;
+}
+
+void BuildMapDialog::setBackground(const QString fileName)
+{
+    QPixmap pix(fileName);
+    QSize windowSize = this->size();
+    QPixmap scalePix = pix.scaled(windowSize);
+
+    QPalette palette = this->palette();
+    palette.setBrush(QPalette::Window, QBrush(scalePix));
+
+    this->setPalette(palette);
 }
 
 //----------------------------------私有槽--------------------------------------------

@@ -63,11 +63,11 @@ BaseWindow::~BaseWindow()
 //----------------------------------公共方法--------------------------------------------
 
 //设置音乐播放器
-void BaseWindow::setMusicPlayer(MusicPlayer *musicPlayer)
+void BaseWindow::setMusicPlayerr(MusicPlayerr *musicPlayerr)
 {
     //设置菜单
     m_quitAction = m_menubar->addAction("音乐");
-    m_musicPlayer = musicPlayer;
+    m_musicPlayer = musicPlayerr;
     connect(m_quitAction, &QAction::triggered, m_musicPlayer, &QWidget::show);
 }
 

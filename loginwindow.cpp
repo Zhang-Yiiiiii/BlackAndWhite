@@ -15,27 +15,12 @@ LoginWindow::LoginWindow(QWidget *parent)
     this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
     //this->setAttribute(Qt::WA_DeleteOnClose);
 
-    this->setFixedSize(517, 363);
+    this->setFixedSize(500, 360);
+    this->setBackground(":/image/musicBackgnd.png");
 
     this->ui->labelLogin->setStyleSheet("QLabel { color: black; }");  // 设置字体颜色为黑色
 
     this->setWindowIcon(QIcon(MYICON));
-
-    //设置用户名输入为黑色
-    // QPalette palette = this->ui->userNameEdit->palette();
-    // palette.setColor(QPalette::Text, Qt::black);  // 设置文本颜色为黑色
-    // this->ui->userNameEdit->setPalette(palette);
-    // this->ui->userNameEdit->setAutoFillBackground(true);  // 确保背景被填充
-
-    //设置密码输入为黑色
-    // palette = this->ui->passwdEdit->palette();
-    // palette.setColor(QPalette::Text, Qt::black);  // 设置文本颜色为黑色
-    // this->ui->passwdEdit->setPalette(palette);
-    // this->ui->passwdEdit->setAutoFillBackground(true);  // 确保背景被填充
-
-    //注册按钮为黑色
-
-    //this->ui->framePic->setStyleSheet("background-image: url(:/image/loginRobot.jpg);");
 
     //设置边框
     this->ui->userNameEdit->setStyleSheet("QLineEdit { border: 2px solid black; border-radius: 5px; }");
@@ -43,10 +28,30 @@ LoginWindow::LoginWindow(QWidget *parent)
     //设置透明度
     this->ui->labelPassword->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     this->ui->labelUsername->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-    this->ui->passwdEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
-    this->ui->userNameEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
+    // this->ui->passwdEdit->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
+    // this->ui->userNameEdit->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
     this->ui->loginButton->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
     this->ui->registerButton->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
+
+    ui->userNameEdit->setStyleSheet(
+        "QLineEdit {"
+        "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+        "    color: white;"              // 输入文字为白色（简写）
+        "}"
+        "QLineEdit::placeholder {"
+        "    color: red;"  // 50% 透明白色
+        "}"
+    );
+
+    ui->passwdEdit->setStyleSheet(
+        "QLineEdit {"
+        "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+        "    color: white;"              // 输入文字为白色（简写）
+        "}"
+        "QLineEdit::placeholder {"
+        "    color: rgba(0, 0, 0, 1.0);"  // 50% 透明白色
+        "}"
+    );
 
     // 置于顶层
     //this->setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -94,25 +99,25 @@ QString LoginWindow::getUserPassword()
     return this->m_password;
 }
 
+void LoginWindow::setBackground(const QString file)
+{
+
+    QPixmap pix(file);
+    QSize windowSize = this->size();
+    QPixmap scalePix = pix.scaled(windowSize);
+
+    QPalette palette = this->palette();
+    palette.setBrush(QPalette::Window, QBrush(scalePix));
+
+    this->setPalette(palette);
+
+}
+
 //----------------------------------保护方法--------------------------------------------
 
-void LoginWindow::paintEvent(QPaintEvent*)
+void LoginWindow::paintEvent(QPaintEvent*e)
 {
-    QPainter painter(this);
-    QPixmap loginPic;
-
-    //画窗口背景
-    loginPic.load(LOGINBACKGROUND);
-    painter.drawPixmap(0, 0, loginPic.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    //画白色背景
-    // loginPic.load(LOGINWIHTEBACKGROUND);
-    // painter.drawPixmap(15,17,loginPic);
-
-    //画机器人图片
-    loginPic.load(LOGINROBOT);
-    painter.drawPixmap(260, 17, loginPic.width() - 15, loginPic.height() - 15, loginPic);
-
+    QDialog::paintEvent(e);
 }
 
 //关闭事件
@@ -132,10 +137,15 @@ void LoginWindow::checkPasswordLength(const QString &password)
     {
         // 在checkPasswordLength函数中添加
         // 设置背景色+红色边框（保留原有透明度背景）
-        this->ui->passwdEdit->setStyleSheet(
+
+        ui->passwdEdit->setStyleSheet(
             "QLineEdit {"
-            "   background-color: rgba(255, 255, 255, 100);"  // 保持原始背景
-            "   border: 2px solid red;"                       // 新增红色边框
+            "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+            "    color: white;"              // 输入文字为白色（简写）
+            "    border: 2px solid red;"                       // 新增红色边框
+            "}"
+            "QLineEdit::placeholder {"
+            "    color: red !important;"  // 50% 透明白色
             "}"
         );
 
@@ -146,7 +156,16 @@ void LoginWindow::checkPasswordLength(const QString &password)
     }
     else
     {
-        this->ui->passwdEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
+        ui->passwdEdit->setStyleSheet(
+            "QLineEdit {"
+            "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+            "    color: white;"              // 输入文字为白色（简写）
+            "}"
+            "QLineEdit::placeholder {"
+            "    color: red !important;"  // 50% 透明白色
+            "}"
+        );
+
         // 隐藏提示或显示确认信息
         //ui->lengthWarningLabel->hide();
         // 显示绿色确认提示

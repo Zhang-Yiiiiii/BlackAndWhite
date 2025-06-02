@@ -14,6 +14,7 @@ release/loginwindow.o
 release/main.o
 release/mainscene.o
 release/musicplayer.o
+release/musicplayerr.o
 release/mypushbutton.o
 release/onlinewindow.o
 release/overlay.o
@@ -36,6 +37,7 @@ release/moc_lightoutgame.o
 release/moc_loginwindow.o
 release/moc_mainscene.o
 release/moc_musicplayer.o
+release/moc_musicplayerr.o
 release/moc_onlinewindow.o
 release/moc_overlay.o
 release/moc_ranklist.o

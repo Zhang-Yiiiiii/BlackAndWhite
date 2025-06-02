@@ -9,6 +9,7 @@
 #include "mypushbutton.h"
 #include "userutils.h"
 #include <QStandardPaths>
+#include "musicplayerr.h"
 
 const QPoint avatar_pos = QPoint(80, 80);
 
@@ -16,7 +17,6 @@ const QPoint avatar_pos = QPoint(80, 80);
 MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
 {
-
     this->setWindowIcon(QIcon(MYICON));
 
     //登录
@@ -73,7 +73,7 @@ MainScene::MainScene(QWidget *parent)
     //setAnimations();
 
     //设置音乐播放器
-    setMusicPlayer(new MusicPlayer(this));
+    setMusicPlayerr(new MusicPlayerr(this));
 
     // 你应该已经在构造函数中获取 currentUser（比如从登录页面传入）
     m_currentUser = UserUtils::findUserByName("default");   //默认用户名
@@ -260,7 +260,7 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
         m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
 
-    m_gameScene->setMusicPlayer(m_musicPlayer); //设置音乐播放器
+    m_gameScene->setMusicPlayerr(m_musicPlayer); //设置音乐播放器
 
     Animator::transition(this, m_gameScene); //使用动画进入
 

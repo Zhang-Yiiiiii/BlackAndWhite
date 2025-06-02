@@ -30,6 +30,7 @@ SOURCES += \
     main.cpp \
     mainscene.cpp \
     musicplayer.cpp \
+    musicplayerr.cpp \
     mypushbutton.cpp \
     onlinewindow.cpp \
     overlay.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     loginwindow.h \
     mainscene.h \
     musicplayer.h \
+    musicplayerr.h \
     mypushbutton.h \
     onlinewindow.h \
     overlay.h \
@@ -68,6 +70,7 @@ FORMS += \
     buildmapdialog.ui \
     loginwindow.ui \
     mainscene.ui \
+    musicplayerr.ui \
     onlinewindow.ui \
     ranklist.ui
 

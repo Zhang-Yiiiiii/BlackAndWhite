@@ -14,7 +14,8 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
 
     //this->setWindowModality(Qt::WindowModal); // 设置为模态窗口
 
-    this->setFixedSize(517, 363);   //设置大小
+    this->setFixedSize(520, 400);   //设置大小
+    setBackground(":/image/musicBackgnd.png");  //设置背景
 
     this->ui->labelLogin->setStyleSheet("QLabel { color: black; }");  // 设置字体颜色为黑色
 
@@ -25,8 +26,8 @@ OnlineWindow::OnlineWindow(QWidget *parent) :
     //设置透明度
     this->ui->ipLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
     this->ui->portLabel->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-    this->ui->portEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
-    this->ui->ipEdit->setStyleSheet("background-color: rgba(255, 255, 255, 100);");
+    this->ui->portEdit->setStyleSheet("background-color: rgba(255, 255, 255, 0.2);");
+    this->ui->ipEdit->setStyleSheet("background-color: rgba(255, 255, 255, 0.2);");
     this->ui->listenBtn->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
     this->ui->joinBtn->setStyleSheet("background-color: rgba(255, 255, 255, 20);");
 
@@ -99,21 +100,19 @@ void OnlineWindow::disconnectOnline()
     }
 }
 
-//------------------------保护方法----------------------------------
-
-//画图事件
-void OnlineWindow::paintEvent(QPaintEvent*)
+//设置背景
+void OnlineWindow::setBackground(const QString file)
 {
-    QPainter painter(this);
-    QPixmap loginPic;
 
-    //画窗口背景
-    loginPic.load(LOGINBACKGROUND);
-    painter.drawPixmap(0, 0, loginPic.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QPixmap pix(file);
+    QSize windowSize = this->size();
+    QPixmap scalePix = pix.scaled(windowSize);
 
-    //画机器人图片
-    loginPic.load(LOGINROBOT);
-    painter.drawPixmap(260, 17, loginPic.width() - 15, loginPic.height() - 15, loginPic);
+    QPalette palette = this->palette();
+    palette.setBrush(QPalette::Window, QBrush(scalePix));
+
+    this->setPalette(palette);
+
 }
 
 //----------------------------------私有槽--------------------------------------------
@@ -164,7 +163,6 @@ void OnlineWindow::onJoinBtnClicked()
     //删除服务器
     if(m_server)
     {
-        qDebug() << "test";
         m_server->close();
         delete m_server;
         m_server = nullptr;

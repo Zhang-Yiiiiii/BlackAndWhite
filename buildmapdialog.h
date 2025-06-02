@@ -36,6 +36,8 @@ public:
     int getNum4();
     int getNum5();
 
+    void setBackground(const QString path);
+
 private:
 
     //------------------------私有属性----------------------------------

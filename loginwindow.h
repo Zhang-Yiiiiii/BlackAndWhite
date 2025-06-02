@@ -35,6 +35,9 @@ public:
     //获取用户信息
     QString getUserPassword();
 
+    //设置背景
+    void setBackground(const QString file);
+
     //------------------------保护方法----------------------------------
 
     //重写画图事件

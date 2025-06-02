@@ -50,5 +50,15 @@
         <file>rule/antGameRule.md</file>
         <file>icon/closeEye.png</file>
         <file>icon/openEye.png</file>
+        <file>icon/list.png</file>
+        <file>icon/nextMusic.png</file>
+        <file>icon/pause.png</file>
+        <file>icon/play.png</file>
+        <file>icon/prevMusic.png</file>
+        <file>icon/chooseMusic.png</file>
+        <file>icon/circle.png</file>
+        <file>icon/order.png</file>
+        <file>icon/random.png</file>
+        <file>image/musicBackgnd.png</file>
     </qresource>
 </RCC>

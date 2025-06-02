@@ -1,7 +1,4 @@
 #include "MusicPlayer.h"
-#include <QStyle>
-#include <QTime>
-#include "MusicPlayer.h"
 #include "qpainter.h"
 #include <QStyle>
 #include <QTime>
@@ -48,6 +45,7 @@ MusicPlayer::MusicPlayer(QWidget *parent)
     connect(m_player, &QMediaPlayer::positionChanged, this, &MusicPlayer::updatePosition);
     connect(m_player, &QMediaPlayer::durationChanged, this, &MusicPlayer::updateDuration);
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &MusicPlayer::handleMediaStatus);
+
     connect(m_slider, &QSlider::sliderMoved, this, &MusicPlayer::setPositionByClick);
     connect(m_playButton, &QPushButton::clicked, this, &MusicPlayer::togglePlayPause);
     connect(m_openButton, &QPushButton::clicked, this, &MusicPlayer::openFile);

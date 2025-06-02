@@ -24,10 +24,13 @@ public:
 private slots:
     void updatePosition(qint64 pos);
     void updateDuration(qint64 dur);
-    void togglePlayPause();
+
+    void togglePlayPause(); //切换暂停
+
     void openFile();
     void setPositionByClick(int pos);
-    void toggleMute();
+
+    void toggleMute();  //切换静音
     void handleMediaStatus(QMediaPlayer::MediaStatus status);
 
 protected:
