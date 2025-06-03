@@ -1,8 +1,10 @@
 #include "onlinewindow.h"
 #include "ui_onlinewindow.h"
 #include "config.h"
+#include "MessageTip.h"
 
 #include <QString>
+#include <QToolTip>
 
 //----------------------------------构造析构--------------------------------------------
 
@@ -47,19 +49,7 @@ OnlineWindow::~OnlineWindow()
 {
     delete ui;
 
-    if(m_server)
-    {
-        m_server->close();
-        m_server->deleteLater();
-        m_server = nullptr;
-    }
-
-    if(m_clientConnection)
-    {
-        m_clientConnection->close();
-        m_clientConnection->deleteLater();
-        m_clientConnection = nullptr;
-    }
+    cleanupConnections();
 }
 
 //----------------------------------公有方法--------------------------------------------
@@ -89,15 +79,7 @@ OnlineWindow* OnlineWindow::flush()
 //断开联机
 void OnlineWindow::disconnectOnline()
 {
-    if(m_clientConnection)
-    {
-        m_clientConnection->close();
-    }
-
-    if(m_server)
-    {
-        m_server->close();
-    }
+    cleanupConnections();
 }
 
 //设置背景
@@ -115,29 +97,39 @@ void OnlineWindow::setBackground(const QString file)
 
 }
 
+// 添加清理函数
+void OnlineWindow::cleanupConnections()
+{
+    if (m_clientConnection)
+    {
+        m_clientConnection->disconnect();
+        m_clientConnection->deleteLater();
+        m_clientConnection = nullptr;
+    }
+
+    if (m_server)
+    {
+        m_server->close();
+        delete m_server;
+        m_server = nullptr;
+    }
+}
+
 //----------------------------------私有槽--------------------------------------------
 
 //作为服务端 监听连接
 void OnlineWindow::onListenBtnClicked()
 {
-    if(!m_server)
-    {
-        m_server = new QTcpServer(this);
-    }
+    // if(m_server && m_server->isListening())
+    // {
+    // QMessageBox::about(this, "提醒", "已经开创房间");
+    // return;
+    // }
 
-    if(m_server->isListening())
-    {
-        QMessageBox::about(this, "提醒", "已经开创房间");
-        return;
-    }
+    cleanupConnections();
+    m_server = new QTcpServer(this);
 
-    //关闭客服端
-    if (m_clientConnection)
-    {
-        m_clientConnection->close();
-        delete m_clientConnection;
-        m_clientConnection = nullptr;
-    }
+    MessageTip::tip(this, "已经开创房间");
 
     //获取ip port
     QString ip = ui->ipEdit->text();
@@ -154,24 +146,22 @@ void OnlineWindow::onListenBtnClicked()
 
         //处理得到的信息
         connect(m_clientConnection, &QTcpSocket::readyRead, this, &OnlineWindow::handleInfo);
+
+        //监听断开连接
+        connect(m_clientConnection, &QTcpSocket::disconnected, this, [ = ]()
+        {
+            m_clientConnection->deleteLater();
+            m_clientConnection = nullptr; // 重要！
+            emit disConnect();
+        });
     });
 }
 
 //作为客服端 请求连接
 void OnlineWindow::onJoinBtnClicked()
 {
-    //删除服务器
-    if(m_server)
-    {
-        m_server->close();
-        delete m_server;
-        m_server = nullptr;
-    }
-
-    if(!m_clientConnection)
-    {
-        m_clientConnection = new QTcpSocket(this);
-    }
+    cleanupConnections();
+    m_clientConnection = new QTcpSocket(this);
 
     //获取ip port
     QString ip = ui->ipEdit->text();

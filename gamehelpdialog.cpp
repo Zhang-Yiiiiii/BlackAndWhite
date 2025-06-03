@@ -1,4 +1,5 @@
 #include "GameHelpDialog.h"
+
 #include <QFile>
 #include <QTextStream>
 #include <QTextDocument>

@@ -1,4 +1,3 @@
-// userutils.cpp
 #include "userutils.h"
 #include <QFile>
 #include <QTextStream>

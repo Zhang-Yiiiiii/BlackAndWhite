@@ -40,9 +40,6 @@ public:
 
     //------------------------保护方法----------------------------------
 
-    //重写画图事件
-    void paintEvent(QPaintEvent*) override;
-
     void closeEvent(QCloseEvent*) override;
 
     void checkPasswordLength(const QString &password);

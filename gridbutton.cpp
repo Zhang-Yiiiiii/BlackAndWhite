@@ -1,6 +1,6 @@
-// gridbutton.cpp
 #include "gridbutton.h"
 #include "config.h"
+
 #include <QPainter>
 #include <QPropertyAnimation>
 

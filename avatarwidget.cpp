@@ -1,6 +1,6 @@
-// avatarwidget.cpp
 #include "avatarwidget.h"
 #include "userutils.h"
+
 #include <QFileDialog>
 #include <QDir>
 #include <QSize>

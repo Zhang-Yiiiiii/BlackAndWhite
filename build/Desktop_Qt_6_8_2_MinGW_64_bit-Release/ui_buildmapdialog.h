@@ -361,7 +361,7 @@ public:
         label_3->setText(QCoreApplication::translate("BuildMapDialog", "bug\346\211\200\345\234\250\350\241\214", nullptr));
         label_4->setText(QCoreApplication::translate("BuildMapDialog", "bug\346\211\200\345\234\250\345\210\227", nullptr));
         label_5->setText(QCoreApplication::translate("BuildMapDialog", "bug\346\226\271\345\220\221", nullptr));
-        label_7->setText(QCoreApplication::translate("BuildMapDialog", "\346\226\271\345\220\221\344\270\2720\357\274\2141\357\274\2142\357\274\2143\357\274\233\345\210\206\345\210\253\345\257\271\345\272\224\345\267\246\357\274\214\344\270\212\357\274\214\345\217\263\357\274\214\344\270\213", nullptr));
+        label_7->setText(QCoreApplication::translate("BuildMapDialog", "<html><head/><body><p><span style=\" color:#ffffff;\">\346\226\271\345\220\221\344\270\2720\357\274\2141\357\274\2142\357\274\2143\357\274\233\345\210\206\345\210\253\345\257\271\345\272\224\345\267\246\357\274\214\344\270\212\357\274\214\345\217\263\357\274\214\344\270\213</span></p></body></html>", nullptr));
         confirmButton->setText(QCoreApplication::translate("BuildMapDialog", "\347\241\256\345\256\232", nullptr));
         cancelButton->setText(QCoreApplication::translate("BuildMapDialog", "\345\217\226\346\266\210", nullptr));
     } // retranslateUi

@@ -1,15 +1,16 @@
-#include "mainscene.h"
-
 #include <QGraphicsOpacityEffect>
 #include <QToolBar>
 #include <QBuffer>
+#include <QStandardPaths>
+
+#include "mainscene.h"
 #include "lightoutgame.h"
 #include "antgame.h"
 #include "animator.h"
 #include "mypushbutton.h"
 #include "userutils.h"
-#include <QStandardPaths>
 #include "musicplayerr.h"
+#include "MessageTip.h"
 
 const QPoint avatar_pos = QPoint(80, 80);
 
@@ -53,7 +54,7 @@ MainScene::MainScene(QWidget *parent)
     connect(onlineAction, &QAction::triggered, this, &MainScene::onOnlineTriggerd);
 
     //断开联机
-    QAction* disconnectAction = m_toolMenu->addAction("断开联机");
+    disconnectAction = m_toolMenu->addAction("断开联机");
     disconnectAction->setIcon(QIcon(DISCONNECTICONPATH));
     connect(disconnectAction, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
 
@@ -72,10 +73,12 @@ MainScene::MainScene(QWidget *parent)
     //设置动画
     //setAnimations();
 
+    //登录窗口
+    m_loginWindow = new LoginWindow(this);
+
     //设置音乐播放器
     setMusicPlayerr(new MusicPlayerr(this));
 
-    // 你应该已经在构造函数中获取 currentUser（比如从登录页面传入）
     m_currentUser = UserUtils::findUserByName("default");   //默认用户名
     m_avatarWidget = new AvatarWidget(m_currentUser, this);
     m_avatarWidget->move(avatar_pos);  // 左上角
@@ -91,11 +94,10 @@ MainScene::~MainScene()
         m_usermanager = nullptr;
     }
 
-    // if(m_loginWindow)
+    // if(m_isOnlineMode && disconnectAction)
     // {
-    // m_loginWindow->deleteLater();
+    // disconnectAction->triggered();
     // }
-
 }
 
 void MainScene::showEvent(QShowEvent *event)
@@ -259,6 +261,11 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
     {
         m_gameScene = new LightOutGame(gameLevel, m_userName, this->m_usermanager, nullptr, enterWay);
     }
+    else
+    {
+        QMessageBox::warning(this, "警告", "未正确初始化游戏");
+        return;
+    }
 
     m_gameScene->setMusicPlayerr(m_musicPlayer); //设置音乐播放器
 
@@ -299,16 +306,13 @@ void MainScene::showLoginWindow()
 
     if(!m_loginWindow)
     {
-        m_loginWindow = new LoginWindow(this);    //不指定父窗口，否则主窗口隐藏时 登录界面也会隐藏
+        m_loginWindow = new LoginWindow(this);
     }
 
     m_loginWindow->setWindowIcon(QIcon(MYICON));
-    m_loginWindow->move((this->width() - m_loginWindow->width()) / 2, (this->height() - m_loginWindow->height()) / 2);
+    m_loginWindow->move((width() - m_loginWindow->width()) / 2, (height() - m_loginWindow->height()) / 2);
 
     m_loginWindow->show();
-
-    //关闭对话框时重新显示主页面
-    //connect(m_loginWindow, &LoginWindow::userClose, this, &MainScene::show, Qt::UniqueConnection);
 }
 
 //自建ant地图
@@ -325,7 +329,7 @@ void MainScene::buildLightGame()
 
     if(level > SELECTBTNNUMBER || level <= ANTGAMENUMBER)    //判断关卡是否输入正确
     {
-        QToolTip::showText(this->rect().center(), "关卡数不正确", this);
+        MessageTip::tip(m_mappingDialog, "关卡数不正确");
         return;
     }
 
@@ -413,6 +417,8 @@ void MainScene::setOnlineMode()
         else
         {
             QMessageBox::about(this, "提醒", "等待对方完成游戏");
+            m_gameScene->setBtnEnabled(false);  //设置按钮不可按
+            m_gameScene->setBackBtnEnabled(true);   //返回按钮可按
         }
     });
 
@@ -539,20 +545,17 @@ void MainScene::onUserConfirmLogin()
 {
     int ret = m_usermanager->verifyUserInfo(m_loginWindow->getUserName(), m_loginWindow->getUserPassword());
 
-    //提示信息所在位置
-    const QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
-
     if(ret == 3) //登录成功
     {
         //显示提示信息
-        QToolTip::showText(pos, "登录成功", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "登录成功");
 
         //记录用户信息
         m_user = m_usermanager->findUser(m_userName);
         m_userName = m_loginWindow->getUserName();
         m_password = m_loginWindow->getUserPassword();
 
-        m_loginWindow->close();
+        m_loginWindow->hide();
 
         //显示头像
         m_currentUser = UserUtils::findUserByName(m_userName);
@@ -562,12 +565,14 @@ void MainScene::onUserConfirmLogin()
     else if(ret == 2) //密码错误
     {
         //显示提示信息
-        QToolTip::showText(pos, "密码错误", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "密码错误");
+
     }
     else //用户不存在
     {
         //显示提示信息
-        QToolTip::showText(pos, "用户不存在", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "用户不存在");
+
     }
 }
 
@@ -580,14 +585,11 @@ void MainScene::onUserConfirmRegister()
 
     int ret = this->m_usermanager->verifyUserInfo(name, pwd);
 
-    //提示信息所在位置
-    QPoint pos = m_loginWindow->mapToGlobal(QPoint(m_loginWindow->width() / 2 - 35, m_loginWindow->height() + 100));
-
     //判断输入是否合理
     if(!m_usermanager->isUserNameRight(name) || !m_usermanager->isPassWordRight(pwd))
     {
         //显示提示信息
-        QToolTip::showText(pos, "用户名或密码长度不正确", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "用户名或密码长度不正确");
 
         return;
     }
@@ -595,12 +597,13 @@ void MainScene::onUserConfirmRegister()
     if(ret == 3 || ret == 2) //用户存在
     {
         //显示提示信息
-        QToolTip::showText(pos, "用户已存在", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "用户已存在");
+
     }
     else //注册成功
     {
         //显示提示信息
-        QToolTip::showText(pos, "注册成功，自动登录", this, this->rect(), 5000);
+        MessageTip::tip(m_onlineWindow, "注册成功，自动登录");
 
         //自动登录
         this->m_userName = name;
@@ -686,9 +689,12 @@ void MainScene::onOnlineTriggerd()
     //监听断开连接
     connect(m_onlineWindow, &OnlineWindow::disConnect, this, [ = ]()
     {
-        m_isOnlineMode = false;
-        m_onlineWindow->disconnectOnline();
-        QMessageBox::about(this, "联机提醒", "对手断开联机模式");
+        if(m_isOnlineMode)
+        {
+            m_isOnlineMode = false;
+            m_onlineWindow->disconnectOnline();
+            QMessageBox::about(this, "联机提醒", "对手断开联机模式");
+        }
     });
 
     //监听对方进入游戏

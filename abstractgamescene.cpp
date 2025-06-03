@@ -164,6 +164,12 @@ void AbstractGameScene::setBtnEnabled(bool enable)
     backBtn->setEnabled(enable);
 }
 
+//返回按钮是否可按
+void AbstractGameScene::setBackBtnEnabled(bool enabled)
+{
+    backBtn->setEnabled(enabled);
+}
+
 //----------------------------------保护方法--------------------------------------------
 
 //设置棋盘尺寸
@@ -490,13 +496,13 @@ void AbstractGameScene::onSubmitBtnClicked()
             ScoreLevel score;
             score = Scoring();
 
-            //对话框
-            QString str = QString("恭喜成功通过此关 %1 级").arg(ScoreMap[score]);
-            QMessageBox::about(this, "通过", str);
-
             //保存时间
             m_showTimer->stop();    //停止计时
             saveTotalTime();
+
+            //对话框
+            QString str = QString("恭喜成功通过此关 %1 级").arg(ScoreMap[score]);
+            QMessageBox::about(this, "通过", str);
 
             //计算经验
             m_usermanager->addExp(m_usermanager->findUser(m_userName), calculateExp());

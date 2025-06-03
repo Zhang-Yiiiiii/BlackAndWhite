@@ -1,8 +1,9 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
-#include <QDebug>
 #include "config.h"
 #include "user.h"
+
+#include <QDebug>
 
 //----------------------------------构造析构--------------------------------------------
 
@@ -115,11 +116,6 @@ void LoginWindow::setBackground(const QString file)
 }
 
 //----------------------------------保护方法--------------------------------------------
-
-void LoginWindow::paintEvent(QPaintEvent*e)
-{
-    QDialog::paintEvent(e);
-}
 
 //关闭事件
 void LoginWindow::closeEvent(QCloseEvent*)

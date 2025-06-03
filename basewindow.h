@@ -11,6 +11,7 @@
 #include <QMenuBar>
 #include <QPixmap>
 #include <QPainter>
+
 #include "musicplayerr.h"
 #include "GameHelpDialog.h"
 

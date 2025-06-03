@@ -40,6 +40,7 @@ SOURCES += \
     userutils.cpp
 
 HEADERS += \
+    MessageTip.h \
     abstractgamescene.h \
     animator.h \
     antgame.h \

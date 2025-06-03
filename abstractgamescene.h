@@ -72,6 +72,9 @@ public:
     //禁用按钮
     virtual void setBtnEnabled(bool enable);
 
+    //返回按钮是否可按
+    void setBackBtnEnabled(bool enabled);
+
 protected:
     //------------------------保护属性----------------------------------
 

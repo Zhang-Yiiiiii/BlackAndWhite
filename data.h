@@ -10,8 +10,9 @@
 #include <QDebug>
 #include <QMap>
 #include <QVector>
-#include "config.h"
 #include <QPoint>
+
+#include "config.h"
 
 class Data
 {

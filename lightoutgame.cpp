@@ -475,6 +475,15 @@ unsigned int LightOutGame::calculateExp()
     return mul * m_boardRow * m_boardRow;
 }
 
+//设置按钮是否可按
+void LightOutGame::setBtnEnabled(bool enabled)
+{
+    for(auto btn : findChildren<QPushButton*>())
+    {
+        btn->setEnabled(enabled);
+    }
+}
+
 //----------------------------------公共槽--------------------------------------------
 
 //监听格子被点击

@@ -173,11 +173,6 @@ void MusicPlayerr::onPrevBtnclicked()
 
     int prevRow = 0;
 
-    if(ui->musicList->count() <= 1)
-    {
-        return;
-    }
-
     if(m_mode == ORDER_MODE)
     {
         prevRow = (currentRow - 1);
@@ -189,11 +184,10 @@ void MusicPlayerr::onPrevBtnclicked()
     }
     else if(m_mode == RANDOM_MODE)
     {
-
         do
         {
             prevRow = rand() % ui->musicList->count();
-        } while(prevRow == currentRow);
+        } while(prevRow == currentRow && ui->musicList->count() >= 2);
     }
     else
     {
@@ -262,15 +256,10 @@ void MusicPlayerr::onNextBtnclicked()
     }
     else if(m_mode == RANDOM_MODE)
     {
-        if(ui->musicList->count() <= 1)
-        {
-            return;
-        }
-
         do
         {
             nextRow = rand() % ui->musicList->count();
-        } while(nextRow == currentRow);
+        } while(nextRow == currentRow && ui->musicList->count() >= 2);
     }
     else
     {

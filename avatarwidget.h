@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QString>
+
 #include "user.h"
 
 class AvatarWidget : public QWidget

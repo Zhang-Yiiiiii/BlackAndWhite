@@ -1,5 +1,6 @@
 #include "MusicPlayer.h"
 #include "qpainter.h"
+
 #include <QStyle>
 #include <QTime>
 #include <QCoreApplication>

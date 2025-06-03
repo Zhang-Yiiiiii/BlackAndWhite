@@ -1,4 +1,3 @@
-// gridbutton.h
 #ifndef GRIDBUTTON_H
 #define GRIDBUTTON_H
 

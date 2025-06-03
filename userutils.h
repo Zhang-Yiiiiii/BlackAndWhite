@@ -1,4 +1,3 @@
-// userutils.h
 #ifndef USERUTILS_H
 #define USERUTILS_H
 

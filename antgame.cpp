@@ -1,4 +1,5 @@
 #include "antgame.h"
+
 #include <QColorDialog>
 #include <QToolTip>
 #include <QPointer>
@@ -16,7 +17,7 @@ AntGame::AntGame(int gameLevel, QString userName, UserManager * usermanager, QWi
 
     initBugInfo();   //初始化bug信息
 
-    setAnimationType(rand() % 2 ? Animator::FadeIn : Animator::SlideFromTop); //设置动画
+    setAnimationType(rand() % 3 ? Animator::SlideFromTop : Animator::FadeIn); //设置动画
 
     showBug();      //显示bug
 

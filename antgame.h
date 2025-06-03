@@ -8,6 +8,7 @@
  *****************************************************************/
 
 #include <QMainWindow>
+
 #include "abstractgamescene.h"
 #include "overlay.h"
 #include "mypushbutton.h"

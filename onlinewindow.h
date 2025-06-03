@@ -51,6 +51,10 @@ private:
     QTcpServer* m_server = nullptr;
     QTcpSocket* m_clientConnection = nullptr;
 
+    //------------------------私有方法----------------------------------
+
+    void cleanupConnections();
+
 signals:
     //------------------------信号----------------------------------
 

@@ -45,11 +45,16 @@
 #define RANKLISHICONPAHT ":/icon/rank.png"              //排行榜图标路径
 
 /************游戏数据配置数据******************/
-#define ANTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/AntData.txt" //ant游戏数据
-#define LIGHTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/LightData.txt" //light游戏数据
+// #define ANTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/AntData.txt" //ant游戏数据
+// #define LIGHTDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/LightData.txt" //light游戏数据
+
+#define ANTDATAPATH  "./data/AntData.txt" //ant游戏数据
+#define LIGHTDATAPATH  "./data/LightData.txt" //light游戏数据
 
 /************用户管理配置数据******************/
-#define USERDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/UserData.txt" //用户数据
+// #define USERDATAPATH  "D:/QtProjects/BlackAndWhiteBlock/UserData.txt" //用户数据
+
+#define USERDATAPATH  "./data/UserData.txt" //用户数据
 
 /************登录界面配置数据******************/
 #define USERACCOUNTICON ":/icon/userAccountIcon.png"      //用户账户图标

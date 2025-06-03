@@ -78,6 +78,8 @@ private:
     //联机窗口
     OnlineWindow* m_onlineWindow = nullptr;
 
+    QAction* disconnectAction = nullptr;
+
     //是否是联机模式
     bool m_isOnlineMode = false;
 

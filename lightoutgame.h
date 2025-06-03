@@ -74,6 +74,9 @@ private:
     //计算经验
     unsigned calculateExp()override;
 
+    //设置按钮是否可按
+    void setBtnEnabled(bool enabled) override;
+
 public slots:
 
     //------------------------公共槽----------------------------------
