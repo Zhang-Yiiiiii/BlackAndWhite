@@ -136,7 +136,7 @@ public:
         ipEdit->setSizePolicy(sizePolicy2);
         ipEdit->setMinimumSize(QSize(320, 20));
         ipEdit->setMaximumSize(QSize(380, 25));
-        ipEdit->setStyleSheet(QString::fromUtf8(""));
+        ipEdit->setStyleSheet(QString::fromUtf8("color: black"));
         ipEdit->setFrame(true);
 
         horizontalLayout->addWidget(ipEdit);
@@ -181,8 +181,8 @@ public:
         portEdit->setSizePolicy(sizePolicy2);
         portEdit->setMinimumSize(QSize(320, 20));
         portEdit->setMaximumSize(QSize(380, 25));
-        portEdit->setAutoFillBackground(true);
-        portEdit->setStyleSheet(QString::fromUtf8(""));
+        portEdit->setAutoFillBackground(false);
+        portEdit->setStyleSheet(QString::fromUtf8("color: black"));
         portEdit->setFrame(true);
         portEdit->setEchoMode(QLineEdit::EchoMode::Normal);
 

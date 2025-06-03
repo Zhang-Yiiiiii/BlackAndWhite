@@ -136,15 +136,18 @@ public:
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(userNameEdit->sizePolicy().hasHeightForWidth());
         userNameEdit->setSizePolicy(sizePolicy2);
-        userNameEdit->setMinimumSize(QSize(400, 30));
+        userNameEdit->setMinimumSize(QSize(320, 30));
         userNameEdit->setMaximumSize(QSize(380, 9999));
-        userNameEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+        userNameEdit->setStyleSheet(QString::fromUtf8("QLineEdit\n"
+" {\n"
 "      background-color: gba(255, 255, 255, 0.8);\n"
 "    color: white;\n"
-"    }\n"
-"    QLineEdit::placeholder {\n"
+" }\357\274\233\n"
+"\n"
+" QLineEdit::placeholder\n"
+" {\n"
 "    color: rgba(255, 255, 255, 1); \n"
-"    }\n"
+" }\357\274\233\n"
 ""));
         userNameEdit->setFrame(true);
         userNameEdit->setClearButtonEnabled(false);
@@ -188,16 +191,19 @@ public:
         passwdEdit->setObjectName("passwdEdit");
         sizePolicy2.setHeightForWidth(passwdEdit->sizePolicy().hasHeightForWidth());
         passwdEdit->setSizePolicy(sizePolicy2);
-        passwdEdit->setMinimumSize(QSize(400, 30));
+        passwdEdit->setMinimumSize(QSize(320, 30));
         passwdEdit->setMaximumSize(QSize(380, 9999));
         passwdEdit->setAutoFillBackground(false);
-        passwdEdit->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
+        passwdEdit->setStyleSheet(QString::fromUtf8("QLineEdit\n"
+" {\n"
 "      background-color: gba(255, 255, 255, 0.8);\n"
 "    color: white;\n"
-"    }\n"
-"    QLineEdit::placeholder {\n"
+" }\357\274\233\n"
+"\n"
+" QLineEdit::placeholder\n"
+" {\n"
 "    color: rgba(255, 255, 255, 1); \n"
-"    }\n"
+" }\357\274\233\n"
 ""));
         passwdEdit->setFrame(true);
         passwdEdit->setEchoMode(QLineEdit::EchoMode::Password);
@@ -282,6 +288,9 @@ public:
         QWidget::setTabOrder(registerButton, loginButton);
 
         retranslateUi(LoginWindow);
+
+        loginButton->setDefault(true);
+
 
         QMetaObject::connectSlotsByName(LoginWindow);
     } // setupUi

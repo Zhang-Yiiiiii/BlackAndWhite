@@ -35,18 +35,19 @@ LoginWindow::LoginWindow(QWidget *parent)
 
     ui->userNameEdit->setStyleSheet(
         "QLineEdit {"
-        "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-        "    color: white;"              // 输入文字为白色（简写）
+        "    background-color: rgba(255, 255, 255, 0.2);"  // 深色背景
+        "    color: black;"              // 输入文字为白色（简写）
+
         "}"
         "QLineEdit::placeholder {"
-        "    color: red;"  // 50% 透明白色
+        "    color: red;"
         "}"
     );
 
     ui->passwdEdit->setStyleSheet(
         "QLineEdit {"
-        "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-        "    color: white;"              // 输入文字为白色（简写）
+        "    background-color: rgba(255, 255, 255, 0.2);"  // 深色背景
+        "    color: black;"              // 输入文字为白色（简写）
         "}"
         "QLineEdit::placeholder {"
         "    color: rgba(0, 0, 0, 1.0);"  // 50% 透明白色

@@ -192,7 +192,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>400</width>
+           <width>320</width>
            <height>30</height>
           </size>
          </property>
@@ -203,13 +203,16 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit {
+          <string notr="true">QLineEdit
+ {
       background-color: gba(255, 255, 255, 0.8);
     color: white;
-    }
-    QLineEdit::placeholder {
+ }；
+
+ QLineEdit::placeholder
+ {
     color: rgba(255, 255, 255, 1); 
-    }
+ }；
 </string>
          </property>
          <property name="frame">
@@ -322,7 +325,7 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>400</width>
+           <width>320</width>
            <height>30</height>
           </size>
          </property>
@@ -336,13 +339,16 @@
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">QLineEdit {
+          <string notr="true">QLineEdit
+ {
       background-color: gba(255, 255, 255, 0.8);
     color: white;
-    }
-    QLineEdit::placeholder {
+ }；
+
+ QLineEdit::placeholder
+ {
     color: rgba(255, 255, 255, 1); 
-    }
+ }；
 </string>
          </property>
          <property name="text">
@@ -529,6 +535,9 @@
          <width>16</width>
          <height>16</height>
         </size>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -52,7 +52,7 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
     QPointer<AbstractGameScene> selfPtr;
     selfPtr = this; // 保存弱引用
-    QTimer::singleShot(2000, [ = ]()
+    QTimer::singleShot(2000, [ = ]()    //延迟出动画时间
     {
         if (!selfPtr)
         {
@@ -61,11 +61,6 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
         initTimer();
     });
-
-    // QTimer::singleShot(2000, [this]()
-    // {
-    // initTimer();    //初始化定时器
-    // });
 
     showPushButton();   //显示提交、返回、重置按钮
 

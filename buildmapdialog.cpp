@@ -8,6 +8,7 @@ BuildMapDialog::BuildMapDialog(QWidget *parent)
     , ui(new Ui::BuildMapDialog)
 {
     ui->setupUi(this);
+    setLineEditsStyle();
 
     this->setWindowTitle("自建地图");
     setBackground(":/image/musicBackgnd.png");
@@ -65,6 +66,24 @@ void BuildMapDialog::setBackground(const QString fileName)
     palette.setBrush(QPalette::Window, QBrush(scalePix));
 
     this->setPalette(palette);
+}
+
+void BuildMapDialog::setLineEditStyle(QLineEdit *le)
+{
+    le->setStyleSheet("QLineEdit {"
+                      "background-color: rgba(255,255,255,0.2);"
+                      "}");
+}
+
+void BuildMapDialog::setLineEditsStyle()
+{
+    QList<QLineEdit*> lineEdits = this->findChildren<QLineEdit*>();
+
+    // 遍历所有 QLineEdit
+    for (QLineEdit *lineEdit : lineEdits)
+    {
+        setLineEditStyle(lineEdit);
+    }
 }
 
 //----------------------------------私有槽--------------------------------------------

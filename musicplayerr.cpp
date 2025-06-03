@@ -67,7 +67,7 @@ void MusicPlayerr::setBackground(const QString fileName)
 void MusicPlayerr::setBtnStyle(QPushButton *btn, QString fileName)
 {
     btn->setFixedSize(50, 50);
-    btn->setStyleSheet("background-color: transparent");
+    btn->setStyleSheet("background-color: rgba(255,255,255,0.2); ");
     btn->setIcon(QIcon(fileName));
 }
 

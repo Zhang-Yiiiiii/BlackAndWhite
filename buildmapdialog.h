@@ -10,6 +10,7 @@
 #include <QDialog>
 #include <QString>
 #include <QMessageBox>
+#include <QLineEdit>
 
 namespace Ui
 {
@@ -37,6 +38,8 @@ public:
     int getNum5();
 
     void setBackground(const QString path);
+    void setLineEditStyle(QLineEdit* le);
+    void setLineEditsStyle();
 
 private:
 
