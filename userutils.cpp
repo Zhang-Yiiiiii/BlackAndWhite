@@ -6,15 +6,24 @@ User* UserUtils::findUserByName(const QString& userName)
 {
     QList<User*> users = loadUsers();
 
+    User* user = nullptr;
+
     for (User* u : users)
     {
         if (u->getUserName() == userName)
         {
-            return u;
+            user = u;
+            break;
         }
     }
 
-    return nullptr;
+    if(user == nullptr && userName == "default")    //找的是默认用户
+    {
+        user = new User("default", "default");
+        saveSingleUser(user);
+    }
+
+    return user;
 }
 
 bool UserUtils::saveUsers(const QList<User*>& users, const QString& filePath)
@@ -66,6 +75,7 @@ QList<User*> UserUtils::loadUsers(const QString& filePath)
     }
 
     file.close();
+
     return users;
 }
 

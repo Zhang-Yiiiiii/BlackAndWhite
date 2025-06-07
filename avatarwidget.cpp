@@ -17,13 +17,13 @@ AvatarWidget::AvatarWidget(User* user, QWidget* parent)
 
     if(!user)
     {
+        setUsername(true);
         updateAvatar("");
     }
     else
     {
         setUsername();
         updateAvatar(m_user->getAvatarPath());
-
     }
 
     //setStyleSheet("border-radius: 50px; border: 2px solid black;");
@@ -41,6 +41,7 @@ void AvatarWidget::setUser(User *user)
 
     if(!user)
     {
+        setUsername(true);
         updateAvatar("");
     }
     else
@@ -51,10 +52,17 @@ void AvatarWidget::setUser(User *user)
 
 }
 
-void AvatarWidget::setUsername()
+void AvatarWidget::setUsername(bool isDefault)
 {
+    if(isDefault)
+    {
+        nameLabel->setText("default  Lv.D");
+        return;
+    }
+
     QString str = QString(m_user->getUserName() + "  Lv.%1").arg(m_user->getLevel());
     nameLabel->setText(str);
+    nameLabel->show();
 }
 
 void AvatarWidget::mousePressEvent(QMouseEvent* event)
@@ -126,12 +134,48 @@ void AvatarWidget::initUi()
     nameLabel->setStyleSheet("QLabel { color: black; }");
     nameLabel->setAlignment(Qt::AlignCenter);
     nameLabel->show();
-    nameLabel->move((width() - nameLabel->width()) / 2, height() + 130);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(avatar);
     layout->addWidget(nameLabel);
+    layout->setAlignment(nameLabel, Qt::AlignHCenter);  // 水平居中
     layout->setSpacing(10);
     layout->setContentsMargins(0, 0, 0, 0);
+
     setLayout(layout);
+
+    qDebug() << "NameLabel geometry:" << nameLabel->geometry();
+    qDebug() << "NameLabel is visible?" << nameLabel->isVisible();
+    qDebug() << "Layout contentsRect:" << layout->contentsRect();
+
 }
+
+// void AvatarWidget::initUi()
+// {
+// avatar = new QLabel(this);
+// nameLabel = new QLabel(this);
+
+// setCursor(Qt::PointingHandCursor);
+
+// avatar->setFixedSize(64, 64); // 或者使用 avatar_size
+// avatar->setScaledContents(true);
+
+// QFont font = this->font();
+// font.setPointSize(12);
+// nameLabel->setFont(font);
+// nameLabel->setStyleSheet("QLabel { color: black; }");
+// nameLabel->setFixedHeight(30);
+// nameLabel->setAlignment(Qt::AlignCenter);
+// nameLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+// QVBoxLayout *layout = new QVBoxLayout(this);
+// layout->addWidget(avatar, 0, Qt::AlignHCenter);
+// layout->addWidget(nameLabel, 0, Qt::AlignHCenter);
+// layout->setSpacing(10);
+// layout->setContentsMargins(5, 5, 5, 5);
+
+// setLayout(layout);
+
+//     // 解决核心问题：确保组件初始有尺寸
+// setFixedSize(150, 120); // ✅✅✅
+// }

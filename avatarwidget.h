@@ -19,7 +19,7 @@ public:
     QSize sizeHint() const override;
 
     void setUser(User* user);
-    void setUsername();
+    void setUsername(bool isDefault = 0);
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;

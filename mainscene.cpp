@@ -59,7 +59,7 @@ MainScene::MainScene(QWidget *parent)
     connect(disconnectAction, &QAction::triggered, this, &MainScene::onDisconnectTriggerd);
 
     //初始化用户管理员
-    this->m_usermanager = new UserManager;
+    m_usermanager = new UserManager;
 
     //初始化用户 默认是default 用户
     m_user = m_usermanager->findUser("default");
@@ -79,10 +79,8 @@ MainScene::MainScene(QWidget *parent)
     //设置音乐播放器
     setMusicPlayerr(new MusicPlayerr(this));
 
-    m_currentUser = UserUtils::findUserByName("default");   //默认用户名
-    m_avatarWidget = new AvatarWidget(m_currentUser, this);
-    m_avatarWidget->move(avatar_pos);  // 左上角
-    m_avatarWidget->show();
+    //显示头像
+    showAvatar();
 
 }
 
@@ -477,6 +475,15 @@ void MainScene::compareResults(int ourTime, int rivalTime)
     //emit m_gameScene->changeBack();
 }
 
+//显示头像
+void MainScene::showAvatar()
+{
+    m_currentUser = UserUtils::findUserByName("default");   //默认用户名
+    m_avatarWidget = new AvatarWidget(m_currentUser, this);
+    m_avatarWidget->move(avatar_pos);  // 左上角
+    m_avatarWidget->show();
+}
+
 //----------------------------------私有槽--------------------------------------------
 
 //选关按钮被点击
@@ -548,13 +555,12 @@ void MainScene::onUserConfirmLogin()
     if(ret == 3) //登录成功
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "登录成功");
+        MessageTip::tip(m_loginWindow, "登录成功");
 
         //记录用户信息
         m_user = m_usermanager->findUser(m_userName);
         m_userName = m_loginWindow->getUserName();
         m_password = m_loginWindow->getUserPassword();
-
         m_loginWindow->hide();
 
         //显示头像
@@ -565,13 +571,13 @@ void MainScene::onUserConfirmLogin()
     else if(ret == 2) //密码错误
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "密码错误");
+        MessageTip::tip(m_loginWindow, "密码错误");
 
     }
     else //用户不存在
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "用户不存在");
+        MessageTip::tip(m_loginWindow, "用户不存在");
 
     }
 }
@@ -589,7 +595,7 @@ void MainScene::onUserConfirmRegister()
     if(!m_usermanager->isUserNameRight(name) || !m_usermanager->isPassWordRight(pwd))
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "用户名或密码长度不正确");
+        MessageTip::tip(m_loginWindow, "用户名或密码长度不正确");
 
         return;
     }
@@ -597,13 +603,13 @@ void MainScene::onUserConfirmRegister()
     if(ret == 3 || ret == 2) //用户存在
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "用户已存在");
+        MessageTip::tip(m_loginWindow, "用户已存在");
 
     }
     else //注册成功
     {
         //显示提示信息
-        MessageTip::tip(m_onlineWindow, "注册成功，自动登录");
+        MessageTip::tip(m_loginWindow, "注册成功，自动登录");
 
         //自动登录
         this->m_userName = name;

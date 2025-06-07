@@ -4,15 +4,17 @@
 /*****************************************************************
  * class: MainScene （主场景类）
  *
- * 用处： 用于显示主页面、显示选关按钮、进行登录、用户注册、创建地图、进行联机
+ * 用处： 用于显示主页面、显示选关按钮、进行登录、用户注册、创建地图、进行联机、音乐播放
  *
  * 功能模块排列：
  *          1.自身功能
  *          2.登录
  *          3.建图
  *          4.联机
+ *          5.音乐
  *
  ********************************************************************/
+
 #include <QToolTip>
 #include <QLayout>
 #include <QInputDialog>
@@ -59,6 +61,10 @@ private:
     //当前用户名和密码
     QString m_userName = "default";
     QString m_password = "default";
+
+    //头像
+    AvatarWidget* m_avatarWidget;
+    User* m_currentUser;
 
     //关卡按钮数组
     Hexagon* m_selectBtns[SELECTBTNNUMBER];
@@ -135,9 +141,8 @@ private:
     //比较联机双方结果
     void compareResults(int ourTime, int rivalTime);
 
-private:
-    AvatarWidget* m_avatarWidget;
-    User* m_currentUser;
+    //显示头像
+    void showAvatar();
 
 private slots:
     //------------------------私有槽----------------------------------

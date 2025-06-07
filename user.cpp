@@ -11,6 +11,12 @@ User::User()
     }
 }
 
+User::User(QString name, QString pwd)
+{
+    setUserName(name);
+    setUserPassword(pwd);
+}
+
 //----------------------------------公共方法--------------------------------------------
 
 QString User::getUserName() const

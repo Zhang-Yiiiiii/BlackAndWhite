@@ -52,7 +52,7 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
     QPointer<AbstractGameScene> selfPtr;
     selfPtr = this; // 保存弱引用
-    QTimer::singleShot(2000, [ = ]()    //延迟出动画时间
+    QTimer::singleShot(m_boardRow * 100, [ = ]()    //延迟出动画时间
     {
         if (!selfPtr)
         {

@@ -21,6 +21,9 @@
 #include <QPainterPath>
 #include <QGraphicsEffect>
 #include <QGraphicsScale>
+#include <QPropertyAnimation>
+
+#include "config.h"
 
 class Hexagon : public QPushButton
 {
@@ -45,6 +48,8 @@ protected:
     //重写绘图函数
     void paintEvent(QPaintEvent *event) override;
 
+    void enterEvent(QEnterEvent *event) override;
+
 private:
 
     //------------------------私有属性----------------------------------
@@ -59,7 +64,7 @@ private:
     QColor m_textColor = Qt::black;
 
     // 背景图（只加载一次）
-    QPixmap backgroundPixmap = QPixmap(":/image/newbackground.png");
+    QPixmap backgroundPixmap = QPixmap(BACKGROUDPATH);
 
     // QColor m_backgroundColor = Qt::white; // 采样到的背景颜色
     // QColor m_fillColor = Qt::white;       // 填充颜色（反色）
@@ -73,6 +78,9 @@ private:
 
     void sampleBackgroundColor();   //采样背景颜色
 
+    QSequentialAnimationGroup* hoverAnim;
+    QPoint originalPos;
+    bool animRunning = false;
 signals:
 
     //------------------------信号----------------------------------

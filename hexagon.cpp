@@ -1,6 +1,7 @@
 #include "hexagon.h"
 #include <QTimer>
 #include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 
 //----------------------------------构造析构--------------------------------------------
 
@@ -9,15 +10,24 @@ Hexagon::Hexagon(int id, QPushButton *parent)
 {
     this->setFixedSize(110, 110);
     this->setAttribute(Qt::WA_TranslucentBackground);
+    setCursor(Qt::PointingHandCursor);
     this->setText(QString::number(this->m_id));
 
-    // ⏳ 延迟采样：等事件队列空闲时再执行（动画后）
+    // 延迟采样：等事件队列空闲时再执行（动画后）
     QTimer::singleShot(2000, this, &Hexagon::sampleBackgroundColor);
 
     // 通知主窗口点击事件
     connect(this, &QPushButton::clicked, this, [ = ]()
     {
         emit beClicked(this->m_id);
+    });
+
+    hoverAnim = new QSequentialAnimationGroup(this);
+
+    // 初始位置先不设置，等 enterEvent 中记录
+    connect(hoverAnim, &QSequentialAnimationGroup::finished, this, [ = ]()
+    {
+        animRunning = false;
     });
 }
 
@@ -38,112 +48,6 @@ int Hexagon::getSideLength()
 {
     return sideLength;
 }
-
-// //重写绘图事件    //原画图
-// void Hexagon::paintEvent(QPaintEvent *event)
-// {
-// Q_UNUSED(event)
-
-// QPainter painter(this);
-// painter.setRenderHint(QPainter::Antialiasing, true);
-// painter.setRenderHint(QPainter::SmoothPixmapTransform, true); // 启用平滑变换 （没设置之前有毛边)
-
-//     // 创建一个六边形的 QPainterPath
-// QPainterPath hexagonPath;
-// QRect rect = contentsRect();//重写绘图事件
-
-// const int radius = Hexagon::sideLength ;  // 六边形的外接圆半径
-
-//     // 计算六边形的顶点
-// QPointF center(rect.center());
-
-// for (int i = 0; i < 6; ++i)
-// {
-// double angle = (i * 60.0 - 30.0) * M_PI / 180.0; // 每个顶点的角度
-// QPointF point(center.x() + radius * qCos(angle), center.y() + radius * qSin(angle));
-
-// if (i == 0)
-// {
-// hexagonPath.moveTo(point); // 移动到第一个顶点
-// }
-// else
-// {
-// hexagonPath.lineTo(point); // 连接到其他顶点
-// }
-// }
-
-// hexagonPath.closeSubpath(); // 闭合路径
-
-//     // 设置画笔和画刷
-// painter.setBrush(Qt::white);
-// QPen pen(Qt::NoPen);
-// painter.setPen(pen);
-// painter.drawPath(hexagonPath);
-
-//     // 绘制按钮文本
-// QFont font("华文新魏", 15);
-// font.setBold(true);
-
-// painter.setFont(font);
-// painter.setPen(QPen(Qt::black));
-// painter.drawText(rect, Qt::AlignCenter, text());
-
-//     // 将 QPainterPath 转换为 QRegion
-// QRegion hexagonRegion(hexagonPath.toFillPolygon().toPolygon());
-// this->setMask(hexagonRegion); // 设置按钮的遮罩
-// }
-
-// //根据中心着色
-// void Hexagon::paintEvent(QPaintEvent *event)
-// {
-// Q_UNUSED(event)
-
-//     // -------- 采样背景颜色 --------
-// sampleBackgroundColor();
-
-// QPainter painter(this);
-// painter.setRenderHint(QPainter::Antialiasing, true);
-// painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-
-//     // 创建六边形路径
-// QPainterPath hexagonPath;
-// QRect rect = contentsRect();
-// const int radius = Hexagon::getSideLength();
-// QPointF center(rect.center());
-
-// for (int i = 0; i < 6; ++i)
-// {
-// double angle = (i * 60.0 - 30.0) * M_PI / 180.0;
-// QPointF point(center.x() + radius * qCos(angle), center.y() + radius * qSin(angle));
-
-// if (i == 0)
-// {
-// hexagonPath.moveTo(point);
-// }
-// else
-// {
-// hexagonPath.lineTo(point);
-// }
-// }
-
-// hexagonPath.closeSubpath();
-
-//     // 设置画笔和画刷
-// painter.setBrush(m_fillColor);
-// painter.setPen(Qt::NoPen);
-// painter.drawPath(hexagonPath);
-
-//     // 设置遮罩（六边形形状）
-// QRegion hexRegion(hexagonPath.toFillPolygon().toPolygon());
-// setMask(hexRegion);
-
-//     // 绘制文本
-// QFont font("华文新魏", 15);
-// font.setBold(true);
-// painter.setFont(font);
-// painter.setPen(m_textColor);
-// painter.drawText(rect, Qt::AlignCenter, text());
-// }
 
 //逐像素着色
 void Hexagon::paintEvent(QPaintEvent *event)
@@ -188,7 +92,7 @@ void Hexagon::paintEvent(QPaintEvent *event)
 
     if (!loaded)
     {
-        backgroundImage.load(":/image/newbackground.png"); // 用你的实际路径
+        backgroundImage.load(BACKGROUDPATH);
         loaded = true;
     }
 
@@ -243,9 +147,6 @@ void Hexagon::paintEvent(QPaintEvent *event)
         m_textColor = QColor(255 - centerColor.red(),
                              255 - centerColor.green(),
                              255 - centerColor.blue());
-
-        // 方法2：亮度对比（更稳健）
-        // m_textColor = (centerColor.lightness() < 128) ? Qt::white : Qt::black;
     }
     else
     {
@@ -259,6 +160,40 @@ void Hexagon::paintEvent(QPaintEvent *event)
     painter.setPen(m_textColor); // 或自动反色处理
 
     painter.drawText(rect, Qt::AlignCenter, this->text());
+}
+
+void Hexagon::enterEvent(QEnterEvent *event)
+{
+    if (animRunning)
+    {
+        return;    // 防止重复触发
+    }
+
+    originalPos = pos();
+    animRunning = true;
+
+    // 清除旧动画
+    hoverAnim->clear();
+
+    // 向上移动动画
+    QPropertyAnimation *up = new QPropertyAnimation(this, "pos");
+    up->setDuration(300);
+    up->setStartValue(originalPos);
+    up->setEndValue(originalPos - QPoint(0, 5));
+    up->setEasingCurve(QEasingCurve::OutCubic);
+
+    // 回弹动画
+    QPropertyAnimation *down = new QPropertyAnimation(this, "pos");
+    down->setDuration(100);
+    down->setStartValue(originalPos - QPoint(0, 5));
+    down->setEndValue(originalPos);
+    down->setEasingCurve(QEasingCurve::InCubic);
+
+    hoverAnim->addAnimation(up);
+    hoverAnim->addAnimation(down);
+    hoverAnim->start();
+
+    QPushButton::enterEvent(event);
 }
 
 void Hexagon::sampleBackgroundColor()
