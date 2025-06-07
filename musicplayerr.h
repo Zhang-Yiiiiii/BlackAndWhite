@@ -32,6 +32,7 @@ public:
 private:
     //设置背景
     void setBackground(const QString fileName);
+
     //设置按钮样式
     void setBtnStyle(QPushButton* btn, const QString fileName);
 
@@ -39,7 +40,7 @@ private:
     void initBtns();
 
     //加载指定文件夹
-    void loadDir(const QString fileName);
+    void loadDir(const QString &fileName);
 
     void startMusic();
 

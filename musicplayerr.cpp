@@ -12,13 +12,15 @@
 #include <QMovie>
 #include <QVideoWidget>
 
+const QSize WindowSize(1020, 720);
+
 MusicPlayerr::MusicPlayerr(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MusicPlayerr)
 {
     ui->setupUi(this);
 
-    setFixedSize(1020, 720);
+    setFixedSize(WindowSize);
     setWindowTitle("音乐");
     setBackground(":/image/musicBackgnd.png");
 
@@ -97,33 +99,44 @@ void MusicPlayerr::initBtns()
 
 }
 
-void MusicPlayerr::loadDir(const QString fileName)
+void MusicPlayerr::loadDir(const QString &fileName)
 {
-    QDir dir (fileName);
-
-    if(dir.exists() == false)
+    if (fileName.trimmed().isEmpty())
     {
-        QMessageBox::warning(this, "警告", "文件不存在");
+        QMessageBox::warning(this, "错误", "目录路径为空！");
         return;
     }
 
-    m_dir = fileName;
+    QDir dir(fileName);
+    qDebug() << "music file:" << fileName;
 
-    QFileInfoList fileList = dir.entryInfoList(QDir::Files);
-
-    ui->musicList->clear(); //清空之前的内容
-
-    for(auto e : fileList)
+    if (!dir.exists())
     {
-        if(e.suffix() == "mp3")
+        QMessageBox::warning(this, "警告", "目录不存在！");
+        return;
+    }
+
+    QFileInfoList fileList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    ui->musicList->clear();
+
+    for (const QFileInfo &e : fileList)
+    {
+        if (e.suffix().toLower() == "mp3")
         {
             ui->musicList->addItem(e.baseName());
         }
     }
 
-    //默认第一行
-    ui->musicList->setCurrentRow(0);
+    // 文件夹中没有 mp3 文件时避免崩溃
+    if (ui->musicList->count() == 0)
+    {
+        QMessageBox::information(this, "提示", "该目录下没有找到 MP3 音乐文件。");
+        return;
+    }
 
+    m_dir = fileName;
+
+    ui->musicList->setCurrentRow(0);
     startMusic();
 }
 
