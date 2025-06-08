@@ -44,6 +44,8 @@ public:
 
     void checkPasswordLength(const QString &password);
 
+    void checkNameLength(const QString &name);
+
 private:
     //------------------------私有属性----------------------------------
 

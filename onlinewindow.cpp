@@ -129,7 +129,7 @@ void OnlineWindow::onListenBtnClicked()
     cleanupConnections();
     m_server = new QTcpServer(this);
 
-    MessageTip::tip(this, "已经开创房间");
+    MessageTip::tipFromBottom(this, "已经开创房间");
 
     //获取ip port
     QString ip = ui->ipEdit->text();

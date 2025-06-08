@@ -308,7 +308,7 @@ void MainScene::showLoginWindow()
     }
 
     m_loginWindow->setWindowIcon(QIcon(MYICON));
-    m_loginWindow->move((width() - m_loginWindow->width()) / 2, (height() - m_loginWindow->height()) / 2);
+    //m_loginWindow->move((width() - m_loginWindow->width()) / 2, (height() - m_loginWindow->height()) / 2);
 
     m_loginWindow->show();
 }
@@ -327,7 +327,9 @@ void MainScene::buildLightGame()
 
     if(level > SELECTBTNNUMBER || level <= ANTGAMENUMBER)    //判断关卡是否输入正确
     {
-        MessageTip::tip(m_mappingDialog, "关卡数不正确");
+        //MessageTip::tip(m_mappingDialog, "关卡数不正确");
+        MessageTip::tipFromCenter(this, "关卡数不正确");
+        //QToolTip::showText(mapToGlobal(rect().center()), "关卡数不正确");
         return;
     }
 
@@ -555,7 +557,7 @@ void MainScene::onUserConfirmLogin()
     if(ret == 3) //登录成功
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "登录成功");
+        MessageTip::tipFromCenter(this, "登录成功");
 
         //记录用户信息
         m_user = m_usermanager->findUser(m_userName);
@@ -571,13 +573,13 @@ void MainScene::onUserConfirmLogin()
     else if(ret == 2) //密码错误
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "密码错误");
+        MessageTip::tipFromBottom(m_loginWindow, "密码错误");
 
     }
     else //用户不存在
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "用户不存在");
+        MessageTip::tipFromBottom(m_loginWindow, "用户不存在");
 
     }
 }
@@ -595,7 +597,7 @@ void MainScene::onUserConfirmRegister()
     if(!m_usermanager->isUserNameRight(name) || !m_usermanager->isPassWordRight(pwd))
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "用户名或密码长度不正确");
+        MessageTip::tipFromBottom(m_loginWindow, "用户名或密码长度不正确");
 
         return;
     }
@@ -603,25 +605,29 @@ void MainScene::onUserConfirmRegister()
     if(ret == 3 || ret == 2) //用户存在
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "用户已存在");
+        MessageTip::tipFromBottom(m_loginWindow, "用户已存在");
 
     }
     else //注册成功
     {
         //显示提示信息
-        MessageTip::tip(m_loginWindow, "注册成功，自动登录");
-
-        //自动登录
-        this->m_userName = name;
-        this->m_password = pwd;
+        MessageTip::tipFromCenter(this, "注册成功，自动登录");
 
         m_loginWindow->hide();
 
         //添加用户信息
-        this->m_usermanager->addUser(this->m_userName, this->m_password);
-        m_currentUser = m_usermanager->findUser(m_userName);
+        this->m_usermanager->addUser(name, pwd);
+        m_currentUser = m_usermanager->findUser(name);
+
+        //自动登录
+        this->m_user = m_usermanager->findUser(name);
+        this->m_userName = name;
+        this->m_password = pwd;
 
         UserUtils::saveSingleUser(m_currentUser);
+
+        //设置头像
+        m_avatarWidget->setUser(m_currentUser);
     }
 }
 

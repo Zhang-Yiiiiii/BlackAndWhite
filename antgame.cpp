@@ -3,6 +3,7 @@
 #include <QColorDialog>
 #include <QToolTip>
 #include <QPointer>
+#include "messagetip.h"
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
 
@@ -684,8 +685,10 @@ void AntGame::onShowHintBtnClicked()
 {
     if(!isBoardInitial() && !m_isHinting)   //棋盘不是最初状态 也不处于提示状态
     {
-        QPoint pos = QPoint(this->rect().width() / 2, 500);
-        QToolTip::showText(pos, "请先重置棋盘", this, rect(), 500);
+        //QPoint pos = QPoint(this->rect().width() / 2, 500);
+        //QToolTip::showText(pos, "请先重置棋盘", this, rect(), 500);
+
+        MessageTip::tipFromCenter(this, "请先重置棋盘");
         return;
     }
     else if(isBoardInitial() && !m_isHinting)   //棋盘是初始状态 但不是提示状态

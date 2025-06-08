@@ -79,8 +79,9 @@ LoginWindow::LoginWindow(QWidget *parent)
     //请求注册 按钮的点击
     connect(this->ui->registerButton, &QPushButton::clicked, this, &LoginWindow::onRequestRegister);
 
-    //检测密码长度
+    //检测用户名、密码长度
     connect(ui->passwdEdit, &QLineEdit::textChanged, this, &LoginWindow::checkPasswordLength);
+    connect(ui->userNameEdit, &QLineEdit::textChanged, this, &LoginWindow::checkNameLength);
 
 }
 
@@ -132,7 +133,6 @@ void LoginWindow::checkPasswordLength(const QString &password)
     // 判断长度是否超限
     if (currentLength > PASSWORD_MAX_LENGTH || currentLength < PASSWORD_MIN_LENGTH)
     {
-        // 在checkPasswordLength函数中添加
         // 设置背景色+红色边框（保留原有透明度背景）
 
         ui->passwdEdit->setStyleSheet(
@@ -142,32 +142,58 @@ void LoginWindow::checkPasswordLength(const QString &password)
             "    border: 2px solid red;"                       // 新增红色边框
             "}"
             "QLineEdit::placeholder {"
-            "    color: red !important;"  // 50% 透明白色
+            "    color: red !important;"
             "}"
         );
 
-        // 显示红色警告
-        // ui->lengthWarningLabel->setText(QString("密码过长（最多%1位）").arg(PASSWORD_MAX_LENGTH));
-        // ui->lengthWarningLabel->setStyleSheet("color: red; font-size: 12px;");
-        // ui->lengthWarningLabel->show();
     }
     else
     {
         ui->passwdEdit->setStyleSheet(
             "QLineEdit {"
             "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-            "    color: white;"              // 输入文字为白色（简写）
+            "    color: white;"              // 输入文字为白色
             "}"
             "QLineEdit::placeholder {"
-            "    color: red !important;"  // 50% 透明白色
+            "    color: red !important;"
             "}"
         );
+    }
+}
 
-        // 隐藏提示或显示确认信息
-        //ui->lengthWarningLabel->hide();
-        // 显示绿色确认提示
-        // ui->lengthWarningLabel->setText("✓ 长度符合要求");
-        // ui->lengthWarningLabel->setStyleSheet("color: green;");
+void LoginWindow::checkNameLength(const QString &name)
+{
+    const int currentLength = name.length();
+    const int NAME_MAX_LENGTH = User::nameMaxLen;
+    const int NAME_MIN_LENGTH = User::nameMinLen;
+
+    // 判断长度是否超限
+    if (currentLength > NAME_MAX_LENGTH || currentLength < NAME_MIN_LENGTH)
+    {
+        // 设置背景色+红色边框（保留原有透明度背景）
+
+        ui->userNameEdit->setStyleSheet(
+            "QLineEdit {"
+            "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+            "    color: white;"              // 输入文字为白色（简写）
+            "    border: 2px solid red;"                       // 新增红色边框
+            "}"
+            "QLineEdit::placeholder {"
+            "    color: red !important;"
+            "}"
+        );
+    }
+    else
+    {
+        ui->userNameEdit->setStyleSheet(
+            "QLineEdit {"
+            "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
+            "    color: white;"              // 输入文字为白色
+            "}"
+            "QLineEdit::placeholder {"
+            "    color: red !important;"
+            "}"
+        );
     }
 }
 
