@@ -1,4 +1,4 @@
-#include "MusicPlayer.h"
+#include "musicplayer.h"
 #include "qpainter.h"
 
 #include <QStyle>

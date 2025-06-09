@@ -18,7 +18,11 @@ const QPoint avatar_pos = QPoint(80, 80);
 MainScene::MainScene(QWidget *parent)
     : BaseWindow(parent), m_gameScene(nullptr)
 {
-    this->setWindowIcon(QIcon(MYICON));
+    //设置图标
+    setWindowIcon(QIcon(MYICON));
+
+    //显示游戏名
+    showGameTitle();
 
     //登录
     QAction* loginAction = m_startMenu->addAction("登录");
@@ -81,7 +85,6 @@ MainScene::MainScene(QWidget *parent)
 
     //显示头像
     showAvatar();
-
 }
 
 MainScene::~MainScene()
@@ -90,6 +93,11 @@ MainScene::~MainScene()
     {
         delete m_usermanager;
         m_usermanager = nullptr;
+    }
+
+    if(m_gameScene)
+    {
+        delete m_gameScene;
     }
 
     // if(m_isOnlineMode && disconnectAction)
@@ -107,26 +115,26 @@ void MainScene::showEvent(QShowEvent *event)
 void MainScene::showGameTitle()
 {
     //标签位置
-    QPoint pos(350, 100);
+    QPoint pos(345, 100);
 
     QLabel* lightoutTitle = new QLabel(this);
     QLabel* antTitle = new QLabel(this);
 
-    QFont font("华文新魏", 40);
+    QFont font("华文行楷", 40);
     font.setBold(true);
     lightoutTitle->setFont(font);
     lightoutTitle->setText("不要黑块");
     lightoutTitle->setStyleSheet("color : black; ");
-    lightoutTitle->setFixedSize(230, 45);
+    lightoutTitle->setFixedSize(230, 55);
     lightoutTitle->setAlignment(Qt::AlignCenter);
     lightoutTitle->move(pos);
 
-    pos.setX(1000);
+    pos.setX(1015);
     font.setBold(true);
     antTitle->setFont(font);
     antTitle->setText("兰顿蚂蚁");
     antTitle->setStyleSheet("color : black; ");
-    antTitle->setFixedSize(230, 45);
+    antTitle->setFixedSize(230, 55);
     antTitle->setAlignment(Qt::AlignCenter);
     antTitle->move(pos);
 }
@@ -323,15 +331,7 @@ void MainScene::buildAntGame(BuildWay buildWay)
 //自建light地图
 void MainScene::buildLightGame()
 {
-    int level = QInputDialog::getInt(this, "建立熄灯游戏", "请输入关卡数38-52");
-
-    if(level > SELECTBTNNUMBER || level <= ANTGAMENUMBER)    //判断关卡是否输入正确
-    {
-        //MessageTip::tip(m_mappingDialog, "关卡数不正确");
-        MessageTip::tipFromCenter(this, "关卡数不正确");
-        //QToolTip::showText(mapToGlobal(rect().center()), "关卡数不正确");
-        return;
-    }
+    int level = QInputDialog::getInt(this, "建立熄灯游戏", "请输入关卡数38-52", ANTGAMENUMBER + 1, ANTGAMENUMBER + 1, SELECTBTNNUMBER);
 
     enterGameScene(level, lightBuildMode);
 }
@@ -671,7 +671,7 @@ void MainScene::onSaveButtonClicked(BuildWay buildWay, int gameStep, int bugX, i
 }
 
 //模拟按钮的点击
-void MainScene::onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool flag)
+void MainScene::onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool &flag)
 {
 
     if(AntGame * antPtr = dynamic_cast<AntGame*>(m_gameScene))

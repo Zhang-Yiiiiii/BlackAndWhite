@@ -28,7 +28,9 @@ public:
     void saveGame(BuildWay buildWay, int step, int x, int y, int direction, bool flag = 1); //flag表示是否要返回
 
     //模拟/关闭
-    void simulate(BuildWay buildWay, int step, int x, int y, int direction, bool flag); //flag 表示模拟还是关闭
+    void simulate(BuildWay buildWay, int step, int x, int y, int direction, bool &flag); //flag 表示模拟还是关闭
+
+    void playHintStep(int index, int delay);
 
     //画图事件
     void paintEvent(QPaintEvent* event) override;

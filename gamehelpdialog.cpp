@@ -1,4 +1,4 @@
-#include "GameHelpDialog.h"
+#include "gamehelpdialog.h"
 
 #include <QFile>
 #include <QTextStream>

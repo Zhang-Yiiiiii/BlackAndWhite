@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>391</height>
+    <width>518</width>
+    <height>436</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -206,7 +206,7 @@
           <string notr="true">QLineEdit
  {
       background-color: gba(255, 255, 255, 0.8);
-    color: white;
+    color: black;
  }；
 
  QLineEdit::placeholder
@@ -342,7 +342,7 @@
           <string notr="true">QLineEdit
  {
       background-color: gba(255, 255, 255, 0.8);
-    color: white;
+    color: black;
  }；
 
  QLineEdit::placeholder

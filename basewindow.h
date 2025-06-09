@@ -13,7 +13,7 @@
 #include <QPainter>
 
 #include "musicplayerr.h"
-#include "GameHelpDialog.h"
+#include "gamehelpdialog.h"
 
 namespace Ui
 {

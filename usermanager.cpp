@@ -657,6 +657,7 @@ void UserManager::releaseUsers()
     m_users.clear();
 }
 
+//更新等级
 void UserManager::updateLV(User* user)
 {
     unsigned exp = user->getExp();
@@ -672,6 +673,7 @@ void UserManager::updateLV(User* user)
     }
 }
 
+//更新所有所有等级
 void UserManager::updateAllLv()
 {
     for(User* user : m_users)

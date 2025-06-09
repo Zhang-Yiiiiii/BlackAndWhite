@@ -1,9 +1,10 @@
 #include "antgame.h"
+#include "MessageTip.h"
 
 #include <QColorDialog>
 #include <QToolTip>
 #include <QPointer>
-#include "messagetip.h"
+#include <QInputDialog>
 
 constexpr int BOARD_SIZE = 20;  //棋盘的行数和列数
 
@@ -94,59 +95,115 @@ void AntGame::saveGame(BuildWay buildWay, int step, int x, int y, int direction,
     }
 }
 
-void AntGame::simulate(BuildWay buildWay, int step, int x, int y, int direction, bool flag)
+// void AntGame::simulate(BuildWay buildWay, int step, int x, int y, int direction, bool flag)
+// {
+//     //static int secs = 0;    //记录时间
+
+// if(flag == 0)   //模拟
+// {
+//         //获取用户输入延迟
+// int delay = QInputDialog::getInt(this, "延迟", "请输入每步模拟时间（ms)");
+
+// if(delay < 0)
+// {
+// delay = 0;
+// }
+
+//         //禁用按钮
+// setBtnEnabled(false);
+// setBackBtnEnabled(true);
+
+// saveGame(buildWay, step, x, y, direction, false);    //保存但是不返回
+
+// for(int i = 0; i < m_hintArray.size(); i++)
+// {
+// QPoint point = m_hintArray[i];
+// int x = point.x(), y = point.y();
+// QPointer<GridButton> cellGuard(m_board[x][y]); // 弱引用
+// QTimer::singleShot(i * delay, this, [ = ]()
+// {
+// if(i == m_hintArray.size() - 1)
+// {
+// setBtnEnabled(true);
+// }
+
+// emit cellGuard->beClicked(x, y);
+// });
+// }
+// }
+// else
+// {
+//         // if(secs < m_hintArray.size() * 1000)
+//         // {
+//         // QMessageBox::about(this, "提醒", "请等待模拟完成");
+//         // return;
+//         // }
+
+// resetGame();
+
+//         //清除路径
+// m_path.clear();
+
+//         //清除答案数组
+// clearTipsButton();
+
+//         //清楚逐步提示步数
+// hintSteps = 0;
+// }
+// }
+
+void AntGame::simulate(BuildWay buildWay, int step, int x, int y, int direction, bool &flag)
 {
-    static int secs = 0;    //记录时间
-    const int delay = 1000;
-
-    if(flag == 0)   //模拟
+    if (!flag)
     {
-        // this->setEnabled(false);
-        setBtnEnabled(false);
-        saveGame(buildWay, step, x, y, direction, false);    //保存但是不返回
-        int time = 0;
+        bool ok = false;
+        int delay = QInputDialog::getInt(this, "延迟", "请输入每步模拟时间（ms)", 110, 110, 200000, 10, &ok);
 
-        for(const auto& point : m_hintArray)
+        if(!ok)
         {
-            int x = point.x(), y = point.y();
-            QPointer<GridButton> cellGuard(m_board[x][y]); // 弱引用
-            QTimer::singleShot(time, this, [ = ]()
-            {
-                secs += delay;
-
-                if(secs == m_hintArray.size() * delay)
-                {
-                    //this->setEnabled(true);
-                    setBtnEnabled(true);
-                }
-
-                emit cellGuard->beClicked(x, y);
-            });
-
-            time += delay;
+            flag = !flag;   //保证按钮状态不变
+            return;
         }
+
+        setBtnEnabled(false);
+        setBackBtnEnabled(true);
+
+        saveGame(buildWay, step, x, y, direction, false);
+
+        // 从第0步开始递归模拟
+        playHintStep(0, delay);
     }
     else
     {
-        // if(secs < m_hintArray.size() * 1000)
-        // {
-        // QMessageBox::about(this, "提醒", "请等待模拟完成");
-        // return;
-        // }
-
         resetGame();
-
-        //清除路径
         m_path.clear();
-
-        //清除答案数组
         clearTipsButton();
-
-        //清楚逐步提示步数
         hintSteps = 0;
-
-        secs = 0;
     }
+}
+
+//逐步模拟
+void AntGame::playHintStep(int index, int delay)
+{
+    if (index >= m_hintArray.size())
+    {
+        setBtnEnabled(true); // 全部播放完后启用按钮
+        return;
+    }
+
+    QPoint point = m_hintArray[index];
+    int x = point.x(), y = point.y();
+    QPointer<GridButton> cellGuard(m_board[x][y]);
+
+    QTimer::singleShot(delay, this, [ = ]()
+    {
+        if (cellGuard)
+        {
+            emit cellGuard->beClicked(x, y);
+        }
+
+        playHintStep(index + 1, delay); // 递归下一步
+    });
 }
 
 void AntGame::paintEvent(QPaintEvent *event)

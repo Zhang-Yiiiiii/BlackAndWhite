@@ -1,4 +1,4 @@
-#include "FancyBasePlate.h"
+#include "fancybaseplate.h"
 #include <QPainter>
 #include <QPainterPath>
 

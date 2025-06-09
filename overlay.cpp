@@ -78,7 +78,7 @@ void Overlay::paintEvent(QPaintEvent *event)
     // 绘制路径点
     painter.setBrush(m_lineColor);
 
-    for (const auto& pt : m_pixelPath)
+    for (const auto& pt : std::as_const(m_pixelPath))
     {
         painter.drawEllipse(pt, m_pointRadius, m_pointRadius);
     }

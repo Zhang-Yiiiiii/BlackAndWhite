@@ -119,7 +119,7 @@ void MusicPlayerr::loadDir(const QString &fileName)
     QFileInfoList fileList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
     ui->musicList->clear();
 
-    for (const QFileInfo &e : fileList)
+    for (const QFileInfo &e : std::as_const(fileList))
     {
         if (e.suffix().toLower() == "mp3")
         {

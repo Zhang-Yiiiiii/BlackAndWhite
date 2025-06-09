@@ -478,7 +478,7 @@ unsigned int LightOutGame::calculateExp()
 //设置按钮是否可按
 void LightOutGame::setBtnEnabled(bool enabled)
 {
-    for(auto btn : findChildren<QPushButton*>())
+    for(auto *btn : findChildren<QPushButton*>())
     {
         btn->setEnabled(enabled);
     }

@@ -34,8 +34,7 @@
 #include "onlinewindow.h"
 #include "abstractgamescene.h"
 #include "avatarwidget.h"
-#include "GameHelpDialog.h"
-
+#include "gamehelpdialog.h"
 class MainScene : public BaseWindow
 {
     Q_OBJECT
@@ -169,7 +168,7 @@ private slots:
     void onSaveButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection);
 
     //模拟按钮的点击
-    void onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool flag);
+    void onSimuButtonClicked(BuildWay buildWay, int gameStep, int bugX, int bugY, int bugDirection, bool &flag);
 
     //用户点击联机按钮
     void onOnlineTriggerd();

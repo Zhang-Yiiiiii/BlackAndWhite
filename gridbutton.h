@@ -11,7 +11,7 @@ class GridButton : public QPushButton
     Q_PROPERTY(int rotationAngle READ rotationAngle WRITE setRotationAngle NOTIFY rotationAngleChanged)
 public:
     explicit GridButton(bool flag, QWidget *parent = nullptr);
-    void changeFlag(bool isShowAnimation = true);
+    void changeFlag(bool isShowAnimation = true, int duration = 300);
     GridButton* setPos(int posx, int posy);
     bool getFlag () const;
 

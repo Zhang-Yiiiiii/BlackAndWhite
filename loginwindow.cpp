@@ -37,7 +37,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     ui->userNameEdit->setStyleSheet(
         "QLineEdit {"
         "    background-color: rgba(255, 255, 255, 0.2);"  // 深色背景
-        "    color: black;"              // 输入文字为白色（简写）
+        "    color: black;"              // 输入文字
 
         "}"
         "QLineEdit::placeholder {"
@@ -48,10 +48,10 @@ LoginWindow::LoginWindow(QWidget *parent)
     ui->passwdEdit->setStyleSheet(
         "QLineEdit {"
         "    background-color: rgba(255, 255, 255, 0.2);"  // 深色背景
-        "    color: black;"              // 输入文字为白色（简写）
+        "    color: black;"              // 输入文字
         "}"
         "QLineEdit::placeholder {"
-        "    color: rgba(0, 0, 0, 1.0);"  // 50% 透明白色
+        "    color: rgba(0, 0, 0, 1.0);"
         "}"
     );
 
@@ -67,7 +67,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     ui->passwdEdit->addAction(toggleAction, QLineEdit::TrailingPosition);
 
     // 连接信号槽：点击时切换密码可见性
-    connect(toggleAction, &QAction::toggled, [this, toggleAction](bool checked)
+    connect(toggleAction, &QAction::toggled, this, [this, toggleAction](bool checked)
     {
         ui->passwdEdit->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
         toggleAction->setIcon(checked ? QIcon(":/icon/openEye.png") : QIcon(":/icon/closeEye.png"));
@@ -138,7 +138,7 @@ void LoginWindow::checkPasswordLength(const QString &password)
         ui->passwdEdit->setStyleSheet(
             "QLineEdit {"
             "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-            "    color: white;"              // 输入文字为白色（简写）
+            "    color: black;"
             "    border: 2px solid red;"                       // 新增红色边框
             "}"
             "QLineEdit::placeholder {"
@@ -152,7 +152,7 @@ void LoginWindow::checkPasswordLength(const QString &password)
         ui->passwdEdit->setStyleSheet(
             "QLineEdit {"
             "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-            "    color: white;"              // 输入文字为白色
+            "    color: black;"
             "}"
             "QLineEdit::placeholder {"
             "    color: red !important;"
@@ -175,7 +175,7 @@ void LoginWindow::checkNameLength(const QString &name)
         ui->userNameEdit->setStyleSheet(
             "QLineEdit {"
             "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-            "    color: white;"              // 输入文字为白色（简写）
+            "    color: black;"              // 输入文字为白色（简写）
             "    border: 2px solid red;"                       // 新增红色边框
             "}"
             "QLineEdit::placeholder {"
@@ -188,7 +188,7 @@ void LoginWindow::checkNameLength(const QString &name)
         ui->userNameEdit->setStyleSheet(
             "QLineEdit {"
             "    background-color: rgba(255, 255, 255, 0.3);;"  // 深色背景
-            "    color: white;"              // 输入文字为白色
+            "    color: black;"              // 输入文字为白色
             "}"
             "QLineEdit::placeholder {"
             "    color: red !important;"

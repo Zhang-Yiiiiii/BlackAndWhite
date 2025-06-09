@@ -2,13 +2,14 @@
 #include <QFile>
 #include <QTextStream>
 
+//通过名字找用户
 User* UserUtils::findUserByName(const QString& userName)
 {
     QList<User*> users = loadUsers();
 
     User* user = nullptr;
 
-    for (User* u : users)
+    for (User* u : std::as_const(users))
     {
         if (u->getUserName() == userName)
         {
@@ -26,6 +27,7 @@ User* UserUtils::findUserByName(const QString& userName)
     return user;
 }
 
+//保存所有用户
 bool UserUtils::saveUsers(const QList<User*>& users, const QString& filePath)
 {
     QFile file(filePath);
@@ -46,6 +48,7 @@ bool UserUtils::saveUsers(const QList<User*>& users, const QString& filePath)
     return true;
 }
 
+//加载用户
 QList<User*> UserUtils::loadUsers(const QString& filePath)
 {
     QList<User*> users;
@@ -79,6 +82,7 @@ QList<User*> UserUtils::loadUsers(const QString& filePath)
     return users;
 }
 
+//保存单个用户
 void UserUtils::saveSingleUser(User* currentUser)
 {
     if(currentUser == nullptr)
