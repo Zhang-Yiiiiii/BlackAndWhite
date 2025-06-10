@@ -4,6 +4,7 @@ release/antgame.o
 release/avatarwidget.o
 release/basewindow.o
 release/buildmapdialog.o
+release/chatdialog.o
 release/data.o
 release/fancybaseplate.o
 release/gamehelpdialog.o
@@ -29,6 +30,7 @@ release/moc_antgame.o
 release/moc_avatarwidget.o
 release/moc_basewindow.o
 release/moc_buildmapdialog.o
+release/moc_chatdialog.o
 release/moc_fancybaseplate.o
 release/moc_gamehelpdialog.o
 release/moc_gridbutton.o

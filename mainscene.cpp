@@ -16,7 +16,7 @@ const QPoint avatar_pos = QPoint(80, 80);
 
 //----------------------------------构造和析构--------------------------------------------
 MainScene::MainScene(QWidget *parent)
-    : BaseWindow(parent), m_gameScene(nullptr)
+    : BaseWindow(parent)
 {
     //设置图标
     setWindowIcon(QIcon(MYICON));
@@ -85,6 +85,7 @@ MainScene::MainScene(QWidget *parent)
 
     //显示头像
     showAvatar();
+
 }
 
 MainScene::~MainScene()
@@ -95,10 +96,11 @@ MainScene::~MainScene()
         m_usermanager = nullptr;
     }
 
-    if(m_gameScene)
-    {
-        delete m_gameScene;
-    }
+    // if(m_gameScene)
+    // {
+    // delete m_gameScene;
+    // m_gameScene = nullptr;
+    // }
 
     // if(m_isOnlineMode && disconnectAction)
     // {
@@ -255,6 +257,7 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
     if(m_gameScene)
     {
         m_gameScene->deleteLater();
+        m_gameScene = nullptr;
     }
 
     if(gameLevel <= ANTGAMENUMBER) //兰顿蚂蚁模式

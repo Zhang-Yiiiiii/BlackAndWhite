@@ -425,6 +425,16 @@ ScoreLevel LightOutGame::Scoring()
     return score;
 }
 
+QString LightOutGame::getInfo()
+{
+    QString result;
+    QTextStream stream(&result);
+    stream << "我将给你一个熄灯游戏的矩阵，你告诉点击哪些格子能够将棋盘翻转成为全白（全为1）的颜色\n";
+    stream << AbstractGameScene::getInfo();
+    return result;
+
+}
+
 //判断是否胜利
 bool LightOutGame::isWin() const
 {

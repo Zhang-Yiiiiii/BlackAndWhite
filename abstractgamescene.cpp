@@ -1,4 +1,5 @@
 #include "abstractgamescene.h"
+#include "chatdialog.h"
 #include "mypushbutton.h"
 #include "fancybaseplate.h"
 #include "config.h"
@@ -65,6 +66,16 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
     showPushButton();   //显示提交、返回、重置按钮
 
     m_menubar->raise(); //让菜单栏置顶 不然有时 点击没有反应
+
+    //ai
+    m_ai = new ChatDialog(this);
+
+    QAction * aiAction = m_menubar->addAction("ai帮助");
+    connect(aiAction, &QAction::triggered, m_ai, &QDialog::show);
+    connect(m_ai, &ChatDialog::applyAidInfo, this, [ = ]()
+    {
+        m_ai->onGetAidInfo(getInfo());
+    });
 }
 
 AbstractGameScene::~AbstractGameScene()
@@ -168,6 +179,36 @@ void AbstractGameScene::setBtnEnabled(bool enable)
 void AbstractGameScene::setBackBtnEnabled(bool enabled)
 {
     backBtn->setEnabled(enabled);
+}
+
+QString AbstractGameScene::getInfo()
+{
+    QString result;
+    QTextStream stream(&result);
+
+    // 添加数组维度信息
+    if (!m_gameArray.empty())
+    {
+        stream << "Array Size: " << m_boardRow
+               << "x" << m_boardCol << "\n";
+    }
+
+    stream << "\n";
+
+    // 转换数组内容
+    for (int row = 0; row < m_boardRow; ++row)
+    {
+
+        // 数组数据
+        for (int col = 0; col < m_boardCol; ++col)
+        {
+            stream << QString("  %1").arg(m_gameArray[row][col] ? " 1 " : " 0 ");
+        }
+
+        stream << "\n";
+    }
+
+    return result;
 }
 
 //----------------------------------保护方法--------------------------------------------
@@ -461,6 +502,13 @@ void AbstractGameScene::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     emit sceneShow();
+}
+
+//重写移动事件
+void AbstractGameScene::moveEvent(QMoveEvent *event)
+{
+    m_ai->move(QPoint(frameGeometry().right() + 3, frameGeometry().top()));
+    BaseWindow::moveEvent(event);
 }
 
 //重写关闭事件

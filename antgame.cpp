@@ -262,6 +262,19 @@ void AntGame::setBtnEnabled(bool enable)
 
 }
 
+QString AntGame::getInfo()
+{
+    QString dir[] {"左", "上", "右", "下"};
+    QString result;
+    QTextStream stream(&result);
+    stream << "这是兰顿蚂蚁游戏，规则如下：20*20 的黑白棋盘。当蚂蚁位于白色格子时，它会前进1格，然后顺时针旋转90°（右转），并将当前格子颜色变为黑色；当蚂蚁位于黑色格子时，它会前进1格，然后逆时针旋转90°（左转），并将当前格子颜色变为白色。"
+              "现在告诉你蚂蚁经过一定步数后的最终位置，你来求解(告诉我点击哪些格子)。\n\n";
+    stream << AbstractGameScene::getInfo();
+    stream << "step: " << m_gameStep << "  \t方向:" << dir[m_bugDir] << "   \t蚂蚁位置(行，列): " << m_bugPos.x() + 1 << " \t " << m_bugPos.y() + 1 << "\n";
+
+    return result;
+}
+
 //----------------------------------私有方法--------------------------------------------
 
 //初始化bug

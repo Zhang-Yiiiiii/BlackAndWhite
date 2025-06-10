@@ -41,6 +41,9 @@ public:
     //设置按钮是否可按
     void setBtnEnabled(bool enable) override;
 
+    //获取游戏信息
+    virtual QString getInfo() override;
+
 private:
 
     //------------------------私有属性----------------------------------

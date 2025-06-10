@@ -59,7 +59,7 @@ public:
     {
         if (LoginWindow->objectName().isEmpty())
             LoginWindow->setObjectName("LoginWindow");
-        LoginWindow->resize(502, 391);
+        LoginWindow->resize(518, 436);
         QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -141,7 +141,7 @@ public:
         userNameEdit->setStyleSheet(QString::fromUtf8("QLineEdit\n"
 " {\n"
 "      background-color: gba(255, 255, 255, 0.8);\n"
-"    color: white;\n"
+"    color: black;\n"
 " }\357\274\233\n"
 "\n"
 " QLineEdit::placeholder\n"
@@ -197,7 +197,7 @@ public:
         passwdEdit->setStyleSheet(QString::fromUtf8("QLineEdit\n"
 " {\n"
 "      background-color: gba(255, 255, 255, 0.8);\n"
-"    color: white;\n"
+"    color: black;\n"
 " }\357\274\233\n"
 "\n"
 " QLineEdit::placeholder\n"

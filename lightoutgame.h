@@ -32,6 +32,9 @@ public:
     //评分
     ScoreLevel Scoring() override;
 
+    //获取游戏信息
+    virtual QString getInfo() override;
+
 private:
 
     //------------------------私有属性----------------------------------

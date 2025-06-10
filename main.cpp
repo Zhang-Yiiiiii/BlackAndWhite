@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     MainScene w;
 
     //设置全局字体
-    //a.setFont(QFont("华文新魏", 15));
+    a.setFont(QFont("华文新魏", 15));
 
     qDebug() << QDir::currentPath();
 
@@ -21,6 +21,10 @@ int main(int argc, char* argv[])
     a.setWindowIcon(QIcon(MYICON));
 
     w.show();
+
+    // //chat测试
+    // ChatDialog c;
+    // c.show();
 
     return a.exec();
 }

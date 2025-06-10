@@ -35,6 +35,7 @@
 #include "abstractgamescene.h"
 #include "avatarwidget.h"
 #include "gamehelpdialog.h"
+
 class MainScene : public BaseWindow
 {
     Q_OBJECT

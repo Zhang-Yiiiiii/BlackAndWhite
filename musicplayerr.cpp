@@ -12,7 +12,7 @@
 #include <QMovie>
 #include <QVideoWidget>
 
-const QSize WindowSize(1020, 720);
+const QSize WindowSize(960, 680);
 
 MusicPlayerr::MusicPlayerr(QWidget *parent) :
     QDialog(parent),
