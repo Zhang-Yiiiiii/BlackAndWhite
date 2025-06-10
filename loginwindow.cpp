@@ -252,6 +252,6 @@ void LoginWindow::onRequestRegister()
     connect(this->ui->loginButton, &QPushButton::clicked, this, &LoginWindow::onRegisterAccount);
     //监听返回按钮的点击
     connect(this->ui->registerButton, &QPushButton::clicked, this, &LoginWindow::onBack);
-    //将密码显示方式改成普通
-    this->ui->passwdEdit->setEchoMode(QLineEdit::Normal);
+    // //将密码显示方式改成普通
+    // this->ui->passwdEdit->setEchoMode(QLineEdit::Normal);
 }

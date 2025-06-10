@@ -86,6 +86,9 @@ MainScene::MainScene(QWidget *parent)
     //显示头像
     showAvatar();
 
+    //ai助手
+    m_ai = new ChatDialog(this);
+
 }
 
 MainScene::~MainScene()
@@ -277,6 +280,7 @@ void MainScene::enterGameScene(int gameLevel, BuildWay enterWay, int gameStep, i
     }
 
     m_gameScene->setMusicPlayerr(m_musicPlayer); //设置音乐播放器
+    m_gameScene->setAi(m_ai);   //设置ai助手
 
     Animator::transition(this, m_gameScene); //使用动画进入
 

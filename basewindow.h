@@ -14,6 +14,7 @@
 
 #include "musicplayerr.h"
 #include "gamehelpdialog.h"
+#include "chatdialog.h"
 
 namespace Ui
 {
@@ -57,9 +58,16 @@ protected:
 
     MusicPlayerr* m_musicPlayer;  //音乐播放器
 
+    QAction* m_aiAction;
+
+    ChatDialog* m_ai;       //ai辅助
+
     //------------------------保护方法----------------------------------
 
     virtual void paintEvent(QPaintEvent*) override;
+
+    //重写移动事件
+    void moveEvent(QMoveEvent* event) override;
 
 protected slots:
     //------------------------保护槽----------------------------------

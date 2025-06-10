@@ -79,6 +79,9 @@ public:
     //获取游戏信息
     virtual QString getInfo();
 
+    //设置ai
+    void setAi(ChatDialog *ai);
+
 protected:
     //------------------------保护属性----------------------------------
 
@@ -164,9 +167,6 @@ protected:
     //关闭窗口的标志
     bool m_isInternalclose = true;  //如果是点击窗口的关闭按钮则关闭程序
 
-    //ai辅助
-    ChatDialog *m_ai;
-
     //------------------------保护方法----------------------------------
 
     //设置棋盘尺寸
@@ -228,9 +228,6 @@ protected:
 
     //重写showEvent
     void showEvent(QShowEvent* event) override;
-
-    //重写移动事件
-    void moveEvent(QMoveEvent* event) override;
 
     //重写关闭事件
     void closeEvent(QCloseEvent* event) override;

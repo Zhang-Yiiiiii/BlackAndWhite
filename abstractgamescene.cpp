@@ -67,15 +67,6 @@ AbstractGameScene::AbstractGameScene(int gameLevel, QString userName, UserManage
 
     m_menubar->raise(); //让菜单栏置顶 不然有时 点击没有反应
 
-    //ai
-    m_ai = new ChatDialog(this);
-
-    QAction * aiAction = m_menubar->addAction("ai帮助");
-    connect(aiAction, &QAction::triggered, m_ai, &QDialog::show);
-    connect(m_ai, &ChatDialog::applyAidInfo, this, [ = ]()
-    {
-        m_ai->onGetAidInfo(getInfo());
-    });
 }
 
 AbstractGameScene::~AbstractGameScene()
@@ -202,13 +193,25 @@ QString AbstractGameScene::getInfo()
         // 数组数据
         for (int col = 0; col < m_boardCol; ++col)
         {
-            stream << QString("  %1").arg(m_gameArray[row][col] ? " 1 " : " 0 ");
+            stream << QString("  %1").arg(m_gameArray[row][col] ? " 1" : " 0");
         }
 
         stream << "\n";
     }
 
     return result;
+}
+
+//设置ai助手
+void AbstractGameScene::setAi(ChatDialog *ai)
+{
+    m_ai = ai;
+
+    //获取信息
+    connect(m_ai, &ChatDialog::applyAidInfo, this, [ = ]()
+    {
+        m_ai->onGetAidInfo(getInfo());
+    });
 }
 
 //----------------------------------保护方法--------------------------------------------
@@ -502,13 +505,6 @@ void AbstractGameScene::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     emit sceneShow();
-}
-
-//重写移动事件
-void AbstractGameScene::moveEvent(QMoveEvent *event)
-{
-    m_ai->move(QPoint(frameGeometry().right() + 3, frameGeometry().top()));
-    BaseWindow::moveEvent(event);
 }
 
 //重写关闭事件

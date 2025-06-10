@@ -179,13 +179,13 @@ void Hexagon::enterEvent(QEnterEvent *event)
     QPropertyAnimation *up = new QPropertyAnimation(this, "pos");
     up->setDuration(300);
     up->setStartValue(originalPos);
-    up->setEndValue(originalPos - QPoint(0, 5));
-    up->setEasingCurve(QEasingCurve::OutCubic);
+    up->setEndValue(originalPos - QPoint(0, 8));
+    up->setEasingCurve(QEasingCurve::InOutQuad);
 
     // 回弹动画
     QPropertyAnimation *down = new QPropertyAnimation(this, "pos");
-    down->setDuration(100);
-    down->setStartValue(originalPos - QPoint(0, 5));
+    down->setDuration(300);
+    down->setStartValue(originalPos - QPoint(0, 8));
     down->setEndValue(originalPos);
     down->setEasingCurve(QEasingCurve::InCubic);
 

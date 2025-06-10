@@ -53,6 +53,15 @@ BaseWindow::BaseWindow(QWidget *parent) :
     {
         exit(0);
     });
+
+    m_aiAction = m_menubar->addAction("ai帮助");
+    connect(m_aiAction, &QAction::triggered, this, [this]()
+    {
+        if(m_ai)
+        {
+            m_ai->show();
+        }
+    });
 }
 
 BaseWindow::~BaseWindow()
@@ -79,6 +88,13 @@ void BaseWindow::paintEvent(QPaintEvent*)
     painter.setRenderHint(QPainter::Antialiasing); // 启用抗锯齿
 
     painter.drawPixmap(0, 0, m_background);
+}
+
+//重写移动事件
+void BaseWindow::moveEvent(QMoveEvent *event)
+{
+    m_ai->move(QPoint(frameGeometry().right() + 3, frameGeometry().top()));
+    QMainWindow::moveEvent(event);
 }
 
 //----------------------------------保护槽--------------------------------------------
