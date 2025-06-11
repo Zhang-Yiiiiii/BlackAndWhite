@@ -170,10 +170,11 @@ void AntGame::simulate(BuildWay buildWay, int step, int x, int y, int direction,
             return;
         }
 
+        //设置按钮不可按
         setBtnEnabled(false);
         setBackBtnEnabled(true);
 
-        saveGame(buildWay, step, x, y, direction, false);
+        saveGame(buildWay, step, x, y, direction, false);   //获取提示同时保存游戏
 
         // 从第0步开始递归模拟
         playHintStep(0, delay);
@@ -511,7 +512,7 @@ bool AntGame::destinationMaping(std::vector<std::vector<bool> >& gameArray, QPoi
 }
 
 //生成提示数组
-void AntGame::generateTipArray()
+void AntGame::generateAnswerArray()
 {
     m_tipsArray.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
 
@@ -616,7 +617,7 @@ QString AntGame::judgeDiff()
     {
         level = "困难";
     }
-    else if (m_gameStep <= 500)
+    else
     {
         level = "地狱";
     }

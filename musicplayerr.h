@@ -1,6 +1,12 @@
 #ifndef MUSICPLAYERR_H
 #define MUSICPLAYERR_H
 
+/*****************************************************************
+ * class: MusicPlayerr （背景音乐播放器）
+ *
+ * 用处: 支持用户自行选择音乐
+ *****************************************************************/
+
 #include <QWidget>
 #include <QString>
 #include <QPushButton>

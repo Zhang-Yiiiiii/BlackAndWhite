@@ -76,7 +76,7 @@ public:
     //返回按钮是否可按
     void setBackBtnEnabled(bool enabled);
 
-    //获取游戏信息
+    //获取游戏信息 用于ai对话
     virtual QString getInfo();
 
     //设置ai
@@ -215,16 +215,13 @@ protected:
     void setAnimation(int delay = 6);
 
     //生成提示数组
-    virtual void generateTipArray() = 0;
+    virtual void generateAnswerArray() = 0;
 
     //清空提示按钮
     void clearTipsButton();
 
     //设置label样式
     void setLabelStyle(QLabel* label);
-
-    //重写绘图事件
-    //void paintEvent(QPaintEvent * event) override;
 
     //重写showEvent
     void showEvent(QShowEvent* event) override;

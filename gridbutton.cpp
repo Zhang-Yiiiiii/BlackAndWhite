@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
+//----------------------------------构造和析构--------------------------------------------
+
 GridButton::GridButton(bool flag, QWidget *parent)
     : QPushButton(parent), m_flag(flag)
 {
@@ -19,6 +21,8 @@ GridButton::GridButton(bool flag, QWidget *parent)
         }
     });
 }
+
+//----------------------------------公有方法--------------------------------------------
 
 void GridButton::setRotationAngle(int angle)
 {

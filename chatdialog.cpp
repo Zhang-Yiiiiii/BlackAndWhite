@@ -19,8 +19,10 @@
 #include <QProcess>
 #include <QFileInfo>
 
+//对话文件
 const QString CONTEXT_FILE = "conversation_context.json";
 
+//------------------------构造和析构----------------------------------
 ChatDialog::ChatDialog(QWidget *parent)
     : QDialog(parent),
       currentReply(nullptr)
@@ -32,6 +34,7 @@ ChatDialog::ChatDialog(QWidget *parent)
 
     loadContext();
 
+    //默认对话
     chatDisplay->append("<b style='color: #27ae60;'>AI:</b> " +
                         markdownToHtml("你好！我是DeepSeek AI助手，我支持markdown语法"));
 }
@@ -48,11 +51,13 @@ ChatDialog::~ChatDialog()
     }
 }
 
+//------------------------私有方法----------------------------------
+//转Html
 QString ChatDialog::markdownToHtml(const QString &markdown)
 {
     QString html = markdown;
 
-    // ====== 改进的公式处理 ======
+    // 改进的公式处理
     // 块级公式处理 ($$...$$)
     static QRegularExpression blockLatexRegex("\\$\\$(.*?)\\$\\$",
             QRegularExpression::DotMatchesEverythingOption);
@@ -171,7 +176,7 @@ QString ChatDialog::markdownToHtml(const QString &markdown)
     html.replace(QRegularExpression("^###\\s+(.+)$", QRegularExpression::MultilineOption), "<h3>\\1</h3>");
     html.replace(QRegularExpression("^####\\s+(.+)$", QRegularExpression::MultilineOption), "<h4>\\1</h3>");
 
-    // 8. 无序列表 - 改进处理
+    // 8. 无序列表 -
     static QRegularExpression ulRegex("^([*+-])\\s+(.+)$", QRegularExpression::MultilineOption);
     QRegularExpressionMatchIterator ulIterator = ulRegex.globalMatch(html);
     QStringList ulLines;

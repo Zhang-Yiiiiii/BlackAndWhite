@@ -7,11 +7,11 @@
 
 void setMarkdownStyled(QTextBrowser* browser, const QString& markdown)
 {
-    // Step 1: 创建一个临时 QTextDocument 用于 Markdown 转换
+    //创建一个临时 QTextDocument 用于 Markdown 转换
     QTextDocument* doc = new QTextDocument(browser);  // 父对象设为 browser，自动管理内存
     doc->setMarkdown(markdown);
 
-    // Step 2: 生成 HTML 并注入 CSS 样式
+    //生成 HTML 并注入 CSS 样式
     QString html = doc->toHtml();
     QString css = R"(
             h1 { font-size: 20px; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
@@ -23,7 +23,7 @@ void setMarkdownStyled(QTextBrowser* browser, const QString& markdown)
         )";
     html.replace("<head>", "<head><style>" + css + "</style>");
 
-    // Step 3: 设置新文档
+    //设置新文档
     doc->setHtml(html);
     browser->setDocument(doc);  // 用新文档替换旧文档
 }

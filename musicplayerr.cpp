@@ -54,6 +54,7 @@ MusicPlayerr::~MusicPlayerr()
     delete ui;
 }
 
+//背景
 void MusicPlayerr::setBackground(const QString fileName)
 {
     QPixmap pix(fileName);
@@ -66,6 +67,7 @@ void MusicPlayerr::setBackground(const QString fileName)
     this->setPalette(palette);
 }
 
+//统一设置格式
 void MusicPlayerr::setBtnStyle(QPushButton *btn, QString fileName)
 {
     btn->setFixedSize(50, 50);
@@ -73,6 +75,7 @@ void MusicPlayerr::setBtnStyle(QPushButton *btn, QString fileName)
     btn->setIcon(QIcon(fileName));
 }
 
+//初始化按钮
 void MusicPlayerr::initBtns()
 {
     setBtnStyle(ui->prevBtn, ":/icon/prevMusic.png");
@@ -99,6 +102,7 @@ void MusicPlayerr::initBtns()
 
 }
 
+//加载文件夹
 void MusicPlayerr::loadDir(const QString &fileName)
 {
     if (fileName.trimmed().isEmpty())
@@ -140,6 +144,7 @@ void MusicPlayerr::loadDir(const QString &fileName)
     startMusic();
 }
 
+//播放音乐
 void MusicPlayerr::startMusic()
 {
     QString musicName(ui->musicList->currentItem()->text());
@@ -151,6 +156,7 @@ void MusicPlayerr::startMusic()
     m_player->play();
 }
 
+//显示列表
 void MusicPlayerr::showList()
 {
     QPropertyAnimation ani(ui->groupBox, "pos");
@@ -165,6 +171,7 @@ void MusicPlayerr::showList()
 
 }
 
+//隐藏列表
 void MusicPlayerr::hideList()
 {
     QPropertyAnimation ani(ui->groupBox, "pos");
@@ -299,11 +306,13 @@ void MusicPlayerr::onListBtnclicked()
     }
 }
 
+//更新音量
 void MusicPlayerr::updateVolume(int pos)
 {
     m_output->setVolume(0.01 * pos);
 }
 
+//更新滑动条位置
 void MusicPlayerr::updatePosition(qint64 pos)
 {
     if(ui->progressSlider->maximum() > 0)
@@ -319,6 +328,7 @@ void MusicPlayerr::updatePosition(qint64 pos)
     ui->progressLabel->setText(currentTime.toString(format) + " / " + m_totalTime);
 }
 
+//更新时长
 void MusicPlayerr::updateDuration(qint64 dur)
 {
     ui->progressSlider->setRange(0, static_cast<int>(dur));

@@ -14,7 +14,6 @@ debug/lightoutgame.o
 debug/loginwindow.o
 debug/main.o
 debug/mainscene.o
-debug/musicplayer.o
 debug/musicplayerr.o
 debug/mypushbutton.o
 debug/onlinewindow.o
@@ -38,7 +37,6 @@ debug/moc_hexagon.o
 debug/moc_lightoutgame.o
 debug/moc_loginwindow.o
 debug/moc_mainscene.o
-debug/moc_musicplayer.o
 debug/moc_musicplayerr.o
 debug/moc_onlinewindow.o
 debug/moc_overlay.o

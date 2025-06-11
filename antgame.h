@@ -30,6 +30,7 @@ public:
     //模拟/关闭
     void simulate(BuildWay buildWay, int step, int x, int y, int direction, bool &flag); //flag 表示模拟还是关闭
 
+    //逐步模拟
     void playHintStep(int index, int delay);
 
     //画图事件
@@ -99,7 +100,7 @@ private:
     bool startingPointMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step, bool isSave = 1); //已知起点
     bool destinationMaping(std::vector<std::vector<bool>>& gameArray, QPoint pos, int bugDir, int step, bool isSave = 1 ); //已知终点
 
-    void generateTipArray() override;   //生成提示数组
+    void generateAnswerArray() override;   //生成提示数组
 
     void recordPath();                  //记录路径
 

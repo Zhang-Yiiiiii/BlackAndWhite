@@ -15,10 +15,10 @@ BaseWindow::BaseWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //设置窗口大小 标题 图标
-    this->setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
-    this->setWindowTitle(MYTITLE);              //设置标题
-    this->setWindowIcon(QIcon(MYICON));         //设置图标
-    this->m_background.load(BACKGROUDPATH);     //提前加载背景图片
+    setFixedSize(BACKGROUDWIDTH, BACKGROUDHEIGHT);
+    setWindowTitle(MYTITLE);              //设置标题
+    setWindowIcon(QIcon(MYICON));         //设置图标
+    m_background.load(BACKGROUDPATH);     //提前加载背景图片
 
     //设置菜单栏
     m_menubar = menuBar();

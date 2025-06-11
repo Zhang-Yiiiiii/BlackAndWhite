@@ -66,7 +66,7 @@ private:
     //int getTotalTime() const override;
 
     //生成提示数组
-    void generateTipArray() override;
+    void generateAnswerArray() override;
 
     //检验是否胜利
     bool isWin() const override;

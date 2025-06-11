@@ -41,7 +41,7 @@ protected:
 
     //------------------------保护属性----------------------------------
 
-    QPixmap m_background;
+    QPixmap m_background;   //背景
     QMenuBar* m_menubar;    //菜单栏
 
     QMenu* m_startMenu;   //开始菜单
@@ -58,16 +58,17 @@ protected:
 
     MusicPlayerr* m_musicPlayer;  //音乐播放器
 
-    QAction* m_aiAction;
+    QAction* m_aiAction;    //ai辅助
 
-    ChatDialog* m_ai;       //ai辅助
+    ChatDialog* m_ai;
 
     //------------------------保护方法----------------------------------
 
+    //重写绘图事件
     virtual void paintEvent(QPaintEvent*) override;
 
     //重写移动事件
-    void moveEvent(QMoveEvent* event) override;
+    virtual void moveEvent(QMoveEvent* event) override;
 
 protected slots:
     //------------------------保护槽----------------------------------

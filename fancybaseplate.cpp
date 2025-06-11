@@ -22,21 +22,25 @@ void FancyBasePlate::paintEvent(QPaintEvent* event)
     painter.setRenderHint(QPainter::Antialiasing);
     const QSize totalSize = calculateTotalSize();
     const int radius = 8;  // 圆角半径
-    // ===== 1. 背景渐变 =====
+
+    // 1. 背景渐变
     QLinearGradient gradient(0, 0, 0, height());
     gradient.setColorAt(0.0, m_baseColor.lighter(110));
     gradient.setColorAt(0.5, m_baseColor);
     gradient.setColorAt(1.0, m_baseColor.darker(110));
-    // ===== 2. 带圆角的主体 =====
+
+    // 2. 带圆角的主体
     QPainterPath backgroundPath;
     backgroundPath.addRoundedRect(0, 0, totalSize.width(), totalSize.height(), radius, radius);
+
     // 绘制渐变背景
     painter.fillPath(backgroundPath, gradient);
-    // ===== 3. 内发光效果 =====
+
+    // 3. 内发光效果
     painter.setPen(QPen(m_highlightColor, 1.5));
     painter.drawPath(backgroundPath);
 
-    // ===== 4. 悬浮高光 =====
+    // 4. 悬浮高光
     if (m_hovered)
     {
         QPainterPath hoverPath;
@@ -47,12 +51,12 @@ void FancyBasePlate::paintEvent(QPaintEvent* event)
         painter.fillPath(hoverPath, QBrush(QColor(255, 255, 255, 20)));
     }
 
-    // ===== 5. 细节装饰线 =====
+    // 5. 细节装饰线
     painter.setPen(QPen(m_baseColor.darker(130), 0.5));
     painter.drawRoundedRect(0, 0, totalSize.width(), totalSize.height(), radius, radius);
 }
 
-// ===== 悬浮效果支持 =====
+// 悬浮效果支持
 void FancyBasePlate::enterEvent(QEnterEvent* event)
 {
     m_hovered = true;
@@ -73,6 +77,7 @@ void FancyBasePlate::setHighlightColor(const QColor& color)
     update();
 }
 
+//计算大小
 QSize FancyBasePlate::calculateTotalSize() const
 {
     // 总尺寸 = 两侧扩展 + (格子尺寸 * 列数) + (间隙 * (列数 - 1))
@@ -81,25 +86,8 @@ QSize FancyBasePlate::calculateTotalSize() const
     return QSize(width, height);
 }
 
-void FancyBasePlate::setGridSize(int rows, int cols)
-{
-    m_rows = rows;
-    m_cols = cols;
-    resize(calculateTotalSize());
-    update();
-}
-
 void FancyBasePlate::setBaseColor(const QColor& color)
 {
     m_baseColor = color;
     update();
 }
-
-// void FancyBasePlate::paintEvent(QPaintEvent* event)
-// {
-// Q_UNUSED(event)
-// QPainter painter(this);
-// painter.setRenderHint(QPainter::Antialiasing);
-
-// painter.fillRect(0, 0, calculateTotalSize().width(), calculateTotalSize().height(), m_baseColor);
-// }

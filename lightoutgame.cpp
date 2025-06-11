@@ -364,7 +364,7 @@ bool LightOutGame::partialEnumeration(const std::vector<std::vector<bool> >& gam
 // }
 
 //显示提示
-void LightOutGame::generateTipArray()
+void LightOutGame::generateAnswerArray()
 {
     m_tipsArray.resize(m_boardRow, std::vector<bool>(m_boardCol, 0));
 

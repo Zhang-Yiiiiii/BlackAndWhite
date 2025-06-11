@@ -23,7 +23,6 @@ SOURCES += \
     loginwindow.cpp \
     main.cpp \
     mainscene.cpp \
-    musicplayer.cpp \
     musicplayerr.cpp \
     mypushbutton.cpp \
     onlinewindow.cpp \
@@ -51,7 +50,6 @@ HEADERS += \
     lightoutgame.h \
     loginwindow.h \
     mainscene.h \
-    musicplayer.h \
     musicplayerr.h \
     mypushbutton.h \
     onlinewindow.h \

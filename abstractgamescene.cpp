@@ -640,7 +640,7 @@ void AbstractGameScene::onShowTips()
     // m_passingTime += 120;
 
     //生成提示数组
-    generateTipArray();
+    generateAnswerArray();
 
     //棋盘位置
     int x = boardPos.x();
